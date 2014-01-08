@@ -1,7 +1,6 @@
 package fr.upmc.flyingduke.domain.dao;
 
 import java.util.Date;
-import java.util.UUID;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -20,9 +19,10 @@ public class GameDao {
 	private static final String DATE = "DATE";
 	
 	/**
-	 * Returns a shallow Game instance : the team fields only have their uuid set
+	 * Returns a shallow Game instance : the team fields only have their uuid set.
+	 * TODO If the requested game is not in the DAO, a REST request is sent. 
 	 * @param uuid
-	 * @return
+	 * @return the game for the uuid
 	 * @throws EntityNotFoundException
 	 */
 	public static Game shallowGet(String uuid) throws EntityNotFoundException {
@@ -48,6 +48,12 @@ public class GameDao {
 		return game;
 	}
 	
+	/**
+	 * TODO Returns a Deep Game instance : the team fields have their field set.
+	 * TODO If the requested game is not in the DAO, a REST request is sent.
+	 * @param uuid
+	 * @return
+	 */
 	public Game deepGet(String uuid) {
 		return null;
 	}
@@ -57,7 +63,7 @@ public class GameDao {
 	 * @param game
 	 */
 	public static void store(Game game) {
-		//Key key = KeyFactory.createKey("uuid", game.getUUID());
+	
 		Entity gameEntity = new Entity(GAME_KIND, game.getUUID());
 		gameEntity.setProperty(HOME_TEAM_UUID, game.getHomeTeam().getUUID());
 		gameEntity.setProperty(AWAY_TEAM_UUID, game.getAwayTeam().getUUID());
@@ -67,7 +73,7 @@ public class GameDao {
 		datastore.put(gameEntity);
 		
 		try {
-			get(game.getUUID()).toString();
+			System.out.println(shallowGet(game.getUUID()).toString());
 		} catch (EntityNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
