@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
-	
+
 	<servlet>
 		<servlet-name>Flyingduke</servlet-name>
 		<servlet-class>fr.upmc.flyingduke.servlets.FlyingdukeServlet</servlet-class>
@@ -13,7 +13,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>Flyingduke</servlet-name>
 		<url-pattern>/flyingduke</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>AdminServlet</servlet-name>
 		<servlet-class>fr.upmc.flyingduke.servlets.AdminServlet</servlet-class>
@@ -22,7 +22,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>AdminServlet</servlet-name>
 		<url-pattern>/administration</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>HomeServlet</servlet-name>
 		<servlet-class>fr.upmc.flyingduke.servlets.HomeServlet</servlet-class>
@@ -40,7 +40,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>MatchServlet</servlet-name>
 		<url-pattern>/match</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>UserServlet</servlet-name>
 		<servlet-class>fr.upmc.flyingduke.servlets.UserServlet</servlet-class>
@@ -49,8 +49,8 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>UserServlet</servlet-name>
 		<url-pattern>/user</url-pattern>
 	</servlet-mapping>
-	
-	
+
+
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>

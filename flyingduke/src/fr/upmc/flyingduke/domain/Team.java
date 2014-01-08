@@ -3,24 +3,17 @@ package fr.upmc.flyingduke.domain;
 import java.util.List;
 
 public class Team {
-	private long id;
+	private String uuid;
 	private String name;
+	private String alias;
 	private List<Person> players;
 	
 	
+
+	public Team(String uuid) {
+		this.uuid = uuid;
+	}
 	
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
 	/**
 	 * @return the name
 	 */
@@ -44,6 +37,26 @@ public class Team {
 	 */
 	public void setPlayers(List<Person> players) {
 		this.players = players;
+	}
+	/**
+	 * @return the id
+	 */
+	public String getUUID() {
+		return uuid;
+	}
+	/**
+	 * @param id the id to set
+	 */
+	public void setUUID(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 
 

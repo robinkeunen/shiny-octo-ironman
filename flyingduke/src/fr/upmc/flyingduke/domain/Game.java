@@ -2,26 +2,26 @@ package fr.upmc.flyingduke.domain;
 
 import java.util.Date;
 
+import fr.upmc.flyingduke.domain.dao.TeamDao;
+
 public class Game {
-	private long id;
+	private String uuid;
 	private Team awayTeam;
 	private Team homeTeam;
 	private Date date;
 	
-	
-	public long getId() {
-		return id;
+
+	public Game(String uuid) {
+		this.uuid = uuid;
 	}
-	/**
-	 * @return the awayTeam
-	 */
+	
 	public Team getAwayTeam() {
 		return awayTeam;
 	}
 	/**
 	 * @param awayTeam the awayTeam to set
 	 */
-	public void setAwayTeam(Team awayTeam) {
+	public void setAwayTeam(Team awayTeam)  {
 		this.awayTeam = awayTeam;
 	}
 	/**
@@ -43,16 +43,30 @@ public class Game {
 		return date;
 	}
 	/**
-	 * @param date the date to set
+	 * @param calendar the date to set
 	 */
 	public void setDate(Date date) {
 		this.date = date;
 	}
 	/**
+	 * @return the id
+	 */
+	public String getUUID() {
+		return uuid;
+	}
+	/**
 	 * @param id the id to set
 	 */
-	public void setId(long id) {
-		this.id = id;
+	public void setUUID(String uuid) {
+		this.uuid = uuid;
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Game [uuid=" + uuid + ", awayTeam=" + awayTeam.getUUID() + ", homeTeam="
+				+ homeTeam.getUUID() + ", date=" + date + "]";
 	}
 	
 	
