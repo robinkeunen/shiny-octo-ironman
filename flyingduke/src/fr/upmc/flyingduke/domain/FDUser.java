@@ -2,7 +2,15 @@ package fr.upmc.flyingduke.domain;
 
 import com.google.appengine.api.datastore.Email;
 
-public class User {
+import fr.upmc.flyingduke.domain.dao.FDUserDao;
+
+/**
+ * Flying Duck user. Name used to differentiate from 
+ * com.google.appengine.api.users.User 
+ * @author roke
+ *
+ */
+public class FDUser {
 	
 	private final long id;
 	private String firstName;
@@ -10,7 +18,21 @@ public class User {
 	private Email email;
 	private int wallet; // Amount of money per user
 	
-	public User(long id) {
+	/**
+	 * Contructor for FDUsers. This constructor creates an entity
+	 * in the store and sets a unique id to the user instance.
+	 * @return
+	 */
+	public static FDUser createFDUser() {
+		return FDUserDao.create();
+	}
+	
+	/**
+	 * Constructor used by the dao to build an instance of FDUser.
+	 * This constructor should not be used by other classes than FDUserDao
+	 * @param id
+	 */
+	public FDUser(long id) {
 		this.id = id;
 	}
 	
@@ -84,6 +106,15 @@ public class User {
 	 */
 	public void setEmail(Email email) {
 		this.email = email;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "FDUser [id=" + id + ", firstName=" + firstName + ", lastName="
+				+ lastName + ", email=" + email + ", wallet=" + wallet + "]";
 	}
 	
 }

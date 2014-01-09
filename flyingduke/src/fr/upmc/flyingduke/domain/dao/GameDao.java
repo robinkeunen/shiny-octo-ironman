@@ -66,13 +66,13 @@ public class GameDao {
 		if (game.getUUID() == null) 
 			throw new MissingUUIDException();
 	
-		Entity gameEntity = new Entity(GAME_KIND, game.getUUID());
-		gameEntity.setProperty(HOME_TEAM_UUID, game.getHomeTeam().getUUID());
-		gameEntity.setProperty(AWAY_TEAM_UUID, game.getAwayTeam().getUUID());
-		gameEntity.setProperty(DATE, game.getDate());
+		Entity entity = new Entity(GAME_KIND, game.getUUID());
+		entity.setProperty(HOME_TEAM_UUID, game.getHomeTeam().getUUID());
+		entity.setProperty(AWAY_TEAM_UUID, game.getAwayTeam().getUUID());
+		entity.setProperty(DATE, game.getDate());
 		
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		datastore.put(gameEntity);
+		datastore.put(entity);
 		
 	}
 }

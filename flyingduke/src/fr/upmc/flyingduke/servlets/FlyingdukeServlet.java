@@ -9,15 +9,22 @@ import java.util.UUID;
 
 import javax.servlet.http.*;
 
+import com.google.appengine.api.datastore.Email;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
+import fr.upmc.flyingduke.domain.Bet;
+import fr.upmc.flyingduke.domain.BetChoice;
+import fr.upmc.flyingduke.domain.FDUser;
 import fr.upmc.flyingduke.domain.Game;
 import fr.upmc.flyingduke.domain.Player;
 import fr.upmc.flyingduke.domain.Team;
+import fr.upmc.flyingduke.domain.dao.BetDao;
 import fr.upmc.flyingduke.domain.dao.GameDao;
 import fr.upmc.flyingduke.domain.dao.TeamDao;
+import fr.upmc.flyingduke.domain.dao.FDUserDao;
 import fr.upmc.flyingduke.exceptions.MissingUUIDException;
 
 @SuppressWarnings("serial")
@@ -70,17 +77,38 @@ public class FlyingdukeServlet extends HttpServlet {
         	home.setAlias("SFG");
         	home.setPlayers(plist2);
         	
+        	// game
         	Game game = new Game(UUID.randomUUID().toString());
         	game.setAwayTeam(away);
         	game.setHomeTeam(home);
         	game.setDate(new Date());
         	
+        	// user 
+        	FDUser fdUser = FDUser.createFDUser();
+        	fdUser.setFirstName("Robin");
+        	fdUser.setLastName("Keunen");
+        	fdUser.setEmail(new Email("robin@keunen.net"));
+        	fdUser.setWallet(100);
         	
+        	// bet
+        	Bet bet = Bet.createBet(fdUser);
+        	bet.setAmount(23);
+        	bet.setChoice(BetChoice.AWAY);
+        	bet.setGameUUID(game.getUUID());
+        	bet.setOdds(1.5);
+        	
+        	// stores 
         	try {
 				GameDao.store(game);
 				TeamDao.store(home);
 	        	TeamDao.store(away);
+	        	FDUserDao.update(fdUser);
+	        	BetDao.update(bet);
+	        	BetDao.get(bet.getId(), bet.getPunterID());
 			} catch (MissingUUIDException e) {
+				e.printStackTrace();
+			} catch (EntityNotFoundException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         	
@@ -89,6 +117,7 @@ public class FlyingdukeServlet extends HttpServlet {
         	PrintWriter page = resp.getWriter();
             page.println("Hello, " + user.getNickname());
             page.println("store et get tests");
+            page.println(userService.createLogoutURL(req.getRequestURI()));
             
         } else {
             resp.sendRedirect(userService.createLoginURL(req.getRequestURI()));
