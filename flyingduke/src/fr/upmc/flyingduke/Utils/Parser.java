@@ -18,6 +18,31 @@ import fr.upmc.flyingduke.domain.dao.GameDao;
 
 public class Parser {
 
+	public ArrayList<Team> parseAllTeams(String xmlToParse){
+		ArrayList<Team> teamsList = new ArrayList<Team>();
+		try{
+			DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			InputSource is = new InputSource();
+			is.setCharacterStream(new StringReader(xmlToParse));
+			Document doc = db.parse(is);
+			//Get all the "game" field of the XML
+			NodeList teams = doc.getElementsByTagName("team");
+			for (int i = 0; i < teams.getLength(); i++) {
+				Element teamXml = (Element) teams.item(i);
+				String teamUUID = teamXml.getAttribute("id");
+				String teamName = teamXml.getAttribute("name");
+				String teamAlias = teamXml.getAttribute("alias");
+				Team team = new Team(teamUUID);
+				team.setAlias(teamAlias);
+				team.setName(teamName);
+				teamsList.add(team);
+			}
+		
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return teamsList;
+	}
 	public ArrayList<Game> parseGamesForDate(String xmlToParse, Date date){
 		ArrayList<Game> gamesList = new ArrayList<Game>();
 		try{

@@ -19,7 +19,10 @@ import com.google.appengine.api.users.UserServiceFactory;
 import fr.upmc.flyingduke.Utils.Parser;
 import fr.upmc.flyingduke.Utils.RESTQuery;
 import fr.upmc.flyingduke.domain.Game;
+import fr.upmc.flyingduke.domain.Team;
 import fr.upmc.flyingduke.domain.dao.GameDao;
+import fr.upmc.flyingduke.domain.dao.TeamDao;
+import fr.upmc.flyingduke.exceptions.MissingUUIDException;
 
 public class FillUpDataBaseServlet extends HttpServlet {
 
@@ -32,11 +35,22 @@ public class FillUpDataBaseServlet extends HttpServlet {
 		RESTQuery requestsLauncher = new RESTQuery();
 		Parser parser = new Parser();
 		GameDao gameDao = new GameDao();
+		TeamDao teamDao = new TeamDao();
 		String button = request.getParameter("button");
+		String xmlResult = "";
 		System.out.println(button);
 		switch(button){
 		case("Get All Teams"):
-			System.out.println("Get all teams");
+		xmlResult = requestsLauncher.getAllTeams();
+		ArrayList<Team> teamsList = parser.parseAllTeams(xmlResult);
+		for (Team team : teamsList){
+			try {
+				teamDao.store(team);
+			} catch (MissingUUIDException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 			
 		break;
 		case("Get Games For This Day"):
@@ -48,7 +62,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			//Month system is 0 based.
 			monthInt--;
 			String month = Integer.toString(monthInt);
-			String xmlResult = requestsLauncher.getGamesByDate(request.getParameter("day"), month, request.getParameter("year"));
+			xmlResult = requestsLauncher.getGamesByDate(request.getParameter("day"), month, request.getParameter("year"));
 			System.out.println(xmlResult);
 			Date date = new Date(dayInt,monthInt,yearInt);
 			ArrayList<Game> gamesList = parser.parseGamesForDate(xmlResult, date);
