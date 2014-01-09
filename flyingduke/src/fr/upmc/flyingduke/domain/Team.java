@@ -3,10 +3,10 @@ package fr.upmc.flyingduke.domain;
 import java.util.List;
 
 public class Team {
-	private String uuid;
+	private final String uuid;
 	private String name;
 	private String alias;
-	private List<Person> players;
+	private List<Player> players;
 	
 	
 
@@ -29,14 +29,14 @@ public class Team {
 	/**
 	 * @return the players
 	 */
-	public List<Person> getPlayers() {
+	public List<Player> getPlayers() {
 		return players;
 	}
 	/**
-	 * @param players the players to set
+	 * @param plist1 the players to set
 	 */
-	public void setPlayers(List<Person> players) {
-		this.players = players;
+	public void setPlayers(List<Player> plist1) {
+		this.players = plist1;
 	}
 	/**
 	 * @return the id
@@ -44,12 +44,7 @@ public class Team {
 	public String getUUID() {
 		return uuid;
 	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setUUID(String uuid) {
-		this.uuid = uuid;
-	}
+	
 
 	public String getAlias() {
 		return alias;
@@ -57,6 +52,15 @@ public class Team {
 
 	public void setAlias(String alias) {
 		this.alias = alias;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Team [uuid=" + uuid + ", name=" + name + ", alias=" + alias
+				+ ", players=[" + players + "]]";
 	}
 
 

@@ -3,12 +3,15 @@ package fr.upmc.flyingduke.domain;
 import java.util.Map;
 
 public class Bet {
-	private long id;
+	private final long id;
 	private String gameID;
 	private BetChoice choice; 
 	private int amount;
 	private Map<BetChoice, Float> cotes;
 	
+	public Bet(long id) {
+		this.id = id;
+	}
 	
 	/**
 	 * @return the gameID
@@ -52,12 +55,7 @@ public class Bet {
 	public long getId() {
 		return id;
 	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+
 	/**
 	 * @return the cote
 	 */

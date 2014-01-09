@@ -1,22 +1,28 @@
 package fr.upmc.flyingduke.domain;
 
-public class User extends Person {
+import com.google.appengine.api.datastore.Email;
 
+public class User extends Person {
 	
-	private String mail;
+	private Email email;
 	private int wallet; // Amount of money per user
+	
+	public User(String uuid) {
+		super(uuid);
+		// TODO Auto-generated constructor stub
+	}
 	
 	/**
 	 * @return the mail
 	 */
-	public String getMail() {
-		return mail;
+	public Email getMail() {
+		return email;
 	}
 	/**
 	 * @param mail the mail to set
 	 */
-	public void setMail(String mail) {
-		this.mail = mail;
+	public void setMail(Email email) {
+		this.email = email;
 	}
 	/**
 	 * @return the wallet

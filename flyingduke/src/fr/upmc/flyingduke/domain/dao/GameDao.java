@@ -29,20 +29,18 @@ public class GameDao {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		
 		// get Entity
-		Key getKey = KeyFactory.createKey(GAME_KIND, uuid);
-		Entity entityGame = datastore.get(getKey);
+		Key key = KeyFactory.createKey(GAME_KIND, uuid);
+		Entity entity = datastore.get(key);
 		
 		// get properties
-		String homeTeamUUID = (String) entityGame.getProperty(HOME_TEAM_UUID);
-		String awayTeamUUID = (String) entityGame.getProperty(HOME_TEAM_UUID);
-		Date date = (Date) entityGame.getProperty(DATE);
+		String homeTeamUUID = (String) entity.getProperty(HOME_TEAM_UUID);
+		String awayTeamUUID = (String) entity.getProperty(HOME_TEAM_UUID);
+		Date date = (Date) entity.getProperty(DATE);
 				
 		// build game
 		Game game = new Game(uuid);
-		Team awayTeam = new Team(awayTeamUUID);
-		Team homeTeam = new Team(homeTeamUUID);
-		game.setAwayTeam(awayTeam);
-		game.setHomeTeam(homeTeam);
+		game.setAwayTeam(new Team(awayTeamUUID));
+		game.setHomeTeam(new Team(homeTeamUUID));
 		game.setDate(date);
 		
 		return game;
@@ -71,13 +69,6 @@ public class GameDao {
 		
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		datastore.put(gameEntity);
-		
-		try {
-			System.out.println(shallowGet(game.getUUID()).toString());
-		} catch (EntityNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 	}
 }

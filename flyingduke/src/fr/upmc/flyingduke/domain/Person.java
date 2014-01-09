@@ -1,23 +1,21 @@
 package fr.upmc.flyingduke.domain;
 
-import java.util.UUID;
-
 public class Person {
-	protected UUID id;
+	protected final String uuid;
 	protected String firstName;
 	protected String lastName;
+	
+	public Person(String uuid) {
+		this.uuid = uuid;
+	}
+	
 	/**
 	 * @return the id
 	 */
-	public UUID getId() {
-		return id;
+	public String getUUID() {
+		return uuid;
 	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(UUID id) {
-		this.id = id;
-	}
+	
 	/**
 	 * @return the firstName
 	 */
@@ -42,4 +40,14 @@ public class Person {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Person [uuid=" + uuid + ", firstName=" + firstName
+				+ ", lastName=" + lastName + "]";
+	}
+	
 }
