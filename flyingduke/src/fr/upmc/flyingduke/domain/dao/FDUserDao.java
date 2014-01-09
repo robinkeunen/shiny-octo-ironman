@@ -65,7 +65,8 @@ public class FDUserDao {
 	 * Users must be created from FDUserDao.create()
 	 */
 	public static void update(FDUser user) throws EntityNotFoundException {
-
+		System.out.println("put " + user.toString());
+		
 		// check if user is in base
 		Key key = KeyFactory.createKey(FD_USER_KIND, user.getId());
 		Entity entity = datastore.get(key);

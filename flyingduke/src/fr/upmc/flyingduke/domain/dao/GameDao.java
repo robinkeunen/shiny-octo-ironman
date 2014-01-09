@@ -29,7 +29,6 @@ public class GameDao {
 	 * @throws EntityNotFoundException
 	 */
 	public static Game shallowGet(String uuid) throws EntityNotFoundException {
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		
 		// get Entity
 		Key key = KeyFactory.createKey(GAME_KIND, uuid);
@@ -73,7 +72,7 @@ public class GameDao {
 		entity.setProperty(AWAY_TEAM_UUID, game.getAwayTeam().getUUID());
 		entity.setProperty(DATE, game.getDate());
 		
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		System.out.println("store " + game.toString());
 		datastore.put(entity);
 		
 	}

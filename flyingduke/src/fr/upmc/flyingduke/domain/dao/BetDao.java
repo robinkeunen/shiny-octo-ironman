@@ -34,6 +34,8 @@ public class BetDao {
 	}
 
 	public static void update(Bet bet) throws EntityNotFoundException {
+		System.out.println("put " + bet.toString());
+		
 		// Check if bet is in base
 		Key key = createBetKey(bet.getId(), bet.getPunterID());
 		Entity entity = datastore.get(key);

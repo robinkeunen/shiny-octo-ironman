@@ -78,16 +78,9 @@ public class TeamDao {
 			}
 			teamEntity.setProperty(PLAYERS, playerUUIDs);
 		}
-		
-		datastore.put(teamEntity);
-		
-		try {
-			shallowGet(team.getUUID());
-		} catch (EntityNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
+		System.out.println("store" + team.toString());
+		datastore.put(teamEntity);
 	}
 	
 }
