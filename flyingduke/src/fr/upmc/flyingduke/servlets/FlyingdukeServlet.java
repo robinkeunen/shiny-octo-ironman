@@ -18,6 +18,7 @@ import fr.upmc.flyingduke.domain.Player;
 import fr.upmc.flyingduke.domain.Team;
 import fr.upmc.flyingduke.domain.dao.GameDao;
 import fr.upmc.flyingduke.domain.dao.TeamDao;
+import fr.upmc.flyingduke.exceptions.MissingUUIDException;
 
 @SuppressWarnings("serial")
 public class FlyingdukeServlet extends HttpServlet {
@@ -74,9 +75,14 @@ public class FlyingdukeServlet extends HttpServlet {
         	game.setHomeTeam(home);
         	game.setDate(new Date());
         	
-        	GameDao.store(game);
-        	TeamDao.store(home);
-        	TeamDao.store(away);
+        	
+        	try {
+				GameDao.store(game);
+				TeamDao.store(home);
+	        	TeamDao.store(away);
+			} catch (MissingUUIDException e) {
+				e.printStackTrace();
+			}
         	
         	
             resp.setContentType("text/plain");

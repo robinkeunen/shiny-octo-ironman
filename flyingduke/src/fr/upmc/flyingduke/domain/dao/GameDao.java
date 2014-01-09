@@ -11,6 +11,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 
 import fr.upmc.flyingduke.domain.Game;
 import fr.upmc.flyingduke.domain.Team;
+import fr.upmc.flyingduke.exceptions.MissingUUIDException;
 
 public class GameDao {
 	private static final String GAME_KIND = "GAME_KIND";
@@ -59,8 +60,11 @@ public class GameDao {
 	/**
 	 * 
 	 * @param game
+	 * @throws MissingUUIDException 
 	 */
-	public static void store(Game game) {
+	public static void store(Game game) throws MissingUUIDException {
+		if (game.getUUID() == null) 
+			throw new MissingUUIDException();
 	
 		Entity gameEntity = new Entity(GAME_KIND, game.getUUID());
 		gameEntity.setProperty(HOME_TEAM_UUID, game.getHomeTeam().getUUID());
