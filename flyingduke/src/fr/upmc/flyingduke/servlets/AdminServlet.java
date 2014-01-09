@@ -34,7 +34,7 @@ public class AdminServlet extends HttpServlet {
 			String valeur = "eccdde3e-f6ec-4f33-8f23-a269dc80b374";
 			RESTQuery classeTest = new RESTQuery();
 			String resultat = classeTest.getGamesByDate("17", "01", "2014");
-			System.out.println("resultat " + resultat);
+			System.out.println("resultat : " + resultat);
 			// get calendar for today
 			Calendar calendar = Calendar.getInstance();
 			calendar.set(2014, 0, 9); 
