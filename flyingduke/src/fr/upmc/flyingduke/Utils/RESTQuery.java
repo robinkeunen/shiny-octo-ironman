@@ -15,6 +15,106 @@ public class RESTQuery {
 	 * @param calendar months start at 0: January is 0.
 	 * @return
 	 */
+	public String getGamesByDate(String day, String month, String year){
+
+		// build request
+		String requestURL = "http://api.sportsdatallc.org/nba-t3/games/" 
+				+ year + "/" + month + "/" + day
+				+ "/schedule.xml?api_key=" + ApiKey + "";
+		URL url = null;
+		BufferedReader reader = null;
+		String xml = "";
+		try {
+			url = new URL(requestURL);
+			reader = new BufferedReader(new InputStreamReader(url.openStream()));
+		
+
+		// read request 
+		String line = null;;
+		while ((line = reader.readLine()) != null){
+			xml += line;
+		}
+		reader.close();
+		} catch (IOException e) {
+			System.out.println("at line public String getGamesByDate(String day, String month, String year) {");
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.println("at line public String getGamesByDate(String day, String month, String year) {");
+		}
+
+		return xml;
+	}
+
+	
+	public String getGameByUUID(String gameUUID){
+		String requestURL =  "http://api.sportsdatallc.org/nba-t3/games/" + gameUUID +"/boxscore.xml?api_key=" + ApiKey;
+		URL url = null;
+		BufferedReader reader = null;
+		String xml = "";
+		try {
+			url = new URL(requestURL);
+			reader = new BufferedReader(new InputStreamReader(url.openStream()));
+		// read request 
+		String line = null;;
+		while ((line = reader.readLine()) != null){
+			xml += line;
+		}
+		reader.close();
+		} catch (IOException e) {
+			System.out.println("at line public String getGameByUUID(String gameUUID) {");
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.println("at line public String getGameByUUID(String gameUUID) {");
+		}
+		return xml;
+	}
+	public String getAllTeams(){
+		String requestURL =  "http://api.sportsdatallc.org/nba-t3/league/hierarchy.xml?api_key=" + ApiKey;
+		URL url = null;
+		BufferedReader reader = null;
+		String xml = "";
+		try {
+			url = new URL(requestURL);
+			reader = new BufferedReader(new InputStreamReader(url.openStream()));
+		// read request 
+		String line = null;;
+		while ((line = reader.readLine()) != null){
+			xml += line;
+		}
+		reader.close();
+		} catch (IOException e) {
+			System.out.println("at line public String getAllTeams() {");
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.println("at line public String getAllTeams() {");
+		}
+		return xml;
+	}
+		
+	public String getTeamByUUID(String teamUUID){
+		String requestURL = "http://api.sportsdatallc.org/nba-t3/teams/" + teamUUID + "/profile.xml?api_key=" + ApiKey;
+		URL url = null;
+		BufferedReader reader = null;
+		String xml = "";
+		try {
+			url = new URL(requestURL);
+			reader = new BufferedReader(new InputStreamReader(url.openStream()));
+		
+
+		// read request 
+		String line = null;;
+		while ((line = reader.readLine()) != null){
+			xml += line;
+		}
+		reader.close();
+		} catch (IOException e) {
+			System.out.println("at line public String getTeamByUUID(String teamUUID) {");
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.println("at line public String getTeamByUUID(String teamUUID) {");
+		}
+		return xml;
+	}
 	public String getGamesForDay(Calendar calendar) {
 		
 		// get strings for the date
