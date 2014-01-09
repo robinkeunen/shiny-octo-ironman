@@ -20,6 +20,8 @@ public class TeamDao {
 	private static final String ALIAS = "ALIAS";
 	private static final String PLAYERS = "PLAYERS";
 
+	private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
 	/**
 	 * Reconstitutes the team for the given uuid.
 	 * Players have only their uuid field set.
@@ -28,7 +30,6 @@ public class TeamDao {
 	 * @throws EntityNotFoundException 
 	 */
 	public static Team shallowGet(String uuid) throws EntityNotFoundException {
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
 		// get Entity
 		Key key = KeyFactory.createKey(TEAM_KIND, uuid);
@@ -78,7 +79,6 @@ public class TeamDao {
 			teamEntity.setProperty(PLAYERS, playerUUIDs);
 		}
 		
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		datastore.put(teamEntity);
 		
 		try {

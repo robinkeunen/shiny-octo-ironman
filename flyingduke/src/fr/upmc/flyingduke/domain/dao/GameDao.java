@@ -19,6 +19,8 @@ public class GameDao {
 	private static final String AWAY_TEAM_UUID = "AWAY_TEAM_UUID";
 	private static final String DATE = "DATE";
 	
+	private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
 	/**
 	 * Returns a shallow Game instance : the team fields only have their uuid set.
 	 * TODO If the requested game is not in the DAO, a REST request is sent. 

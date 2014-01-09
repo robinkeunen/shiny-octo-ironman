@@ -17,8 +17,9 @@ public class FDUserDao {
 	private static final String EMAIL = "EMAIL";
 	private static final String WALLET = "WALLET";
 
+	private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
 	public static FDUser get(long id) throws EntityNotFoundException {
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
 		// get Entity
 		Key key = KeyFactory.createKey(FD_USER_KIND, id);
@@ -50,7 +51,6 @@ public class FDUserDao {
 		Entity entity = new Entity(FD_USER_KIND);
 		
 		// put in store, will generate a key
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		datastore.put(entity);
 		
 		// return the User with the assigned id
@@ -65,7 +65,6 @@ public class FDUserDao {
 	 * Users must be created from FDUserDao.create()
 	 */
 	public static void update(FDUser user) throws EntityNotFoundException {
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
 		// check if user is in base
 		Key key = KeyFactory.createKey(FD_USER_KIND, user.getId());

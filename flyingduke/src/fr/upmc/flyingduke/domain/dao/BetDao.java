@@ -17,10 +17,11 @@ public class BetDao {
 	private final static String CHOICE = "CHOICE";
 	private final static String AMOUNT = "AMOUNT";
 	private final static String ODDS = "ODDS";
+	
+	private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
 
 	public static Bet create(FDUser punter) {
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-
 		// create fduser and bet key
 		Key punterKey = KeyFactory
 				.createKey(FDUserDao.FD_USER_KIND, punter.getId());
@@ -28,14 +29,11 @@ public class BetDao {
 
 		// set properties
 		datastore.put(entity);
-		System.out.println("create " + entity.toString() );
 
 		return new Bet(entity.getKey().getId(), punter.getId());
 	}
 
 	public static void update(Bet bet) throws EntityNotFoundException {
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		System.out.println("update " + bet.toString());
 		// Check if bet is in base
 		Key key = createBetKey(bet.getId(), bet.getPunterID());
 		Entity entity = datastore.get(key);
@@ -48,12 +46,10 @@ public class BetDao {
 
 		// update in base
 		datastore.put(entity);	
-		System.out.println("update " + entity.toString() );
 
 	}
 
 	public static Bet get(long id, long punterId) throws EntityNotFoundException {
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		
 		// get entity
 		Key key = createBetKey(id, punterId);
@@ -73,7 +69,6 @@ public class BetDao {
 		bet.setAmount(amount);
 		bet.setOdds(odds);
 		
-		System.out.println("get " + bet.toString());
 		return bet;
 	}
 
