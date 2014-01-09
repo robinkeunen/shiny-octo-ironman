@@ -62,18 +62,32 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			//Month system is 0 based.
 			monthInt--;
 			String month = Integer.toString(monthInt);
-			xmlResult = requestsLauncher.getGamesByDate(request.getParameter("day"), month, request.getParameter("year"));
-			System.out.println(xmlResult);
-			Date date = new Date(dayInt,monthInt,yearInt);
+			xmlResult = requestsLauncher.getGamesByDate(request.getParameter("day"), request.getParameter("month"), request.getParameter("year"));
+			System.out.println(dayInt + " " + monthInt + " " + yearInt);
+			Date date = new Date(yearInt -1900,monthInt,dayInt);
 			ArrayList<Game> gamesList = parser.parseGamesForDate(xmlResult, date);
 			System.out.println("Fin du parser");
 			for (Game game : gamesList){
+				System.out.println(game.getDate());
 				gameDao.store(game);
 			}
+			System.out.println("FIN");
 			
 			}catch (Exception e){
 				System.out.println("Month is not an integer");
 			}
+		break;
+		case("Get All Games"):
+			xmlResult = requestsLauncher.getAllTeams();
+		ArrayList<Game> gamesList = parser.parseAllGames(xmlResult);
+		for (Game game : gamesList){
+			try {
+				gameDao.store(game);
+			} catch (MissingUUIDException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 			
 		}
 	}
