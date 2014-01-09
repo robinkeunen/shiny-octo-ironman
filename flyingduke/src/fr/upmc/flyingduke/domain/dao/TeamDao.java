@@ -12,6 +12,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 
 import fr.upmc.flyingduke.domain.Player;
 import fr.upmc.flyingduke.domain.Team;
+import fr.upmc.flyingduke.exceptions.MissingUUIDException;
 
 public class TeamDao {
 	private static final String TEAM_KIND = "TEAM_KIND";
@@ -52,12 +53,19 @@ public class TeamDao {
 		team.setAlias(alias);
 		team.setPlayers(players); 
 		
-		System.out.println(team.toString());
-		
 		return team;
 	}
 	
-	public static void store(Team team) { 
+	/**
+	 * Stores a team object in the database. The UUID must be set.
+	 * The name and alias should be set. The players may be set.
+	 * @param team
+	 * @throws MissingUUIDException 
+	 */
+	public static void store(Team team) throws MissingUUIDException { 
+		if (team.getUUID() == null)
+			throw new MissingUUIDException();
+		
 		Entity teamEntity = new Entity(TEAM_KIND, team.getUUID());
 		teamEntity.setProperty(TEAM_KIND, team.getUUID());
 		teamEntity.setProperty(NAME, team.getName());
