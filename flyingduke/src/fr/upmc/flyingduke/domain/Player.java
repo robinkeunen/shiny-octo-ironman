@@ -1,13 +1,17 @@
 package fr.upmc.flyingduke.domain;
 
-public class Player extends Person {
+public class Player {
+
+	private final String uuid;
+	private String firstName;
+	private String lastName;
 
 	private String position;
 
 	public Player(String uuid) {
-		super(uuid);
+		this.uuid = uuid;
 	}
-	
+
 	/**
 	 * @return the position
 	 */
@@ -28,6 +32,41 @@ public class Player extends Person {
 	@Override
 	public String toString() {
 		return "Player { " + super.toString() + " } position=" + position + "]";
+	}
+
+	/**
+	 * @return the firstName
+	 */
+	public String getFirstName() {
+		return firstName;
+	}
+
+	/**
+	 * @param firstName the firstName to set
+	 */
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	/**
+	 * @return the lastName
+	 */
+	public String getLastName() {
+		return lastName;
+	}
+
+	/**
+	 * @param lastName the lastName to set
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	/**
+	 * @return the uuid
+	 */
+	public String getUUID() {
+		return uuid;
 	}
 
 }
