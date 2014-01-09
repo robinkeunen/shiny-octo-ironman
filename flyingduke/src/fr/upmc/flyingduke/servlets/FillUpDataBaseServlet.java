@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -91,5 +92,8 @@ public class FillUpDataBaseServlet extends HttpServlet {
 		}
 			
 		}
+		
+		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/views/admin.jsp"); 
+		dispatcher.forward(request,response);
 	}
 }
