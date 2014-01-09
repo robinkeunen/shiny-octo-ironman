@@ -1,6 +1,7 @@
 package fr.upmc.flyingduke.domain.dao;
 
 import java.util.Date;
+import java.util.List;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -8,6 +9,10 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 import fr.upmc.flyingduke.domain.Game;
 import fr.upmc.flyingduke.domain.Team;
@@ -18,7 +23,7 @@ public class GameDao {
 	private static final String HOME_TEAM_UUID = "HOME_TEAM_UUID";
 	private static final String AWAY_TEAM_UUID = "AWAY_TEAM_UUID";
 	private static final String DATE = "DATE";
-	
+
 	private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
 	/**
@@ -29,25 +34,30 @@ public class GameDao {
 	 * @throws EntityNotFoundException
 	 */
 	public static Game shallowGet(String uuid) throws EntityNotFoundException {
-		
+
 		// get Entity
 		Key key = KeyFactory.createKey(GAME_KIND, uuid);
 		Entity entity = datastore.get(key);
-		
+
+		Game game = gameFromEntity(uuid, entity);
+
+		return game;
+	}
+
+	private static Game gameFromEntity(String uuid, Entity entity) {
 		// get properties
 		String homeTeamUUID = (String) entity.getProperty(HOME_TEAM_UUID);
 		String awayTeamUUID = (String) entity.getProperty(HOME_TEAM_UUID);
 		Date date = (Date) entity.getProperty(DATE);
-				
+
 		// build game
 		Game game = new Game(uuid);
 		game.setAwayTeam(new Team(awayTeamUUID));
 		game.setHomeTeam(new Team(homeTeamUUID));
-		game.setDate(date);
-		
+		game.setDate(date);		
 		return game;
 	}
-	
+
 	/**
 	 * TODO Returns a Deep Game instance : the team fields have their field set.
 	 * TODO If the requested game is not in the DAO, a REST request is sent.
@@ -57,7 +67,7 @@ public class GameDao {
 	public Game deepGet(String uuid) {
 		return null;
 	}
-	
+
 	/**
 	 * 
 	 * @param game
@@ -66,14 +76,21 @@ public class GameDao {
 	public static void store(Game game) throws MissingUUIDException {
 		if (game.getUUID() == null) 
 			throw new MissingUUIDException();
-	
+
 		Entity entity = new Entity(GAME_KIND, game.getUUID());
 		entity.setProperty(HOME_TEAM_UUID, game.getHomeTeam().getUUID());
 		entity.setProperty(AWAY_TEAM_UUID, game.getAwayTeam().getUUID());
 		entity.setProperty(DATE, game.getDate());
-		
+
 		System.out.println("store " + game.toString());
 		datastore.put(entity);
-		
+
+	}
+
+	public static List<Game> gameForDay(Date day) {
+		Filter dateFilter = 
+				new FilterPredicate(DATE, FilterOperator.EQUAL, day);
+		Query q = new Query("Person").setFilter(dateFilter);
+		return null;
 	}
 }

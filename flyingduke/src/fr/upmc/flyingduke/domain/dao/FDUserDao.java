@@ -2,19 +2,27 @@ package fr.upmc.flyingduke.domain.dao;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Email;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.PreparedQuery.TooManyResultsException;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.users.User;
 
 import fr.upmc.flyingduke.domain.FDUser;
+import fr.upmc.flyingduke.exceptions.ExistingUserException;
 
 public class FDUserDao {
+	
 	public static final String FD_USER_KIND = "FD_USER_KIND";
 	private static final String FIRST_NAME = "FIRST_NAME";
 	private static final String LAST_NAME = "LAST_NAME";
-	private static final String EMAIL = "EMAIL";
+	private static final String GOOGLE_USER = "GOOGLE_USER";
 	private static final String WALLET = "WALLET";
 
 	private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -24,37 +32,30 @@ public class FDUserDao {
 		// get Entity
 		Key key = KeyFactory.createKey(FD_USER_KIND, id);
 		Entity entity = datastore.get(key);
-		
-		// get properties
-		String firstName = (String) entity.getProperty(FIRST_NAME);
-		String lastName = (String) entity.getProperty(LAST_NAME);
-		Email email = (Email) entity.getProperty(EMAIL);
-		int wallet  = ((Long) entity.getProperty(WALLET)).intValue();
-		
-		// build user
-		FDUser user = new FDUser(id);
-		user.setFirstName(firstName);
-		user.setLastName(lastName);
-		user.setEmail(email);
-		user.setWallet(wallet);
-		
-		return user;
+
+		return fdUserFromEntity(entity);		
 	}
-	
+
 	/**
 	 * Creates a new user in the base. The google datastore will
 	 * generate an id for the user.
-	 * @param user
+	 * @param user the google user must be unique.
+	 * @throws ExistingUserException 
 	 */
-	public static FDUser create() {
+	public static FDUser create(User googleuser) throws ExistingUserException {
+		FDUser fduser = getFromGoogleUser(googleuser);
+		if (fduser != null) {
+			throw new ExistingUserException();
+		}
 		// create entity
 		Entity entity = new Entity(FD_USER_KIND);
+		entity.setProperty(GOOGLE_USER, googleuser);
 		
 		// put in store, will generate a key
 		datastore.put(entity);
-		
+
 		// return the User with the assigned id
-		return new FDUser(entity.getKey().getId());
+		return fdUserFromEntity(entity);
 	}
 
 	/**
@@ -66,7 +67,7 @@ public class FDUserDao {
 	 */
 	public static void update(FDUser user) throws EntityNotFoundException {
 		System.out.println("put " + user.toString());
-		
+
 		// check if user is in base
 		Key key = KeyFactory.createKey(FD_USER_KIND, user.getId());
 		Entity entity = datastore.get(key);
@@ -74,14 +75,67 @@ public class FDUserDao {
 		// update properties
 		entity.setProperty(FIRST_NAME, user.getFirstName());
 		entity.setProperty(LAST_NAME, user.getLastName());
-		entity.setProperty(EMAIL, user.getEmail());
+		entity.setProperty(GOOGLE_USER, user.getGoogleuser());
 		entity.setProperty(WALLET, user.getWallet());
 
 		// update in base
 		datastore.put(entity);
 	}
 
+	public static FDUser getFromGoogleUser(User googleuser) {
+		Filter userFilter = 
+				new FilterPredicate(GOOGLE_USER, FilterOperator.EQUAL, googleuser);
 
+		Query query = new Query(FD_USER_KIND).setFilter(userFilter);
+		PreparedQuery pq = datastore.prepare(query);
+		Entity entity = null;
+		try {
+			 entity = pq.asSingleEntity();
+		} catch (TooManyResultsException exception) {
+			for (Entity e: pq.asIterable()) {
+				System.out.println(e);
+			}
+			throw exception; 
+		}
+		
+		if (entity == null)
+			return null;
+		
+		return fdUserFromEntity(entity);
 
+	}
+	
+	public static void deleteUser(User googleuser) {
+		Filter userFilter = 
+				new FilterPredicate(GOOGLE_USER, FilterOperator.EQUAL, googleuser);
 
+		Query query = new Query(FD_USER_KIND).setFilter(userFilter);
+		PreparedQuery pq = datastore.prepare(query);
+
+		for (Entity entity: pq.asIterable()) {
+			System.out.println("==> delete " + entity.toString());
+			datastore.delete(entity.getKey());
+		}
+
+	}
+
+	private static FDUser fdUserFromEntity(Entity entity) {
+		
+		Object firstName = entity.getProperty(FIRST_NAME);
+		Object lastName = entity.getProperty(LAST_NAME);
+		Object googleUser = entity.getProperty(GOOGLE_USER);
+		Object wallet  = entity.getProperty(WALLET);
+
+		// build user
+		FDUser fdUser = new FDUser(entity.getKey().getId());
+		if (firstName != null)
+			fdUser.setFirstName((String) firstName);
+		if (lastName != null)
+			fdUser.setLastName((String) lastName);
+		if (googleUser != null)
+			fdUser.setGoogleuser((User) googleUser); 
+		if (wallet != null)
+			fdUser.setWallet(((Long) wallet).intValue());
+		return fdUser;
+	}
 }

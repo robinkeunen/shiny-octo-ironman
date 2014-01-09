@@ -1,8 +1,10 @@
 package fr.upmc.flyingduke.domain;
 
 import com.google.appengine.api.datastore.Email;
+import com.google.appengine.api.users.User;
 
 import fr.upmc.flyingduke.domain.dao.FDUserDao;
+import fr.upmc.flyingduke.exceptions.ExistingUserException;
 
 /**
  * Flying Duck user. Name used to differentiate from 
@@ -15,16 +17,17 @@ public class FDUser {
 	private final long id;
 	private String firstName;
 	private String lastName;
-	private Email email;
+	private User googleuser;
 	private int wallet; // Amount of money per user
 	
 	/**
 	 * Contructor for FDUsers. This constructor creates an entity
 	 * in the store and sets a unique id to the user instance.
 	 * @return
+	 * @throws ExistingUserException One user per google account
 	 */
-	public static FDUser createFDUser() {
-		return FDUserDao.create();
+	public static FDUser createFDUser(User googleuser) throws ExistingUserException {
+		return FDUserDao.create(googleuser);
 	}
 	
 	/**
@@ -36,18 +39,6 @@ public class FDUser {
 		this.id = id;
 	}
 	
-	/**
-	 * @return the mail
-	 */
-	public Email getMail() {
-		return email;
-	}
-	/**
-	 * @param mail the mail to set
-	 */
-	public void setMail(Email email) {
-		this.email = email;
-	}
 	/**
 	 * @return the wallet
 	 */
@@ -95,17 +86,17 @@ public class FDUser {
 	}
 
 	/**
-	 * @return the email
+	 * @return the googleuser
 	 */
-	public Email getEmail() {
-		return email;
+	public User getGoogleuser() {
+		return googleuser;
 	}
 
 	/**
-	 * @param email the email to set
+	 * @param googleuser the googleuser to set
 	 */
-	public void setEmail(Email email) {
-		this.email = email;
+	public void setGoogleuser(User googleuser) {
+		this.googleuser = googleuser;
 	}
 
 	/* (non-Javadoc)
@@ -114,7 +105,9 @@ public class FDUser {
 	@Override
 	public String toString() {
 		return "FDUser [id=" + id + ", firstName=" + firstName + ", lastName="
-				+ lastName + ", email=" + email + ", wallet=" + wallet + "]";
+				+ lastName + ", googleuser=" + googleuser + ", wallet="
+				+ wallet + "]";
 	}
+
 	
 }
