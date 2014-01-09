@@ -15,6 +15,7 @@ public class Game {
 		this.uuid = uuid;
 	}
 	
+	
 	public Team getAwayTeam() {
 		return awayTeam;
 	}
