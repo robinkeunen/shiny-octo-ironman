@@ -22,7 +22,16 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>AdminServlet</servlet-name>
 		<url-pattern>/administration</url-pattern>
 	</servlet-mapping>
-
+	<servlet>
+		<servlet-name>FillUpDataBaseServlet</servlet-name>
+		<servlet-class>fr.upmc.flyingduke.servlets.FillUpDataBaseServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>FillUpDataBaseServlet</servlet-name>
+		<url-pattern>/FillUp</url-pattern>
+	</servlet-mapping>
+	
+	
 	<servlet>
 		<servlet-name>HomeServlet</servlet-name>
 		<servlet-class>fr.upmc.flyingduke.servlets.HomeServlet</servlet-class>

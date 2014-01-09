@@ -16,19 +16,29 @@
 	<%
 		UserService userService = UserServiceFactory.getUserService();
 		User user = (User) pageContext.getAttribute("user");
-		if (user == null) {
+		/*if (user == null) {
 			response.sendRedirect(userService.createLoginURL(request.getRequestURI()));
 			return;
-		}
+		}*/
 	%>
+	<form action="/FillUp" Method="POST">
+	<INPUT type=submit name="button" value="Get All Teams">
+	</form>
+	<form action="/FillUp" Method="POST">
+	Day <input type="text" name="day">
+	Month <input type="text" name="month">
+	Year<input type="text" name="year">
+	<INPUT type=submit name="button" value="Get Games For This Day">
+	</form>
+	
+	
 	<p>
-		Hi <%= user.getNickname() %> - do some admin then 
+		Hi Admin - do some admin then 
 		<a href="<%= userService.createLogoutURL("/administration") %>">
 			Logout </a>
 	</p>
 
 	<%
-		}
 	%>
 	
 	
