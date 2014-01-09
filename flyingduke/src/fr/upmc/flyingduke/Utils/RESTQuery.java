@@ -79,7 +79,6 @@ public class RESTQuery {
 			URLConnection con = url.openConnection();
 			con.setConnectTimeout(5000);
 			con.setReadTimeout(5000);
-			System.out.println("ici");
 			reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
 		// read request 
 		String line = null;

@@ -78,8 +78,9 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			}
 		break;
 		case("Get All Games"):
-			xmlResult = requestsLauncher.getAllTeams();
+		xmlResult = requestsLauncher.getAllGames();
 		ArrayList<Game> gamesList = parser.parseAllGames(xmlResult);
+		System.out.println("GAMEs");
 		for (Game game : gamesList){
 			try {
 				gameDao.store(game);

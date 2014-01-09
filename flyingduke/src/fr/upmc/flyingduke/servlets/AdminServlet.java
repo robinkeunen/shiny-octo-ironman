@@ -36,8 +36,8 @@ public class AdminServlet extends HttpServlet {
 			pageContext.setAttribute("user", user);
 			String valeur = "eccdde3e-f6ec-4f33-8f23-a269dc80b374";
 			RESTQuery classeTest = new RESTQuery();
-			String resultat = classeTest.getAllGames();
-			System.out.println("resultat : " + resultat);
+			//String resultat = classeTest.getAllGames();
+			//System.out.println("resultat : " + resultat);
 			// get calendar for today
 			Calendar calendar = Calendar.getInstance();
 			calendar.set(2014, 0, 9); 

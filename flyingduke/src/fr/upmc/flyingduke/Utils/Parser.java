@@ -1,6 +1,7 @@
 package fr.upmc.flyingduke.Utils;
 
 import java.io.StringReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -68,11 +69,15 @@ public class Parser {
 				Team awayTeam = new Team(awayTeamElement.getAttribute("id"));
 				awayTeam.setName(awayTeamElement.getAttribute("name"));
 				awayTeam.setAlias(awayTeamElement.getAttribute("alias"));
-				//Set Game's AwayTeam, homeTeam and date
+				//Set Game's date
+				String dateXml = gameXml.getAttribute("scheduled");
+				Date date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").parse(dateXml);
+				System.out.println("DATE : " + date);
+				game.setDate(date);
+				//Set Game's AwayTeam, homeTeam
 				game.setAwayTeam(awayTeam);
 				game.setHomeTeam(homeTeam);
 				//Add the game to the ArrayList previously created
-				gamesList.add(game);
 				gamesList.add(game);
 			}
 		
