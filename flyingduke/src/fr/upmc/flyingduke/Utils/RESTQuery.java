@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Calendar;
 
 public class RESTQuery {
@@ -65,6 +66,32 @@ public class RESTQuery {
 			e.printStackTrace();
 		} catch (NullPointerException e) {
 			System.out.println("at line public String getGameByUUID(String gameUUID) {");
+		}
+		return xml;
+	}
+	public String getAllGames(){
+		String requestURL =  "http://api.sportsdatallc.org/nba-t3/games/2013/reg/schedule.xml?api_key=" + ApiKey;
+		URL url = null;
+		BufferedReader reader = null;
+		String xml = "";
+		try {
+			url = new URL(requestURL);
+			URLConnection con = url.openConnection();
+			con.setConnectTimeout(5000);
+			con.setReadTimeout(5000);
+			System.out.println("ici");
+			reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		// read request 
+		String line = null;
+		while ((line = reader.readLine()) != null){
+			xml += line +"\n";
+		}
+		reader.close();
+		} catch (IOException e) {
+			System.out.println("at line public String getAllGames() {");
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.println("at line public String getAllGames() {");
 		}
 		return xml;
 	}
