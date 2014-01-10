@@ -89,20 +89,5 @@ for(Game game : gamesList){
 	</TR>
 	<% }%>
 	</table>
-	<%
-		System.out.println("doGet HomeServlet");
-		if (googleUser == null) {
-			response.sendRedirect(userService.createLoginURL(request
-					.getRequestURI()));
-			return;
-		}
-		System.out.println("MAIL : " + googleUser.getEmail());
-		if ((fdUser = fdUserQuery.getFromGoogleUser(googleUser)) == null) {
-			System.out.println("redirect creation");
-			response.sendRedirect("/views/createUser.jsp");
-			return;
-		}
-		System.out.println("User Verification ok");
-	%>
 </body>
 </html>
