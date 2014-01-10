@@ -116,7 +116,7 @@ public class GameDao {
 
 	public static List<Game> gameForDay(Calendar day) {
 		// get hour range for the day
-		//day.setTimeZone(TimeZone.getTimeZone("UTC")); 
+		day.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
 		Calendar startHour = (Calendar) day.clone();
 		startHour.set(Calendar.HOUR_OF_DAY, 0);
 		startHour.set(Calendar.MINUTE, 0);
