@@ -18,6 +18,7 @@ import fr.upmc.flyingduke.domain.Bet;
 import fr.upmc.flyingduke.domain.BetChoice;
 import fr.upmc.flyingduke.domain.dao.BetDao;
 
+@SuppressWarnings("serial")
 public class MatchServlet extends HttpServlet {
 
 

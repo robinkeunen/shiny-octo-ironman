@@ -28,6 +28,11 @@ public class FDUserDao {
 	private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 	private final static Key ancestor = KeyFactory.createKey(FD_USER_KIND, "USER_ANCESTOR");
 
+	/**
+	 * Retrieves the fduser in base for the given id;
+	 * @param id the id must be created through the datastore
+	 * @return the fduser in base for the given id
+	 */
 	public static FDUser get(long id) throws EntityNotFoundException {
 
 		// get Entity
@@ -84,6 +89,12 @@ public class FDUserDao {
 		datastore.put(entity);
 	}
 
+	/**
+	 *  Retrieves the (unique) fduser matching the given google account.
+	 *  This method crashes if multiple fdusers are in base for the google account.
+	 * @param googleuser the parameter for the search
+	 * @return the (unique) fduser matching the given google account or null if the user is not in base
+	 */
 	public static FDUser getFromGoogleUser(User googleuser) {
 		Filter userFilter = 
 				new FilterPredicate(GOOGLE_USER, FilterOperator.EQUAL, googleuser);
@@ -96,7 +107,7 @@ public class FDUserDao {
 		} catch (TooManyResultsException exception) {
 			for (Entity e: pq.asIterable()) {
 				//datastore.delete(e.getKey());
-				System.out.println("remove users from db" + e);
+				System.out.println("clean db to restore google accounts constraints" + e);
 			}
 			throw exception; 
 		}
@@ -108,6 +119,10 @@ public class FDUserDao {
 
 	}
 	
+	/**
+	 * Deletes the user for the given google account
+	 * @param googleuser
+	 */
 	public static void deleteUser(User googleuser) {
 		Filter userFilter = 
 				new FilterPredicate(GOOGLE_USER, FilterOperator.EQUAL, googleuser);

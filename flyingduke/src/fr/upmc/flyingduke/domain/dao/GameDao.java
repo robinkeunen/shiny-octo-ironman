@@ -2,7 +2,6 @@ package fr.upmc.flyingduke.domain.dao;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
@@ -22,7 +21,6 @@ import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
-import fr.upmc.flyingduke.domain.BetChoice;
 import fr.upmc.flyingduke.domain.Game;
 import fr.upmc.flyingduke.domain.Team;
 import fr.upmc.flyingduke.domain.Game.OddsContainer;
@@ -57,44 +55,29 @@ public class GameDao {
 		return game;
 	}
 
-	private static Game gameFromEntity(Entity entity) {
-		// get properties
-		Object homeTeamUUID = entity.getProperty(HOME_TEAM_UUID);
-		Object awayTeamUUID = entity.getProperty(HOME_TEAM_UUID);
-		Object date = entity.getProperty(DATE);
-		Object oddsO = entity.getProperty(ODDS);
 
-		// build game
-		Game game = new Game(entity.getKey().getName());
-		if (homeTeamUUID != null)
-			game.setAwayTeam(new Team((String) awayTeamUUID));
-		if (awayTeamUUID != null)
-			game.setHomeTeam(new Team((String) homeTeamUUID));
-		if (date != null)
-			game.setDate((Date) date);		
-		if (oddsO != null) {
-			EmbeddedEntity oddsEE = (EmbeddedEntity) oddsO;
-			game.setOdds(
-					(Double) oddsEE.getProperty(ODDS_HOME),
-					(Double) oddsEE.getProperty(ODDS_AWAY));
-		}
+	/**
+	 * Returns a Deep Game instance : the team fields have their field set.
+	 * TODO If the requested game is not in the DAO, a REST request is sent.
+	 * @param uuid
+	 * @return
+	 * @throws EntityNotFoundException 
+	 */
+	public static Game deepGet(String uuid) throws EntityNotFoundException {
+		
+		Key key = KeyFactory.createKey(GAME_KIND, uuid);
+		Entity entity = datastore.get(key);
+		
+		Game game = gameFromEntity(entity);
+		game = getTeams(game);
+
 		return game;
 	}
 
 	/**
-	 * TODO Returns a Deep Game instance : the team fields have their field set.
-	 * TODO If the requested game is not in the DAO, a REST request is sent.
-	 * @param uuid
-	 * @return
-	 */
-	public Game deepGet(String uuid) {
-		return null;
-	}
-
-	/**
-	 * 
-	 * @param game
-	 * @throws MissingUUIDException 
+	 * Stores the given game in the datastore.
+	 * @param game the game to persist
+	 * @throws MissingUUIDException thrown if the uuid for the game is not set.
 	 */
 	public static void store(Game game) throws MissingUUIDException {
 		if (game.getUUID() == null) 
@@ -118,6 +101,12 @@ public class GameDao {
 		datastore.put(entity);
 	}
 
+	/**
+	 * Returns a list of the game later than now. 
+	 * The list is not longer than gameLimit.
+	 * @param gameLimit the maximum result list size 
+	 * @return the list of the future games.
+	 */
 	public static List<Game> futureGames(int gameLimit) {
 		Date now = new Date();
 		Filter from = new FilterPredicate(
@@ -130,13 +119,29 @@ public class GameDao {
 
 		// convert to objects
 		List<Game> games = new LinkedList<>();
+		Game game = null;
 		for (Entity entity: pq.asIterable(FetchOptions.Builder.withLimit(gameLimit))) {
-			//for (Entity entity: pq.asIterable()) {
-			games.add(gameFromEntity(entity));
+			game = getTeams(gameFromEntity(entity));
+			games.add(game);
 		}
 		return games;
 	}
 
+	/**
+	 * The list of the game scheduled for the given day. Pay attention to the timezone. 
+	 * Example to get the games in the East Coast time zone 
+	 * 
+	 * Calendar someday = Calendar.getInstance();
+	 * someday.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
+	 *
+	 * someday.set(2014, 0, 10);
+	 *	for (Game gamequery: GameDao.gameForDay(someday)) {
+	 *		page.println(gamequery.toString());
+	 *	}
+	 *
+	 * @param day search parameter
+	 * @return The list of the game scheduled for the given day.
+	 */
 	public static List<Game> gameForDay(Calendar day) {
 		// get hour range for the day
 		day.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
@@ -164,10 +169,48 @@ public class GameDao {
 
 		// convert to objects
 		List<Game> games = new LinkedList<>();
+		Game game = null;
 		for (Entity entity: pq.asIterable()) {
-			games.add(gameFromEntity(entity));
+			game = getTeams(gameFromEntity(entity));
+			games.add(game);
 		}
 
 		return games;
+	}
+
+	private static Game gameFromEntity(Entity entity) {
+		// get properties
+		Object homeTeamUUID = entity.getProperty(HOME_TEAM_UUID);
+		Object awayTeamUUID = entity.getProperty(HOME_TEAM_UUID);
+		Object date = entity.getProperty(DATE);
+		Object oddsO = entity.getProperty(ODDS);
+
+		// build game
+		Game game = new Game(entity.getKey().getName());
+		if (homeTeamUUID != null)
+			game.setAwayTeam(new Team((String) awayTeamUUID));
+		if (awayTeamUUID != null)
+			game.setHomeTeam(new Team((String) homeTeamUUID));
+		if (date != null)
+			game.setDate((Date) date);		
+		if (oddsO != null) {
+			EmbeddedEntity oddsEE = (EmbeddedEntity) oddsO;
+			game.setOdds(
+					(Double) oddsEE.getProperty(ODDS_HOME),
+					(Double) oddsEE.getProperty(ODDS_AWAY));
+		}
+		return game;
+	}
+	
+	private static Game getTeams(Game game)  {
+		try {
+			Team homeTeam = TeamDao.shallowGet(game.getHomeTeam().getUUID());
+			Team awayTeam = TeamDao.shallowGet(game.getAwayTeam().getUUID());
+			game.setHomeTeam(homeTeam);
+			game.setAwayTeam(awayTeam);	
+		} catch (EntityNotFoundException e) {
+			System.out.println("WARNING: Teams not found for " + game);
+		}
+		return game;
 	}
 }
