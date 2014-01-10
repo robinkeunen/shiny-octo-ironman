@@ -4,24 +4,16 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.PreparedQuery.TooManyResultsException;
-import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -33,9 +25,8 @@ import fr.upmc.flyingduke.domain.Game;
 import fr.upmc.flyingduke.domain.Player;
 import fr.upmc.flyingduke.domain.Team;
 import fr.upmc.flyingduke.domain.dao.BetDao;
-import fr.upmc.flyingduke.domain.dao.GameDao;
-import fr.upmc.flyingduke.domain.dao.TeamDao;
 import fr.upmc.flyingduke.domain.dao.FDUserDao;
+import fr.upmc.flyingduke.domain.dao.GameDao;
 import fr.upmc.flyingduke.exceptions.ExistingUserException;
 import fr.upmc.flyingduke.exceptions.MissingUUIDException;
 
@@ -165,7 +156,7 @@ public class FlyingdukeServlet extends HttpServlet {
 			
 			List<Bet> bets2compute = BetDao.getBets2Compute(fdUser);
 			int b2cc = 0;
-			for (Bet betquery: betsquery) {
+			for (Bet betquery: bets2compute) {
 				page.print(b2cc + ". ");
 				page.println(betquery.toString());
 				b2cc++;
