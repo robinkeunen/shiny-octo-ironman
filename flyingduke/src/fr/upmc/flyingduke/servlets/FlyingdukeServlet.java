@@ -123,7 +123,12 @@ public class FlyingdukeServlet extends HttpServlet {
 			//TeamDao.store(home);
 			//TeamDao.store(away);
 			//FDUserDao.update(fdUser);
-			//BetDao.update(bet);
+			try {
+				BetDao.update(bet);
+			} catch (EntityNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			//BetDao.get(bet.getId(), bet.getPunterID());
 
 			FDUser fdtest = FDUserDao.getFromGoogleUser(googleuser);
@@ -132,8 +137,8 @@ public class FlyingdukeServlet extends HttpServlet {
 
 			page.println("\ngame of day query 8");
 			Calendar someday = Calendar.getInstance();
+			someday.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
 			someday.set(2014, 0, 8);
-			someday.setTimeZone(TimeZone.getTimeZone("UTC")); 
 			for (Game gamequery: GameDao.gameForDay(someday)) {
 				page.println(gamequery.toString());
 			}

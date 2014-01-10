@@ -1,6 +1,9 @@
 package fr.upmc.flyingduke.domain;
 
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class Game {
 	private String uuid;
@@ -64,8 +67,11 @@ public class Game {
 	 */
 	@Override
 	public String toString() {
+		DateFormat df = DateFormat.getInstance();
+		df.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+		
 		return "Game [uuid=" + uuid + ", awayTeam=" + awayTeam.getUUID() + ", homeTeam="
-				+ homeTeam.getUUID() + ", date=" + date + "]";
+				+ homeTeam.getUUID() + ", date=" + df.format(date) + "]";
 	}
 	
 	

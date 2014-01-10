@@ -95,7 +95,8 @@ public class FDUserDao {
 			 entity = pq.asSingleEntity();
 		} catch (TooManyResultsException exception) {
 			for (Entity e: pq.asIterable()) {
-				System.out.println(e);
+				//datastore.delete(e.getKey());
+				System.out.println("remove users from db" + e);
 			}
 			throw exception; 
 		}
