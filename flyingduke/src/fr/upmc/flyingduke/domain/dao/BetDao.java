@@ -29,6 +29,12 @@ public class BetDao {
 	private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
 
+	/**
+	 * A bet must be instantiated through the datastore to get an id.
+	 * The conputed field is set to false by default.  
+	 * @param punter the fduser placing the bet
+	 * @return
+	 */
 	public static Bet create(FDUser punter) {
 		// create fduser and bet key
 		Key punterKey = KeyFactory
@@ -42,6 +48,12 @@ public class BetDao {
 		return new Bet(entity.getKey().getId(), punter.getId());
 	}
 
+	/**
+	 * Updates the bet at the bet's id in the datastore. The id of bet
+	 * must be created through BetDao.create 
+	 * @param bet the Bet to save
+	 * @throws EntityNotFoundException thrown if the bet has not been created in base.
+	 */
 	public static void update(Bet bet) throws EntityNotFoundException {
 		System.out.println("put " + bet.toString());
 
@@ -61,6 +73,14 @@ public class BetDao {
 
 	}
 
+	/**
+	 * Retrieves a bet in the datastore for the given parameters 
+	 * @param id the bet id
+	 * @param punterId the fduser who placed the bet
+	 * @return the bet in the datastore for the given parameters
+	 * @throws EntityNotFoundException thrown if the fduser for the punterId
+	 * does not exist in the base
+	 */
 	public static Bet get(long id, long punterId) throws EntityNotFoundException {
 
 		// get entity
@@ -72,6 +92,11 @@ public class BetDao {
 		return betFromEntity(entity);
 	}
 
+	/**
+	 * Retrieves all the bets for the given user.
+	 * @param fduser the fduser who placed the bet
+	 * @return a list of all the bets for the given user
+	 */
 	public static List<Bet> getBetForFDUser(FDUser fduser) {
 		// build parent key
 		Key fduserKey = KeyFactory.createKey(FDUserDao.FD_USER_KIND, fduser.getId());
@@ -88,6 +113,11 @@ public class BetDao {
 		return bets;
 	}
 
+	/**
+	 * Retrieves all the bets that have not been computed for the given user.
+	 * @param fduser the fduser who placed the bet
+	 * @return a list of all the bets for the given user where computed == false
+	 */
 	public static List<Bet> getBets2Compute(FDUser fduser) {
 		Key fduserKey = KeyFactory.createKey(FDUserDao.FD_USER_KIND, fduser.getId());
 
