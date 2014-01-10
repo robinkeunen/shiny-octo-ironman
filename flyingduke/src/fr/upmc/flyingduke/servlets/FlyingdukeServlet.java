@@ -27,6 +27,7 @@ import fr.upmc.flyingduke.domain.Team;
 import fr.upmc.flyingduke.domain.dao.BetDao;
 import fr.upmc.flyingduke.domain.dao.FDUserDao;
 import fr.upmc.flyingduke.domain.dao.GameDao;
+import fr.upmc.flyingduke.domain.dao.TeamDao;
 import fr.upmc.flyingduke.exceptions.ExistingUserException;
 import fr.upmc.flyingduke.exceptions.MissingUUIDException;
 
@@ -122,13 +123,21 @@ public class FlyingdukeServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 			
-			page.println("\nget games, set odds, store, restore");
+			
 			try {
+				page.println("\nget games, set odds, store, restore");
 				String someuuid = "eccdde3e-f6ec-4f33-8f23-a269dc80b374";
 				Game gameq = GameDao.shallowGet(someuuid);
 				gameq.setOdds(1.25, 1.1);
 				GameDao.store(gameq);
 				page.println(GameDao.shallowGet(someuuid));
+				
+				page.println("\ndeep game get");
+				Game deepGame = GameDao.deepGet(someuuid);
+				page.println(deepGame);
+				page.println(deepGame.getHomeTeam());
+				page.println(deepGame.getAwayTeam());
+				
 			} catch (EntityNotFoundException | MissingUUIDException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

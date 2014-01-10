@@ -57,13 +57,23 @@ public class GameDao {
 
 
 	/**
-	 * TODO Returns a Deep Game instance : the team fields have their field set.
+	 * Returns a Deep Game instance : the team fields have their field set.
 	 * TODO If the requested game is not in the DAO, a REST request is sent.
 	 * @param uuid
 	 * @return
+	 * @throws EntityNotFoundException 
 	 */
-	public Game deepGet(String uuid) {
-		return null;
+	public static Game deepGet(String uuid) throws EntityNotFoundException {
+		
+		Key key = KeyFactory.createKey(GAME_KIND, uuid);
+		Entity entity = datastore.get(key);
+		
+		Game game = gameFromEntity(entity);
+		Team homeTeam = TeamDao.shallowGet(game.getHomeTeam().getUUID());
+		Team awayTeam = TeamDao.shallowGet(game.getAwayTeam().getUUID());
+		game.setHomeTeam(homeTeam);
+		game.setAwayTeam(awayTeam);
+		return game;
 	}
 
 	/**
