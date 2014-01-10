@@ -135,7 +135,7 @@ public class FlyingdukeServlet extends HttpServlet {
 			try {
 				String someuuid = "eccdde3e-f6ec-4f33-8f23-a269dc80b374";
 				Game gameq = GameDao.shallowGet(someuuid);
-				gameq.setOdds(1.25, 1.25, 1.1);
+				gameq.setOdds(1.25, 1.1);
 				GameDao.store(gameq);
 				page.println(GameDao.shallowGet(someuuid));
 			} catch (EntityNotFoundException | MissingUUIDException e) {
@@ -143,11 +143,33 @@ public class FlyingdukeServlet extends HttpServlet {
 				e.printStackTrace();
 			} 
 			
+			page.println("\nupdate bet");
+			try {
+				Bet computedBet = BetDao.get(5910974510923776L, 5629499534213120L);
+				computedBet.setComputed(true);
+				BetDao.update(computedBet);
+			} catch (EntityNotFoundException e) {
+				page.println("bet not found");
+			}
 			
 			page.println("\nbets for user query");
-			List<Bet> betsquery =BetDao.getBetForFDUser(fdUser);
-			for (Bet betquery: betsquery)
+			List<Bet> betsquery = BetDao.getBetForFDUser(fdUser);
+			int bqc = 0;
+			for (Bet betquery: betsquery) {
+				page.print(bqc + ". ");
 				page.println(betquery.toString());
+				bqc++;
+			}
+			
+			page.println("\nnot computed bets for user query");
+			
+			List<Bet> bets2compute = BetDao.getBets2Compute(fdUser);
+			int b2cc = 0;
+			for (Bet betquery: betsquery) {
+				page.print(b2cc + ". ");
+				page.println(betquery.toString());
+				b2cc++;
+			}
 
 			FDUser fdtest = FDUserDao.getFromGoogleUser(googleuser);
 			System.out.println("query test: " + fdtest.toString());

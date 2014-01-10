@@ -11,6 +11,8 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 import fr.upmc.flyingduke.domain.Bet;
 import fr.upmc.flyingduke.domain.BetChoice;
@@ -22,7 +24,8 @@ public class BetDao {
 	private final static String CHOICE = "CHOICE";
 	private final static String AMOUNT = "AMOUNT";
 	private final static String ODDS = "ODDS";
-	
+	private final static String COMPUTED = "COMPUTED";
+
 	private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
 
@@ -31,6 +34,7 @@ public class BetDao {
 		Key punterKey = KeyFactory
 				.createKey(FDUserDao.FD_USER_KIND, punter.getId());
 		Entity entity = new Entity(BET_KIND, punterKey);
+		entity.setProperty(COMPUTED, false);
 
 		// set properties
 		datastore.put(entity);
@@ -40,7 +44,7 @@ public class BetDao {
 
 	public static void update(Bet bet) throws EntityNotFoundException {
 		System.out.println("put " + bet.toString());
-		
+
 		// Check if bet is in base
 		Key key = createBetKey(bet.getId(), bet.getPunterID());
 		Entity entity = datastore.get(key);
@@ -50,6 +54,7 @@ public class BetDao {
 		entity.setProperty(CHOICE, bet.getChoice().toString());
 		entity.setProperty(AMOUNT, bet.getAmount());
 		entity.setProperty(ODDS, bet.getOdds());
+		entity.setProperty(COMPUTED, bet.isComputed());
 
 		// update in base
 		datastore.put(entity);	
@@ -57,32 +62,54 @@ public class BetDao {
 	}
 
 	public static Bet get(long id, long punterId) throws EntityNotFoundException {
-		
+
 		// get entity
 		Key key = createBetKey(id, punterId);
 		Entity entity = datastore.get(key);
 
 		// get properties
-				
+
 		return betFromEntity(entity);
 	}
 
 	public static List<Bet> getBetForFDUser(FDUser fduser) {
 		// build parent key
 		Key fduserKey = KeyFactory.createKey(FDUserDao.FD_USER_KIND, fduser.getId());
-		
+
 		// build query
 		Query query = new Query(BET_KIND).setAncestor(fduserKey);
 		PreparedQuery pq = datastore.prepare(query);
-		
+
 		List<Bet> bets = new LinkedList<Bet>();
 		for (Entity entity: pq.asIterable()) {
 			bets.add(betFromEntity(entity));
 		}
-		
+
 		return bets;
 	}
-	
+
+	public static List<Bet> getBets2Compute(FDUser fduser) {
+		Key fduserKey = KeyFactory.createKey(FDUserDao.FD_USER_KIND, fduser.getId());
+
+		// build filter
+		FilterPredicate filter = new FilterPredicate(
+				COMPUTED, 
+				FilterOperator.EQUAL, 
+				false);
+		
+		// build query
+		Query query = new Query(BET_KIND).setAncestor(fduserKey).setFilter(filter);
+		PreparedQuery pq = datastore.prepare(query);
+
+		List<Bet> bets = new LinkedList<Bet>();
+		for (Entity entity: pq.asIterable()) {
+			bets.add(betFromEntity(entity));
+		}
+
+		return bets;
+	}
+
+
 	private static Key createBetKey(long betId, long punterId) {
 		Key punterKey = KeyFactory
 				.createKey(FDUserDao.FD_USER_KIND, punterId);
@@ -90,19 +117,20 @@ public class BetDao {
 				.createKey(punterKey, BET_KIND, betId);
 		return key;
 	}
-	
+
 	private static Bet betFromEntity(Entity entity) {
-		
+
 		// get properties
 		Object gameUUID = entity.getProperty(GAME_UUID); 
 		Object choiceO = entity.getProperty(CHOICE);
 		Object amountO = entity.getProperty(AMOUNT);
 		Object oddsO = entity.getProperty(ODDS);
-		
+		Object computed = entity.getProperty(COMPUTED);
+
 		// build bet
 		long parentId = entity.getKey().getParent().getId();
 		Bet bet = new Bet(entity.getKey().getId(), parentId);
-		
+
 		if (gameUUID != null)
 			bet.setGameUUID((String) gameUUID);
 		if (choiceO != null) {
@@ -113,10 +141,12 @@ public class BetDao {
 			int amount = ((Long) amountO).intValue();
 			bet.setAmount(amount);
 		}
-
 		if (oddsO != null){
 			double odds = (double) oddsO;
 			bet.setOdds(odds);
+		}
+		if (computed != null) {
+			bet.setComputed((boolean) computed);
 		}
 
 		return bet;

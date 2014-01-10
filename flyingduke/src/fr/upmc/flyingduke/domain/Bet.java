@@ -9,6 +9,7 @@ public class Bet {
 	private BetChoice choice; 
 	private int amount;
 	private double odds;
+	private boolean computed;
 	
 	/**
 	 * Constructor for Bet. This constructor creates an entity
@@ -98,7 +99,21 @@ public class Bet {
 	public String toString() {
 		return "Bet [id=" + id + ", punterID=" + punterID + ", gameUUID="
 				+ gameUUID + ", choice=" + choice + ", amount=" + amount
-				+ ", odds=" + odds + "]";
+				+ ", computed=" + computed + ", odds=" + odds + "]";
+	}
+
+	/**
+	 * @return the computed
+	 */
+	public boolean isComputed() {
+		return computed;
+	}
+
+	/**
+	 * @param computed the computed to set
+	 */
+	public void setComputed(boolean computed) {
+		this.computed = computed;
 	}
 
 }

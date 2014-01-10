@@ -36,7 +36,6 @@ public class GameDao {
 	private static final String ODDS = "ODDS";
 	private static final String ODDS_HOME = "ODDS_HOME";
 	private static final String ODDS_AWAY = "ODDS_AWAY";
-	private static final String ODDS_TIE = "ODDS_TIE";
 
 	private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
@@ -77,8 +76,7 @@ public class GameDao {
 			EmbeddedEntity oddsEE = (EmbeddedEntity) oddsO;
 			game.setOdds(
 					(Double) oddsEE.getProperty(ODDS_HOME),
-					(Double) oddsEE.getProperty(ODDS_AWAY),
-					(Double) oddsEE.getProperty(ODDS_TIE));
+					(Double) oddsEE.getProperty(ODDS_AWAY));
 		}
 		return game;
 	}
@@ -113,7 +111,6 @@ public class GameDao {
 			EmbeddedEntity embeddedEntity = new EmbeddedEntity();
 			embeddedEntity.setProperty(ODDS_HOME, odds.getHome());
 			embeddedEntity.setProperty(ODDS_AWAY, odds.getAway());
-			embeddedEntity.setProperty(ODDS_TIE, odds.getTie());
 			entity.setProperty(ODDS, embeddedEntity);
 		}
 

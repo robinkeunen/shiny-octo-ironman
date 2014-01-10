@@ -82,19 +82,17 @@ public class Game {
 	}
 
 
-	public void setOdds(double home, double away, double tie) {
-		this.odds = new OddsContainer(home, away, tie);
+	public void setOdds(double home, double away) {
+		this.odds = new OddsContainer(home, away);
 	}
 	
 	public class OddsContainer {
 		private double home;
 		private double away;
-		private double tie;
 		
-		OddsContainer(double home, double away, double tie) {
+		OddsContainer(double home, double away) {
 			this.home = home;
 			this.away = away;
-			this.tie = tie;
 		}
 
 		/**
@@ -110,16 +108,9 @@ public class Game {
 		public double getAway() {
 			return away;
 		}
-
-		/**
-		 * @return the tie
-		 */
-		public double getTie() {
-			return tie;
-		}
 		
 		public String toString() {
-			return "[ " + home + ", " + away + ", " + tie + "]"; 
+			return "[ " + home + ", " + away + "]"; 
 		}
 	}
 
