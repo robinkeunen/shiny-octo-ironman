@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 <%@page import="java.util.GregorianCalendar"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.google.appengine.api.users.User" %>
@@ -11,9 +11,10 @@
 <%@ page import="fr.upmc.flyingduke.utils.*" %>
 <%@ page import="java.util.Calendar" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.List" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-=======
+
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ page import="com.google.appengine.api.users.User"%>
 <%@ page import="com.google.appengine.api.users.UserService"%>
@@ -28,7 +29,6 @@
 <title>Home</title>
 </head>
 <body>
-<<<<<<< HEAD
 <%
 FDUserDao fdUserQuery = new FDUserDao();
 FDUser fdUser;
@@ -89,13 +89,8 @@ for(Game game : gamesList){
 	</TR>
 	<% }%>
 	</table>
-=======
 	<%
-		FDUserDao fdUserQuery = new FDUserDao();
-		FDUser fdUser;
 		System.out.println("doGet HomeServlet");
-		UserService userService = UserServiceFactory.getUserService();
-		User googleUser = userService.getCurrentUser();
 		if (googleUser == null) {
 			response.sendRedirect(userService.createLoginURL(request
 					.getRequestURI()));
@@ -109,11 +104,5 @@ for(Game game : gamesList){
 		}
 		System.out.println("User Verification ok");
 	%>
-        
-        <h1>Insert Something</h1>
-        here
-	
-
->>>>>>> 49d9c61e2b395f28fe53f2ca5f229cc66a023cc3
 </body>
 </html>
