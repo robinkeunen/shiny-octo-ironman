@@ -5,7 +5,7 @@ public class Player {
 	private final String uuid;
 	private String firstName;
 	private String lastName;
-
+	private int jersey;
 	private String position;
 
 	public Player(String uuid) {
@@ -67,6 +67,14 @@ public class Player {
 	 */
 	public String getUUID() {
 		return uuid;
+	}
+
+	public int getJersey() {
+		return jersey;
+	}
+
+	public void setJersey(int jersey) {
+		this.jersey = jersey;
 	}
 
 }

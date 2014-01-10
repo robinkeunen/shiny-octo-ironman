@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.EmbeddedEntity;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
@@ -54,11 +55,11 @@ public class TeamDao {
 		teamEntity.setProperty(NAME, team.getName());
 		teamEntity.setProperty(ALIAS, team.getAlias());
 		if (team.getPlayers() != null) {
-			List <String> playerUUIDs = new LinkedList<String>();
+			List <EmbeddedEntity> players = new LinkedList<EmbeddedEntity>();
 			for (Player player: team.getPlayers()){
-				playerUUIDs.add(player.getUUID());
+				//players.add(player.getUUID());
 			}
-			teamEntity.setProperty(PLAYERS, playerUUIDs);
+			//teamEntity.setProperty(PLAYERS, playerUUIDs);
 		}
 
 		System.out.println("store" + team.toString());
@@ -90,6 +91,25 @@ public class TeamDao {
 			team.setPlayers(players); 		
 		return team;
 	}
-
+	
+	private static class PlayerEntityBuilder {
+		
+		private static final String UUID = "UUID";
+		private static final String FIRST_NAME = "FIRST_NAME";
+		private static final String LAST_NAME = "LAST_NAME";
+		private static final String JERSEY = "JERSEY";
+		private static final String POSITION = "POSITION";
+		
+		public static EmbeddedEntity makePlayerEntity(Player player) {
+			EmbeddedEntity ee = new EmbeddedEntity();
+			ee.setProperty(UUID, player.getUUID());
+			ee.setProperty(FIRST_NAME, player.getFirstName());
+			ee.setProperty(LAST_NAME, player.getLastName());
+			ee.setProperty(JERSEY, player.getJersey());
+			ee.setProperty(POSITION, player.getPosition());
+			
+			return ee;
+		}
+	}
 	
 }
