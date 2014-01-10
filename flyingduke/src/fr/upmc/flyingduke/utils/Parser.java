@@ -183,9 +183,7 @@ public class Parser {
 					//Set game's odds
 					double awayOdds = 1.25 + home_winpct/away_winpct;
 					double homeOdds = 1.0 + away_winpct/home_winpct;
-					gameOdds.put("home", homeOdds);
-					gameOdds.put("away", awayOdds);
-					game.setOdds(gameOdds);
+					game.setOdds(homeOdds,awayOdds);
 				}
 			//Add the game to the ArrayList previously created
 			gamesList.add(game);
