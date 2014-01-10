@@ -34,29 +34,36 @@ public class TeamDao {
 		// get Entity
 		Key key = KeyFactory.createKey(TEAM_KIND, uuid);
 		Entity entity = datastore.get(key);
-		
+
+		return teamFromEntity(entity);
+	}
+
+	private static Team teamFromEntity(Entity entity) {
 		// get properties
-		String name = (String) entity.getProperty(NAME);
-		String alias = (String) entity.getProperty(ALIAS);
-		
+		Object name = entity.getProperty(NAME);
+		Object alias = entity.getProperty(ALIAS);
+
 		List<Player> players = null;
 		if (entity.hasProperty(PLAYERS)) {
+			@SuppressWarnings("unchecked")
 			List<String> playerUUIDs = (List<String>) entity.getProperty(PLAYERS);
 			players = new LinkedList<>();
 			for (String playerUUID: playerUUIDs) {
 				players.add(new Player(playerUUID));
 			}
 		}
-		
+
 		// build team
-		Team team = new Team(uuid);
-		team.setName(name);
-		team.setAlias(alias);
-		team.setPlayers(players); 
-		
+		Team team = new Team(entity.getKey().getName());
+		if (name != null)
+			team.setName((String) name);
+		if (alias != null)
+			team.setAlias((String) alias);
+		if (players != null)
+			team.setPlayers(players); 		
 		return team;
 	}
-	
+
 	/**
 	 * Stores a team object in the database. The UUID must be set.
 	 * The name and alias should be set. The players may be set.
@@ -66,7 +73,7 @@ public class TeamDao {
 	public static void store(Team team) throws MissingUUIDException { 
 		if (team.getUUID() == null)
 			throw new MissingUUIDException();
-		
+
 		Entity teamEntity = new Entity(TEAM_KIND, team.getUUID());
 		teamEntity.setProperty(TEAM_KIND, team.getUUID());
 		teamEntity.setProperty(NAME, team.getName());
@@ -82,5 +89,5 @@ public class TeamDao {
 		System.out.println("store" + team.toString());
 		datastore.put(teamEntity);
 	}
-	
+
 }

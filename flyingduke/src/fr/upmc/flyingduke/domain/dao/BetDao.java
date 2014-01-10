@@ -58,6 +58,11 @@ public class BetDao {
 		Entity entity = datastore.get(key);
 
 		// get properties
+				
+		return betFromEntity(entity);
+	}
+
+	private static Bet betFromEntity(Entity entity) {
 		String gameUUID = (String) entity.getProperty(GAME_UUID);
 		BetChoice choice = BetChoice.valueOf(
 				(String) entity.getProperty(CHOICE));
@@ -65,12 +70,11 @@ public class BetDao {
 		double odds = (double) entity.getProperty(ODDS);
 		
 		// build bet
-		Bet bet = new Bet(id, punterId);
+		Bet bet = new Bet(entity.getKey().getId(), entity.getKey().getParent().getId());
 		bet.setGameUUID(gameUUID);
 		bet.setChoice(choice);
 		bet.setAmount(amount);
 		bet.setOdds(odds);
-		
 		return bet;
 	}
 

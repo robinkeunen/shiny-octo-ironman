@@ -2,8 +2,6 @@ package fr.upmc.flyingduke.domain;
 
 import java.util.Date;
 
-import fr.upmc.flyingduke.domain.dao.TeamDao;
-
 public class Game {
 	private String uuid;
 	private Team awayTeam;

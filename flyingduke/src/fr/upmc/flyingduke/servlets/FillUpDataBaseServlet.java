@@ -17,13 +17,13 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
-import fr.upmc.flyingduke.Utils.Parser;
-import fr.upmc.flyingduke.Utils.RESTQuery;
 import fr.upmc.flyingduke.domain.Game;
 import fr.upmc.flyingduke.domain.Team;
 import fr.upmc.flyingduke.domain.dao.GameDao;
 import fr.upmc.flyingduke.domain.dao.TeamDao;
 import fr.upmc.flyingduke.exceptions.MissingUUIDException;
+import fr.upmc.flyingduke.utils.Parser;
+import fr.upmc.flyingduke.utils.RESTQuery;
 
 public class FillUpDataBaseServlet extends HttpServlet {
 

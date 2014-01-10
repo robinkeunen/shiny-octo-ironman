@@ -1,7 +1,10 @@
 package fr.upmc.flyingduke.domain.dao;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -9,7 +12,9 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
@@ -39,22 +44,25 @@ public class GameDao {
 		Key key = KeyFactory.createKey(GAME_KIND, uuid);
 		Entity entity = datastore.get(key);
 
-		Game game = gameFromEntity(uuid, entity);
+		Game game = gameFromEntity(entity);
 
 		return game;
 	}
 
-	private static Game gameFromEntity(String uuid, Entity entity) {
+	private static Game gameFromEntity(Entity entity) {
 		// get properties
-		String homeTeamUUID = (String) entity.getProperty(HOME_TEAM_UUID);
-		String awayTeamUUID = (String) entity.getProperty(HOME_TEAM_UUID);
-		Date date = (Date) entity.getProperty(DATE);
+		Object homeTeamUUID = entity.getProperty(HOME_TEAM_UUID);
+		Object awayTeamUUID = entity.getProperty(HOME_TEAM_UUID);
+		Object date = entity.getProperty(DATE);
 
 		// build game
-		Game game = new Game(uuid);
-		game.setAwayTeam(new Team(awayTeamUUID));
-		game.setHomeTeam(new Team(homeTeamUUID));
-		game.setDate(date);		
+		Game game = new Game(entity.getKey().getName());
+		if (homeTeamUUID != null)
+			game.setAwayTeam(new Team((String) awayTeamUUID));
+		if (awayTeamUUID != null)
+			game.setHomeTeam(new Team((String) homeTeamUUID));
+		if (date != null)
+			game.setDate((Date) date);		
 		return game;
 	}
 
@@ -84,13 +92,39 @@ public class GameDao {
 
 		System.out.println("store " + game.toString());
 		datastore.put(entity);
-
 	}
 
-	public static List<Game> gameForDay(Date day) {
-		Filter dateFilter = 
-				new FilterPredicate(DATE, FilterOperator.EQUAL, day);
-		Query q = new Query("Person").setFilter(dateFilter);
-		return null;
+	public static List<Game> gameForDay(Calendar day) {
+		// het hour range for the day
+		day.setTimeZone(TimeZone.getTimeZone("UTC"));
+		Calendar startHour = (Calendar) day.clone();
+		startHour.set(Calendar.HOUR_OF_DAY, 0);
+		startHour.set(Calendar.MINUTE, 0);
+		
+		Calendar endHour = (Calendar) day.clone();
+		endHour.set(Calendar.HOUR_OF_DAY, 23);
+		endHour.set(Calendar.MINUTE, 59);
+		
+		// build predicates
+		Filter from = new FilterPredicate(DATE, 
+										  FilterOperator.GREATER_THAN_OR_EQUAL, 
+										  startHour.getTime());
+		Filter to = new FilterPredicate(DATE, 
+										FilterOperator.LESS_THAN_OR_EQUAL,
+										endHour.getTime());
+		// build range
+		Filter range = CompositeFilterOperator.and(from, to);
+		
+		// query the store
+		Query query = new Query("Person").setFilter(range).addSort(DATE);
+		PreparedQuery pq = datastore.prepare(query);
+		
+		// convert to objects
+		List<Game> games = new LinkedList<>();
+		for (Entity entity: pq.asIterable()) {
+			games.add(gameFromEntity(entity));
+		}
+		
+		return games;
 	}
 }

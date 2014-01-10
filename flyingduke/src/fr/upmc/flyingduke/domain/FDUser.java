@@ -1,6 +1,5 @@
 package fr.upmc.flyingduke.domain;
 
-import com.google.appengine.api.datastore.Email;
 import com.google.appengine.api.users.User;
 
 import fr.upmc.flyingduke.domain.dao.FDUserDao;

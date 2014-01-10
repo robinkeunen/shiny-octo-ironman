@@ -1,4 +1,4 @@
-package fr.upmc.flyingduke.Utils;
+package fr.upmc.flyingduke.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;

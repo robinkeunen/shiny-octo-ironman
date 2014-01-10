@@ -16,7 +16,7 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
-import fr.upmc.flyingduke.Utils.RESTQuery;
+import fr.upmc.flyingduke.utils.RESTQuery;
 
 @SuppressWarnings("serial")
 public class AdminServlet extends HttpServlet {

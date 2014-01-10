@@ -2,6 +2,7 @@ package fr.upmc.flyingduke.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,6 +49,12 @@ public class FlyingdukeServlet extends HttpServlet {
 
 			// clean accounts
 			FDUserDao.deleteUser(googleuser);
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
 			
 			// tests data
 
@@ -102,6 +109,7 @@ public class FlyingdukeServlet extends HttpServlet {
 			} catch (ExistingUserException e1) {
 				e1.printStackTrace();
 			}
+			
 			fdUser.setFirstName("Robin");
 			fdUser.setLastName("Keunen");
 			fdUser.setWallet(100);
@@ -129,6 +137,21 @@ public class FlyingdukeServlet extends HttpServlet {
 			} catch (EntityNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}
+			
+			System.out.println("\ngame of day query");
+			Calendar someday = Calendar.getInstance();
+			someday.set(2014, 0, 8);
+			for (Game gamequery: GameDao.gameForDay(someday)) {
+				System.out.println(gamequery.toString());
+			}
+			someday.set(2014, 0, 9);
+			for (Game gamequery: GameDao.gameForDay(someday)) {
+				System.out.println(gamequery.toString());
+			}
+			someday.set(2014, 0, 10);
+			for (Game gamequery: GameDao.gameForDay(someday)) {
+				System.out.println(gamequery.toString());
 			}
 
 

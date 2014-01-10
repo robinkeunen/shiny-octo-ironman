@@ -1,4 +1,4 @@
-package fr.upmc.flyingduke.Utils;
+package fr.upmc.flyingduke.utils;
 
 import java.io.StringReader;
 import java.text.SimpleDateFormat;

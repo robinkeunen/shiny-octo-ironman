@@ -26,11 +26,12 @@ public class FDUserDao {
 	private static final String WALLET = "WALLET";
 
 	private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+	private final static Key ancestor = KeyFactory.createKey(FD_USER_KIND, "USER_ANCESTOR");
 
 	public static FDUser get(long id) throws EntityNotFoundException {
 
 		// get Entity
-		Key key = KeyFactory.createKey(FD_USER_KIND, id);
+		Key key = KeyFactory.createKey(ancestor, FD_USER_KIND, id);
 		Entity entity = datastore.get(key);
 
 		return fdUserFromEntity(entity);		
@@ -48,11 +49,12 @@ public class FDUserDao {
 			throw new ExistingUserException();
 		}
 		// create entity
-		Entity entity = new Entity(FD_USER_KIND);
+		Entity entity = new Entity(FD_USER_KIND, ancestor);
 		entity.setProperty(GOOGLE_USER, googleuser);
 		
 		// put in store, will generate a key
 		datastore.put(entity);
+		System.out.println("create " + entity);
 
 		// return the User with the assigned id
 		return fdUserFromEntity(entity);
@@ -69,7 +71,7 @@ public class FDUserDao {
 		System.out.println("put " + user.toString());
 
 		// check if user is in base
-		Key key = KeyFactory.createKey(FD_USER_KIND, user.getId());
+		Key key = KeyFactory.createKey(ancestor, FD_USER_KIND, user.getId());
 		Entity entity = datastore.get(key);
 
 		// update properties
@@ -86,7 +88,7 @@ public class FDUserDao {
 		Filter userFilter = 
 				new FilterPredicate(GOOGLE_USER, FilterOperator.EQUAL, googleuser);
 
-		Query query = new Query(FD_USER_KIND).setFilter(userFilter);
+		Query query = new Query(FD_USER_KIND).setFilter(userFilter).setAncestor(ancestor);
 		PreparedQuery pq = datastore.prepare(query);
 		Entity entity = null;
 		try {
@@ -109,7 +111,7 @@ public class FDUserDao {
 		Filter userFilter = 
 				new FilterPredicate(GOOGLE_USER, FilterOperator.EQUAL, googleuser);
 
-		Query query = new Query(FD_USER_KIND).setFilter(userFilter);
+		Query query = new Query(FD_USER_KIND).setFilter(userFilter).setAncestor(ancestor);
 		PreparedQuery pq = datastore.prepare(query);
 
 		for (Entity entity: pq.asIterable()) {
