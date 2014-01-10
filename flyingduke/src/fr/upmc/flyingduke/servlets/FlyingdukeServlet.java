@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.servlet.http.*;
@@ -46,16 +47,11 @@ public class FlyingdukeServlet extends HttpServlet {
 		User googleuser = userService.getCurrentUser();
 
 		if (googleuser != null) {
-
-			// clean accounts
-			FDUserDao.deleteUser(googleuser);
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
+			resp.setContentType("text/plain");
+			PrintWriter page = resp.getWriter();
 			
+			// clean accounts
+
 			// tests data
 
 			// players
@@ -107,9 +103,9 @@ public class FlyingdukeServlet extends HttpServlet {
 			try {
 				fdUser = FDUser.createFDUser(googleuser);
 			} catch (ExistingUserException e1) {
-				e1.printStackTrace();
+				fdUser = FDUserDao.getFromGoogleUser(googleuser);
 			}
-			
+
 			fdUser.setFirstName("Robin");
 			fdUser.setLastName("Keunen");
 			fdUser.setWallet(100);
@@ -122,44 +118,43 @@ public class FlyingdukeServlet extends HttpServlet {
 			bet.setOdds(1.5);
 
 			// stores 
-			try {
-				GameDao.store(game);
-				TeamDao.store(home);
-				TeamDao.store(away);
-				FDUserDao.update(fdUser);
-				BetDao.update(bet);
-				BetDao.get(bet.getId(), bet.getPunterID());
 
-				FDUser fdtest = FDUserDao.getFromGoogleUser(googleuser);
-				System.out.println("query test: " + fdtest.toString());
-			} catch (MissingUUIDException e) {
-				e.printStackTrace();
-			} catch (EntityNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			System.out.println("\ngame of day query");
+			//GameDao.store(game);
+			//TeamDao.store(home);
+			//TeamDao.store(away);
+			//FDUserDao.update(fdUser);
+			//BetDao.update(bet);
+			//BetDao.get(bet.getId(), bet.getPunterID());
+
+			FDUser fdtest = FDUserDao.getFromGoogleUser(googleuser);
+			System.out.println("query test: " + fdtest.toString());
+
+
+			page.println("\ngame of day query 8");
 			Calendar someday = Calendar.getInstance();
 			someday.set(2014, 0, 8);
+			someday.setTimeZone(TimeZone.getTimeZone("UTC")); 
 			for (Game gamequery: GameDao.gameForDay(someday)) {
-				System.out.println(gamequery.toString());
+				page.println(gamequery.toString());
 			}
+
+			page.println("\ngame of day query 9");
 			someday.set(2014, 0, 9);
 			for (Game gamequery: GameDao.gameForDay(someday)) {
-				System.out.println(gamequery.toString());
+				page.println(gamequery.toString());
 			}
+			
+			page.println("\ngame of day query 10");
 			someday.set(2014, 0, 10);
 			for (Game gamequery: GameDao.gameForDay(someday)) {
-				System.out.println(gamequery.toString());
+				page.println(gamequery.toString());
 			}
-
-
-			resp.setContentType("text/plain");
-			PrintWriter page = resp.getWriter();
-			page.println("Hello, " + googleuser.getNickname());
-			page.println("store et get tests");
-			page.println(userService.createLogoutURL(req.getRequestURI()));
+			
+			page.println("\ngame from now");
+			for (Game gamequery: GameDao.futureGames(20)) {
+				page.println(gamequery.toString());
+			}
+	
 
 		} else {
 			resp.sendRedirect(userService.createLoginURL(req.getRequestURI()));
