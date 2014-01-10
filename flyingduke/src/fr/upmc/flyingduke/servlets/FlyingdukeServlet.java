@@ -138,21 +138,10 @@ public class FlyingdukeServlet extends HttpServlet {
 			System.out.println("query test: " + fdtest.toString());
 
 
-			page.println("\ngame of day query 8");
+			page.println("\ngame of day query 10");
 			Calendar someday = Calendar.getInstance();
 			someday.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
-			someday.set(2014, 0, 8);
-			for (Game gamequery: GameDao.gameForDay(someday)) {
-				page.println(gamequery.toString());
-			}
 
-			page.println("\ngame of day query 9");
-			someday.set(2014, 0, 9);
-			for (Game gamequery: GameDao.gameForDay(someday)) {
-				page.println(gamequery.toString());
-			}
-			
-			page.println("\ngame of day query 10");
 			someday.set(2014, 0, 10);
 			for (Game gamequery: GameDao.gameForDay(someday)) {
 				page.println(gamequery.toString());

@@ -107,8 +107,8 @@ public class GameDao {
 
 		// convert to objects
 		List<Game> games = new LinkedList<>();
-		//for (Entity entity: pq.asIterable(FetchOptions.Builder.withLimit(gameLimit))) {
-		for (Entity entity: pq.asIterable()) {
+		for (Entity entity: pq.asIterable(FetchOptions.Builder.withLimit(gameLimit))) {
+		//for (Entity entity: pq.asIterable()) {
 			games.add(gameFromEntity(entity));
 		}
 		return games;
