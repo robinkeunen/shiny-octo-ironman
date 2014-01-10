@@ -27,17 +27,17 @@ public class AdminServlet extends HttpServlet {
 			throws IOException, ServletException {
 		System.out.println("JESUISLA");
 		Calendar calendar = new GregorianCalendar();
-		RESTQuery queryLauncher = new RESTQuery();
-		String xmlResult = queryLauncher.getGamesForDay();
+		//RESTQuery queryLauncher = new RESTQuery();
+		//String xmlResult = queryLauncher.getGamesForDay();
 		System.out.println("Fin de la query");
-		try {
+		/*try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			System.out.println("Sleep a echoué");
-		}
+		}*/
 		System.out.println("apres sleep");
-		Parser parser = new Parser();
-		parser.parseGamesForDay(xmlResult);
+		//Parser parser = new Parser();
+		//parser.parseGamesForDay(xmlResult);
 		
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
