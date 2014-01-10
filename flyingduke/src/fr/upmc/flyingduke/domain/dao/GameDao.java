@@ -69,10 +69,8 @@ public class GameDao {
 		Entity entity = datastore.get(key);
 		
 		Game game = gameFromEntity(entity);
-		Team homeTeam = TeamDao.shallowGet(game.getHomeTeam().getUUID());
-		Team awayTeam = TeamDao.shallowGet(game.getAwayTeam().getUUID());
-		game.setHomeTeam(homeTeam);
-		game.setAwayTeam(awayTeam);
+		game = getTeams(game);
+
 		return game;
 	}
 
@@ -121,9 +119,10 @@ public class GameDao {
 
 		// convert to objects
 		List<Game> games = new LinkedList<>();
+		Game game = null;
 		for (Entity entity: pq.asIterable(FetchOptions.Builder.withLimit(gameLimit))) {
-			//for (Entity entity: pq.asIterable()) {
-			games.add(gameFromEntity(entity));
+			game = getTeams(gameFromEntity(entity));
+			games.add(game);
 		}
 		return games;
 	}
@@ -170,8 +169,10 @@ public class GameDao {
 
 		// convert to objects
 		List<Game> games = new LinkedList<>();
+		Game game = null;
 		for (Entity entity: pq.asIterable()) {
-			games.add(gameFromEntity(entity));
+			game = getTeams(gameFromEntity(entity));
+			games.add(game);
 		}
 
 		return games;
@@ -200,5 +201,16 @@ public class GameDao {
 		}
 		return game;
 	}
-
+	
+	private static Game getTeams(Game game)  {
+		try {
+			Team homeTeam = TeamDao.shallowGet(game.getHomeTeam().getUUID());
+			Team awayTeam = TeamDao.shallowGet(game.getAwayTeam().getUUID());
+			game.setHomeTeam(homeTeam);
+			game.setAwayTeam(awayTeam);	
+		} catch (EntityNotFoundException e) {
+			System.out.println("WARNING: Teams not found for " + game);
+		}
+		return game;
+	}
 }
