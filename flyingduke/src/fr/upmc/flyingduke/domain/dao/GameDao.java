@@ -10,6 +10,7 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
@@ -94,37 +95,56 @@ public class GameDao {
 		datastore.put(entity);
 	}
 
+	public static List<Game> futureGames(int gameLimit) {
+		Date now = new Date();
+		Filter from = new FilterPredicate(
+				DATE, 
+				FilterOperator.GREATER_THAN_OR_EQUAL, 
+				now);
+
+		Query q = new Query(GAME_KIND).setFilter(from).addSort(DATE);
+		PreparedQuery pq = datastore.prepare(q);
+
+		// convert to objects
+		List<Game> games = new LinkedList<>();
+		//for (Entity entity: pq.asIterable(FetchOptions.Builder.withLimit(gameLimit))) {
+		for (Entity entity: pq.asIterable()) {
+			games.add(gameFromEntity(entity));
+		}
+		return games;
+	}
+
 	public static List<Game> gameForDay(Calendar day) {
-		// het hour range for the day
-		day.setTimeZone(TimeZone.getTimeZone("UTC"));
+		// get hour range for the day
+		//day.setTimeZone(TimeZone.getTimeZone("UTC")); 
 		Calendar startHour = (Calendar) day.clone();
 		startHour.set(Calendar.HOUR_OF_DAY, 0);
 		startHour.set(Calendar.MINUTE, 0);
-		
+
 		Calendar endHour = (Calendar) day.clone();
 		endHour.set(Calendar.HOUR_OF_DAY, 23);
 		endHour.set(Calendar.MINUTE, 59);
-		
+
 		// build predicates
 		Filter from = new FilterPredicate(DATE, 
-										  FilterOperator.GREATER_THAN_OR_EQUAL, 
-										  startHour.getTime());
+				FilterOperator.GREATER_THAN_OR_EQUAL, 
+				startHour.getTime());
 		Filter to = new FilterPredicate(DATE, 
-										FilterOperator.LESS_THAN_OR_EQUAL,
-										endHour.getTime());
+				FilterOperator.LESS_THAN_OR_EQUAL,
+				endHour.getTime());
 		// build range
 		Filter range = CompositeFilterOperator.and(from, to);
-		
+
 		// query the store
-		Query query = new Query("Person").setFilter(range).addSort(DATE);
+		Query query = new Query(GAME_KIND).setFilter(range).addSort(DATE);
 		PreparedQuery pq = datastore.prepare(query);
-		
+
 		// convert to objects
 		List<Game> games = new LinkedList<>();
 		for (Entity entity: pq.asIterable()) {
 			games.add(gameFromEntity(entity));
 		}
-		
+
 		return games;
 	}
 }
