@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -30,7 +31,6 @@ public class RESTQuery {
 			url = new URL(requestURL);
 			reader = new BufferedReader(new InputStreamReader(url.openStream()));
 		
-
 		// read request 
 		String line = null;;
 		while ((line = reader.readLine()) != null){
