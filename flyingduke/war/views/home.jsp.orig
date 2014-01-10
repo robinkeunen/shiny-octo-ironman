@@ -10,6 +10,7 @@
 <%@ page import="fr.upmc.flyingduke.domain.dao.GameDao" %>
 <%@ page import="fr.upmc.flyingduke.utils.*" %>
 <%@ page import="java.util.Calendar" %>
+<%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -20,6 +21,8 @@
 <%@ page import="com.google.appengine.api.users.UserServiceFactory"%>
 <%@ page import="fr.upmc.flyingduke.domain.FDUser"%>
 <%@ page import="fr.upmc.flyingduke.domain.dao.FDUserDao"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+>>>>>>> 49d9c61e2b395f28fe53f2ca5f229cc66a023cc3
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -109,9 +112,6 @@ for(Game game : gamesList){
 		}
 		System.out.println("User Verification ok");
 	%>
-        
-        <h1>Insert Something</h1>
-        here
 	
 
 >>>>>>> 49d9c61e2b395f28fe53f2ca5f229cc66a023cc3

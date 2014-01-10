@@ -1,6 +1,7 @@
 package fr.upmc.flyingduke.utils;
 
 import java.io.StringReader;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -132,8 +133,8 @@ public class Parser {
 	public ArrayList<Game> parseGamesForDay(String xmlToParse){
 		ArrayList<Game> gamesList = new ArrayList<Game>();
 		try{
-			double home_winpct = 0.0;
-			double away_winpct = 0.0;
+			double home_winpct = 0.00;
+			double away_winpct = 0.00;
 			HashMap gameOdds = new HashMap();
 			Calendar calendar = new GregorianCalendar();
 			DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -151,6 +152,7 @@ public class Parser {
 			//Get all the "game" field of the XML
 			NodeList games = doc.getElementsByTagName("game");
 			NodeList teamsStats = docStats.getElementsByTagName("team");
+			//Loop on the games List
 			for (int i = 0; i < games.getLength(); i++) {
 				System.out.println("CPT : " + i);
 				Element gameXml = (Element) games.item(i);
@@ -171,6 +173,7 @@ public class Parser {
 				game.setAwayTeam(awayTeam);
 				game.setHomeTeam(homeTeam);
 				game.setDate(calendar.getTime());
+				//Get win pourcentages for away and home Team
 				for(int j=0;j<teamsStats.getLength();j++){
 					Element teamStatXml = (Element) teamsStats.item(j);
 					String teamStatId = teamStatXml.getAttribute("id");
@@ -179,20 +182,19 @@ public class Parser {
 					}else if(teamStatId.equalsIgnoreCase(awayTeam.getUUID())){
 						away_winpct = Double.parseDouble(teamStatXml.getAttribute("win_pct"));
 					}
-					System.out.println("pourcentage home : " + home_winpct);
-					//Set game's odds
-					double awayOdds = 1.25 + home_winpct/away_winpct;
-					double homeOdds = 1.0 + away_winpct/home_winpct;
-					game.setOdds(homeOdds,awayOdds);
 				}
+				//Set game's odds
+				double awayOdds = 1.25 + home_winpct/away_winpct;
+				double homeOdds = 1.0 + away_winpct/home_winpct;
+				game.setOdds(homeOdds,awayOdds);
 			//Add the game to the ArrayList previously created
-			gamesList.add(game);
+				gamesList.add(game);
+			}
+		}	catch(Exception e){
+			e.printStackTrace();
 		}
-	}	catch(Exception e){
-		e.printStackTrace();
+		return gamesList;
 	}
-	return gamesList;
-}
-//Fetch teams statistics
+	//Fetch teams statistics
 
 }
