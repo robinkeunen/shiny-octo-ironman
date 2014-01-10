@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class RESTQuery {
 
@@ -141,10 +142,10 @@ public class RESTQuery {
 		}
 		return xml;
 	}
-	public String getGamesForDay(Calendar calendar) {
+	public String getGamesForDay() {
 		
 		// get strings for the date
-		
+		Calendar calendar = new GregorianCalendar();
 		String day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
 		// Calendar months start at 0, API months start at 1
 		String month = String.valueOf(calendar.get(Calendar.MONTH) + 1); 
@@ -165,7 +166,7 @@ public class RESTQuery {
 		// read request 
 		String line = null;;
 		while ((line = reader.readLine()) != null){
-			xml += line;
+			xml += line + "\n";
 		}
 		reader.close();
 		} catch (IOException e) {
@@ -173,6 +174,34 @@ public class RESTQuery {
 			e.printStackTrace();
 		} catch (NullPointerException e) {
 			System.out.println("at line public String getGamesForDay(Calendar calendar) {");
+		}
+
+		return xml;
+	}
+public String getTeamsStatistics() {
+		
+	
+		// build request
+		String requestURL = "http://api.sportsdatallc.org/nba-t3/seasontd/2013/reg/standings.xml?api_key=" + ApiKey;
+		URL url = null;
+		BufferedReader reader = null;
+		String xml = "";
+		try {
+			url = new URL(requestURL);
+			reader = new BufferedReader(new InputStreamReader(url.openStream()));
+		
+
+		// read request 
+		String line = null;;
+		while ((line = reader.readLine()) != null){
+			xml += line + "\n";
+		}
+		reader.close();
+		} catch (IOException e) {
+			System.out.println("at line public String getTeamsStatistics(Calendar calendar) {");
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.println("at line public String getTeamsStatistics(Calendar calendar) {");
 		}
 
 		return xml;
