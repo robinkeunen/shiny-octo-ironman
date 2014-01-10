@@ -15,14 +15,17 @@
 <body>
 	<%
 		UserService userService = UserServiceFactory.getUserService();
-		User user = (User) pageContext.getAttribute("user");
-		/*if (user == null) {
+		User googleUser = userService.getCurrentUser();
+		if (googleUser == null) {
 			response.sendRedirect(userService.createLoginURL(request.getRequestURI()));
 			return;
-		}*/
+		}
 	%>
 	<form action="/FillUp" Method="POST">
 	<INPUT type=submit name="button" value="Get All Teams">
+	</form>
+	<form action="/FillUp" Method="POST">
+	<INPUT type=submit name="button" value="Get All Games">
 	</form>
 	<form action="/FillUp" Method="POST">
 	Day <input type="text" name="day">

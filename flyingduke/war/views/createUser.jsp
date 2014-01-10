@@ -24,12 +24,19 @@ if (googleUser == null){
 	return;
 }
 System.out.println("MAIL : " + googleUser.getEmail());
-if ((fdUser = fdUserQuery.getFromGoogleUser(googleUser)) == null){
+if ((fdUser = fdUserQuery.getFromGoogleUser(googleUser)) != null){
 	System.out.println("Redirection vers création");
-	response.sendRedirect("/views/createUser.jsp");
+	response.sendRedirect("/views/home.jsp");
 	return;
 }
 System.out.println("la Verification User finie");
 %>
+<form action="/CreateUser" Method="POST">
+	First Name <input type="text" name="firstName">
+	Last Name <input type="text" name="lastName">
+	<INPUT type=submit name="buttonCreate" value="Create User">
+	</form>
+	
+
 </body>
 </html>

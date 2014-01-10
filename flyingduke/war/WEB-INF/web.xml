@@ -15,6 +15,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	</servlet-mapping>
 
 	<servlet>
+		<servlet-name>CreateUserServlet</servlet-name>
+		<servlet-class>fr.upmc.flyingduke.servlets.CreateUserServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CreateUserServlet</servlet-name>
+		<url-pattern>/CreateUser</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
 		<servlet-name>AdminServlet</servlet-name>
 		<servlet-class>fr.upmc.flyingduke.servlets.AdminServlet</servlet-class>
 	</servlet>
