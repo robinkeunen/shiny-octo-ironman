@@ -129,7 +129,10 @@ public class FlyingdukeServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			//BetDao.get(bet.getId(), bet.getPunterID());
+			page.println("bets for user query");
+			List<Bet> betsquery =BetDao.getBetForFDUser(fdUser);
+			for (Bet betquery: betsquery)
+				page.println(betquery.toString());
 
 			FDUser fdtest = FDUserDao.getFromGoogleUser(googleuser);
 			System.out.println("query test: " + fdtest.toString());

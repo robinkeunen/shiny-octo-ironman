@@ -94,7 +94,7 @@ public class BetDao {
 	private static Bet betFromEntity(Entity entity) {
 		
 		// get properties
-		Object gameUUID = entity.getProperty(GAME_UUID);
+		Object gameUUID = entity.getProperty(GAME_UUID); 
 		Object choiceO = entity.getProperty(CHOICE);
 		Object amountO = entity.getProperty(AMOUNT);
 		Object oddsO = entity.getProperty(ODDS);
