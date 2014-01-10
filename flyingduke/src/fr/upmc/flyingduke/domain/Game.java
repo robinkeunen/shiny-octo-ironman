@@ -2,18 +2,18 @@ package fr.upmc.flyingduke.domain;
 
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.TimeZone;
 
 public class Game {
+
+
 	private String uuid;
 	private Team awayTeam;
 	private Team homeTeam;
 	private Date date;
-	private HashMap<BetChoice, Float> odds;
-
+	private OddsContainer odds;
+	
 	public Game(String uuid) {
-		HashMap<BetChoice, Float> odds = new HashMap<>();
 		this.uuid = uuid;
 	}
 	
@@ -72,19 +72,56 @@ public class Game {
 		df.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 		
 		return "Game [uuid=" + uuid + ", awayTeam=" + awayTeam.getUUID() + ", homeTeam="
-				+ homeTeam.getUUID() + ", date=" + df.format(date) + "]";
+				+ homeTeam.getUUID() + ", date=" + df.format(date) + ", odds="
+				+ odds +"]";
 	}
 
 
-	public HashMap getOdds() {
+	public OddsContainer getOdds() {
 		return odds;
 	}
 
 
-	public void setOdds(HashMap odds) {
-		this.odds = odds;
+	public void setOdds(double home, double away, double tie) {
+		this.odds = new OddsContainer(home, away, tie);
 	}
 	
-	
+	public class OddsContainer {
+		private double home;
+		private double away;
+		private double tie;
+		
+		OddsContainer(double home, double away, double tie) {
+			this.home = home;
+			this.away = away;
+			this.tie = tie;
+		}
+
+		/**
+		 * @return the home
+		 */
+		public double getHome() {
+			return home;
+		}
+
+		/**
+		 * @return the away
+		 */
+		public double getAway() {
+			return away;
+		}
+
+		/**
+		 * @return the tie
+		 */
+		public double getTie() {
+			return tie;
+		}
+		
+		public String toString() {
+			return "[ " + home + ", " + away + ", " + tie + "]"; 
+		}
+	}
+
 	
 }

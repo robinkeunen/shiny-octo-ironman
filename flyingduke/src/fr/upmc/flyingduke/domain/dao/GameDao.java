@@ -2,12 +2,14 @@ package fr.upmc.flyingduke.domain.dao;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.EmbeddedEntity;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.FetchOptions;
@@ -20,8 +22,10 @@ import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
+import fr.upmc.flyingduke.domain.BetChoice;
 import fr.upmc.flyingduke.domain.Game;
 import fr.upmc.flyingduke.domain.Team;
+import fr.upmc.flyingduke.domain.Game.OddsContainer;
 import fr.upmc.flyingduke.exceptions.MissingUUIDException;
 
 public class GameDao {
@@ -29,6 +33,10 @@ public class GameDao {
 	private static final String HOME_TEAM_UUID = "HOME_TEAM_UUID";
 	private static final String AWAY_TEAM_UUID = "AWAY_TEAM_UUID";
 	private static final String DATE = "DATE";
+	private static final String ODDS = "ODDS";
+	private static final String ODDS_HOME = "ODDS_HOME";
+	private static final String ODDS_AWAY = "ODDS_AWAY";
+	private static final String ODDS_TIE = "ODDS_TIE";
 
 	private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
@@ -55,6 +63,7 @@ public class GameDao {
 		Object homeTeamUUID = entity.getProperty(HOME_TEAM_UUID);
 		Object awayTeamUUID = entity.getProperty(HOME_TEAM_UUID);
 		Object date = entity.getProperty(DATE);
+		Object oddsO = entity.getProperty(ODDS);
 
 		// build game
 		Game game = new Game(entity.getKey().getName());
@@ -64,6 +73,13 @@ public class GameDao {
 			game.setHomeTeam(new Team((String) homeTeamUUID));
 		if (date != null)
 			game.setDate((Date) date);		
+		if (oddsO != null) {
+			EmbeddedEntity oddsEE = (EmbeddedEntity) oddsO;
+			game.setOdds(
+					(Double) oddsEE.getProperty(ODDS_HOME),
+					(Double) oddsEE.getProperty(ODDS_AWAY),
+					(Double) oddsEE.getProperty(ODDS_TIE));
+		}
 		return game;
 	}
 
@@ -91,6 +107,16 @@ public class GameDao {
 		entity.setProperty(AWAY_TEAM_UUID, game.getAwayTeam().getUUID());
 		entity.setProperty(DATE, game.getDate());
 
+		// inner entity for odds
+		OddsContainer odds = game.getOdds();
+		if (odds != null) {
+			EmbeddedEntity embeddedEntity = new EmbeddedEntity();
+			embeddedEntity.setProperty(ODDS_HOME, odds.getHome());
+			embeddedEntity.setProperty(ODDS_AWAY, odds.getAway());
+			embeddedEntity.setProperty(ODDS_TIE, odds.getTie());
+			entity.setProperty(ODDS, embeddedEntity);
+		}
+
 		System.out.println("store " + game.toString());
 		datastore.put(entity);
 	}
@@ -108,7 +134,7 @@ public class GameDao {
 		// convert to objects
 		List<Game> games = new LinkedList<>();
 		for (Entity entity: pq.asIterable(FetchOptions.Builder.withLimit(gameLimit))) {
-		//for (Entity entity: pq.asIterable()) {
+			//for (Entity entity: pq.asIterable()) {
 			games.add(gameFromEntity(entity));
 		}
 		return games;

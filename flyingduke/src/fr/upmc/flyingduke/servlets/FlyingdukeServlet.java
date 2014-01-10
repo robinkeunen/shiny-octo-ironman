@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
@@ -129,7 +130,21 @@ public class FlyingdukeServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			page.println("bets for user query");
+			
+			page.println("\nget games, set odds, store, restore");
+			try {
+				String someuuid = "eccdde3e-f6ec-4f33-8f23-a269dc80b374";
+				Game gameq = GameDao.shallowGet(someuuid);
+				gameq.setOdds(1.25, 1.25, 1.1);
+				GameDao.store(gameq);
+				page.println(GameDao.shallowGet(someuuid));
+			} catch (EntityNotFoundException | MissingUUIDException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			
+			
+			page.println("\nbets for user query");
 			List<Bet> betsquery =BetDao.getBetForFDUser(fdUser);
 			for (Bet betquery: betsquery)
 				page.println(betquery.toString());
