@@ -3,6 +3,7 @@ package fr.upmc.flyingduke.domain;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 public class Game {
@@ -10,7 +11,7 @@ public class Game {
 	private Team awayTeam;
 	private Team homeTeam;
 	private Date date;
-	
+	private HashMap odds;
 
 	public Game(String uuid) {
 		this.uuid = uuid;
@@ -72,6 +73,16 @@ public class Game {
 		
 		return "Game [uuid=" + uuid + ", awayTeam=" + awayTeam.getUUID() + ", homeTeam="
 				+ homeTeam.getUUID() + ", date=" + df.format(date) + "]";
+	}
+
+
+	public HashMap getOdds() {
+		return odds;
+	}
+
+
+	public void setOdds(HashMap odds) {
+		this.odds = odds;
 	}
 	
 	
