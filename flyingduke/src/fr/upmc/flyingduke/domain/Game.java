@@ -1,7 +1,6 @@
 package fr.upmc.flyingduke.domain;
 
 import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
@@ -11,9 +10,10 @@ public class Game {
 	private Team awayTeam;
 	private Team homeTeam;
 	private Date date;
-	private HashMap odds;
+	private HashMap<BetChoice, Float> odds;
 
 	public Game(String uuid) {
+		HashMap<BetChoice, Float> odds = new HashMap<>();
 		this.uuid = uuid;
 	}
 	
