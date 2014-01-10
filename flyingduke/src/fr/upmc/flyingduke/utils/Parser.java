@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -131,6 +132,9 @@ public class Parser {
 	public ArrayList<Game> parseGamesForDay(String xmlToParse){
 		ArrayList<Game> gamesList = new ArrayList<Game>();
 		try{
+			double home_winpct = 0.0;
+			double away_winpct = 0.0;
+			HashMap gameOdds = new HashMap();
 			Calendar calendar = new GregorianCalendar();
 			DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			InputSource is = new InputSource();
@@ -171,14 +175,17 @@ public class Parser {
 					Element teamStatXml = (Element) teamsStats.item(j);
 					String teamStatId = teamStatXml.getAttribute("id");
 					if(teamStatId.equalsIgnoreCase(homeTeam.getUUID())){
-						double home_winpct = Double.parseDouble(teamStatXml.getAttribute("win_pct"));
-						System.out.println("pourcentage home : " + home_winpct);
+						home_winpct = Double.parseDouble(teamStatXml.getAttribute("win_pct"));
 					}else if(teamStatId.equalsIgnoreCase(awayTeam.getUUID())){
-						double away_winpct = Double.parseDouble(teamStatXml.getAttribute("win_pct"));
-						System.out.println("pourcentage away : " + away_winpct);
+						away_winpct = Double.parseDouble(teamStatXml.getAttribute("win_pct"));
 					}
+					System.out.println("pourcentage home : " + home_winpct);
 					//Set game's odds
-					
+					double awayOdds = 1.25 + home_winpct/away_winpct;
+					double homeOdds = 1.0 + away_winpct/home_winpct;
+					gameOdds.put("home", homeOdds);
+					gameOdds.put("away", awayOdds);
+					game.setOdds(gameOdds);
 				}
 			//Add the game to the ArrayList previously created
 			gamesList.add(game);
