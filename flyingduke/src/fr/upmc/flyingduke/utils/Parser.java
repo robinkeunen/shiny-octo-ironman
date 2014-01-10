@@ -1,5 +1,6 @@
 package fr.upmc.flyingduke.utils;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -11,16 +12,20 @@ import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import fr.upmc.flyingduke.domain.Game;
+import fr.upmc.flyingduke.domain.Player;
 import fr.upmc.flyingduke.domain.Team;
 import fr.upmc.flyingduke.domain.dao.GameDao;
 import fr.upmc.flyingduke.servlets.HomeServlet;
+import fr.upmc.flyingduke.domain.Player;
 
 public class Parser {
 
@@ -197,4 +202,21 @@ public class Parser {
 	}
 	//Fetch teams statistics
 
+	public ArrayList<Player> parsePlayersTeam(String listPlayersXml) throws ParserConfigurationException, SAXException, IOException {
+		ArrayList<Player> listPlayers = new ArrayList<Player>();
+		DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		InputSource is = new InputSource();
+		is.setCharacterStream(new StringReader(listPlayersXml));
+		Document doc = db.parse(is);
+		NodeList players = doc.getElementsByTagName("player");
+		for (int i=0;i<players.getLength();i++){
+			Element playerXml = (Element) players.item(i);
+			Player player = new Player(playerXml.getAttribute("id"));
+			player.setFirstName(playerXml.getAttribute("first_name"));
+			player.setLastName(playerXml.getAttribute("last_name"));
+			player.setPosition(playerXml.getAttribute("position"));
+			listPlayers.add(player);
+		}
+		return listPlayers;
+	}
 }

@@ -12,12 +12,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
 import fr.upmc.flyingduke.domain.Game;
+import fr.upmc.flyingduke.domain.Player;
 import fr.upmc.flyingduke.domain.Team;
 import fr.upmc.flyingduke.domain.dao.GameDao;
 import fr.upmc.flyingduke.domain.dao.TeamDao;
@@ -29,6 +33,59 @@ public class FillUpDataBaseServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
+			String action = request.getParameter("action");
+			String xmlResult="";
+			RESTQuery requestsLauncher = new RESTQuery();
+			Parser parser = new Parser();
+			TeamDao teamDao = new TeamDao();
+			GameDao gameDao = new GameDao();
+			if (action.equalsIgnoreCase("getGamesDay")){
+				xmlResult = requestsLauncher.getGamesForDay();
+				ArrayList<Game> gamesList = parser.parseGamesForDay(xmlResult);
+				for (Game game : gamesList){
+					System.out.println(game.getDate());
+					try {
+						gameDao.store(game);
+					} catch (MissingUUIDException e) {
+						e.printStackTrace();
+					}
+				}	
+			}else if (action.equalsIgnoreCase("getAllGames")){
+				xmlResult = requestsLauncher.getAllGames();
+				ArrayList<Game> gamesList = parser.parseAllGames(xmlResult);
+				for (Game game : gamesList){
+					try {
+						gameDao.store(game);
+					} catch (MissingUUIDException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}else if(action.equalsIgnoreCase("getAllTeams")){
+				System.out.println("GET ALL TEAMS LANCE");
+				xmlResult = requestsLauncher.getAllTeams();
+				ArrayList<Team> teamsList = parser.parseAllTeams(xmlResult);
+				for (Team team : teamsList){
+					String xmlPlayersTeam = requestsLauncher.getTeamByUUID(team.getUUID());
+					try {
+						Thread.sleep(1000);
+						ArrayList<Player> playersList = parser.parsePlayersTeam(xmlPlayersTeam);
+						team.setPlayers(playersList);
+						teamDao.store(team);
+						System.out.println("NAME");
+						System.out.println(team.getName());
+					} catch (ParserConfigurationException | SAXException e1) {
+						e1.printStackTrace();
+					}catch (MissingUUIDException e) {
+						e.printStackTrace();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
