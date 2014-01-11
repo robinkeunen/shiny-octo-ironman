@@ -59,6 +59,42 @@ public class Parser {
 		return teamsList;
 	}
 
+	public String parseGameBoxScore(String xmlToParse){
+		try{
+			DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			InputSource is = new InputSource();
+			is.setCharacterStream(new StringReader(xmlToParse));
+			Document doc = db.parse(is);
+			NodeList games = doc.getElementsByTagName("game");
+			Element gameXml = (Element) games.item(0);
+			String gameStatus = gameXml.getAttribute("status");
+			String homeTeamid = gameXml.getAttribute("home_team");
+			if (gameStatus.equalsIgnoreCase("closed")){
+				NodeList teams = doc.getElementsByTagName("team");
+				String winningTeam = "";
+				int winningTeamScore = 0;
+				for (int i = 0; i < games.getLength(); i++) {
+					Element teamXml = (Element) teams.item(i);
+					int teamScore = Integer.parseInt(teamXml.getAttribute("points"));
+					if (teamScore > winningTeamScore){
+						winningTeamScore = teamScore;
+						if(teamXml.getAttribute("id").equalsIgnoreCase(homeTeamid)){
+							winningTeam = "home";
+						}else{
+							winningTeam="away";
+						}
+					}
+				}
+				return winningTeam;
+			}else{
+				return "NotOver";
+			}
+		}catch(Exception e){
+			System.out.println("Parsing Game Box Error");
+		}
+		return "NotOver";
+	}
+
 	public ArrayList<Game> parseAllGames(String xmlToParse){
 		ArrayList<Game> gamesList = new ArrayList<Game>();
 		try{
@@ -83,7 +119,7 @@ public class Parser {
 				Team awayTeam = new Team(awayTeamElement.getAttribute("id"));
 				awayTeam.setName(awayTeamElement.getAttribute("market") + " " + awayTeamElement.getAttribute("name"));
 				awayTeam.setAlias(awayTeamElement.getAttribute("alias"));
-				*/
+				 */
 				String homeTeamId = homeTeamElement.getAttribute("id");
 				String awayTeamId = awayTeamElement.getAttribute("id");
 				//Set Game's date
@@ -209,7 +245,7 @@ public class Parser {
 						away_PointsAgainst = Double.parseDouble(teamStatXml.getAttribute("points_against"));
 					}
 				}
-			//Set Game's AwayTeam, homeTeam
+				//Set Game's AwayTeam, homeTeam
 				game.setAwayTeamUUID(awayTeamId);
 				game.setHomeTeamUUID(homeTeamId);
 				//Set game's odds
@@ -227,17 +263,17 @@ public class Parser {
 					awayTeamDB.setPointsAgainst(away_PointsAgainst);
 					teamDao.store(awayTeamDB);
 					teamDao.store(homeTeamDB);
-					
+
 					System.out.println(game.getUUID());
 					System.out.println("NOM Home :");
 					Game gamesql = gameDao.get(game.getUUID());
 					System.out.println("NOM EXTERIEUR :");
-					} catch (MissingUUIDException e) {
+				} catch (MissingUUIDException e) {
 					e.printStackTrace();
 				} catch (EntityNotFoundException e) {
-					
+
 				}
-			//Add the game to the ArrayList previously created
+				//Add the game to the ArrayList previously created
 				gamesList.add(game);
 			}
 		}	catch(Exception e){

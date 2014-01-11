@@ -2,6 +2,8 @@ package fr.upmc.flyingduke.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,6 +26,7 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
 import fr.upmc.flyingduke.domain.Bet;
+import fr.upmc.flyingduke.domain.BetChoice;
 import fr.upmc.flyingduke.domain.FDUser;
 import fr.upmc.flyingduke.domain.Game;
 import fr.upmc.flyingduke.domain.Player;
@@ -40,75 +43,122 @@ public class FillUpDataBaseServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-			String action = request.getParameter("action");
-			String xmlResult="";
-			RESTQuery requestsLauncher = new RESTQuery();
-			Parser parser = new Parser();
-			TeamDao teamDao = new TeamDao();
-			GameDao gameDao = new GameDao();
-			if (action.equalsIgnoreCase("getGamesDay")){
-				xmlResult = requestsLauncher.getGamesForDay();
-				ArrayList<Game> gamesList = parser.parseGamesForDay(xmlResult);
-				for (Game game : gamesList){
-					System.out.println(game.getDate());
-					try {
-						gameDao.store(game);
-						
-						System.out.println(game.getUUID());
-						System.out.println("NOM Home :");
-						System.out.println("NOM EXTERIEUR :");
-						} catch (MissingUUIDException e) {
-						e.printStackTrace();
-					} 
-				}	
-				
-			}else if (action.equalsIgnoreCase("getAllGames")){
-				xmlResult = requestsLauncher.getAllGames();
-				ArrayList<Game> gamesList = parser.parseAllGames(xmlResult);
-				for (Game game : gamesList){
-					try {
-						gameDao.store(game);
-					} catch (MissingUUIDException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}else if(action.equalsIgnoreCase("getAllTeams")){
-				System.out.println("GET ALL TEAMS LANCE");
-				xmlResult = requestsLauncher.getAllTeams();
-				ArrayList<Team> teamsList = parser.parseAllTeams(xmlResult);
-				for (Team team : teamsList){
-					String xmlPlayersTeam = requestsLauncher.getTeamByUUID(team.getUUID());
-					try {
-						Thread.sleep(1000);
-						ArrayList<Player> playersList = parser.parsePlayersTeam(xmlPlayersTeam);
-						team.setPlayers(playersList);
-						teamDao.store(team);
-						System.out.println("NAME");
-						System.out.println(team.getName());
-					} catch (ParserConfigurationException | SAXException e1) {
-						e1.printStackTrace();
-					}catch (MissingUUIDException e) {
-						e.printStackTrace();
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}else if(action.equalsIgnoreCase("betsComputing")){
-				Calendar today = Calendar.getInstance();
-				today.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
-				today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
-				BetDao betDao = new BetDao();
-				FDUserDao userDao = new FDUserDao();
-				List<FDUser> usersList = userDao.getAllFDUsers();
-				for (FDUser fdUser : usersList){
-					List<Bet> listBetsUser = betDao.getBets2Compute(fdUser);
-					
+		String action = request.getParameter("action");
+		String xmlResult="";
+		RESTQuery requestsLauncher = new RESTQuery();
+		Parser parser = new Parser();
+		TeamDao teamDao = new TeamDao();
+		GameDao gameDao = new GameDao();
+		if (action.equalsIgnoreCase("getGamesDay")){
+			xmlResult = requestsLauncher.getGamesForDay();
+			ArrayList<Game> gamesList = parser.parseGamesForDay(xmlResult);
+			for (Game game : gamesList){
+				System.out.println(game.getDate());
+				try {
+					gameDao.store(game);
+
+					System.out.println(game.getUUID());
+					System.out.println("NOM Home :");
+					System.out.println("NOM EXTERIEUR :");
+				} catch (MissingUUIDException e) {
+					e.printStackTrace();
+				} 
+			}	
+
+		}else if (action.equalsIgnoreCase("getAllGames")){
+			xmlResult = requestsLauncher.getAllGames();
+			ArrayList<Game> gamesList = parser.parseAllGames(xmlResult);
+			for (Game game : gamesList){
+				try {
+					gameDao.store(game);
+				} catch (MissingUUIDException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
-			
-		
+		}else if(action.equalsIgnoreCase("getAllTeams")){
+			System.out.println("GET ALL TEAMS LANCE");
+			xmlResult = requestsLauncher.getAllTeams();
+			ArrayList<Team> teamsList = parser.parseAllTeams(xmlResult);
+			for (Team team : teamsList){
+				String xmlPlayersTeam = requestsLauncher.getTeamByUUID(team.getUUID());
+				try {
+					Thread.sleep(1000);
+					ArrayList<Player> playersList = parser.parsePlayersTeam(xmlPlayersTeam);
+					team.setPlayers(playersList);
+					teamDao.store(team);
+					System.out.println("NAME");
+					System.out.println(team.getName());
+				} catch (ParserConfigurationException | SAXException e1) {
+					e1.printStackTrace();
+				}catch (MissingUUIDException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}else if(action.equalsIgnoreCase("betsComputing")){
+			Calendar yesterday = Calendar.getInstance();
+			List<Game> gameList;
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Calendar today = Calendar.getInstance();
+			today.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
+			today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
+			int hour = today.get(Calendar.HOUR_OF_DAY);
+			System.out.println("avant le if");
+			if (hour >= 0 && hour < 6){
+				//if it's before 6 A.M, fetch games of yesterday
+				yesterday.add(Calendar.DATE, -1);
+				gameList = gameDao.gameForDay(yesterday);  
+				System.out.println(gameList);
+			}else{
+				//else fetch today's games
+				gameList = gameDao.gameForDay(today);  
+			}
+			System.out.println("apres le if");
+			RESTQuery queryLauncher = new RESTQuery();
+			BetDao betDao = new BetDao();
+			FDUserDao userDao = new FDUserDao();
+			List<FDUser> usersList = userDao.getAllFDUsers();
+			for(Game game : gameList){
+				System.out.println("UUID : " + game.getUUID());
+				String xmlBoxScore = queryLauncher.getGameByUUID(game.getUUID());
+				String over = parser.parseGameBoxScore(xmlBoxScore);
+				//Sleep for 1s because of the API limits
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if (!over.equalsIgnoreCase("NotOver")){
+					System.out.println("Partie terminée");
+					BetChoice winningTeam = BetChoice.AWAY;
+					if (over.equalsIgnoreCase("home")){
+						winningTeam = BetChoice.HOME; 
+					}
+					for (FDUser fdUser : usersList){
+						List<Bet> listBetsUser = betDao.getBets2Compute(fdUser);
+						for (Bet bet : listBetsUser){
+							if (bet.getGameUUID().equalsIgnoreCase(game.getUUID())){
+								if(bet.getChoice().equals(winningTeam)){
+									Double gainDouble = (bet.getAmount() * bet.getOdds());
+									int gain = gainDouble.intValue();
+									fdUser.setWallet(fdUser.getWallet() + gain);
+								}
+							}
+						}
+						try {
+							userDao.update(fdUser);
+						} catch (EntityNotFoundException e) {
+							System.out.println("Update of user impossible");
+						}
+					}
+				}
+			}
+		}
+
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
@@ -122,7 +172,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 		System.out.println(button);
 		switch(button){
 		case("Get All Teams"):
-		xmlResult = requestsLauncher.getAllTeams();
+			xmlResult = requestsLauncher.getAllTeams();
 		ArrayList<Team> teamsList = parser.parseAllTeams(xmlResult);
 		for (Team team : teamsList){
 			try {
@@ -132,11 +182,11 @@ public class FillUpDataBaseServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
-			
+
 		break;
 		case("Get Games For This Day"):
 			System.out.println("Get Games for Day");
-			try{
+		try{
 			int monthInt = Integer.parseInt((request.getParameter("month")));
 			int dayInt = Integer.parseInt((request.getParameter("day")));
 			int yearInt = Integer.parseInt((request.getParameter("year")));
@@ -153,13 +203,13 @@ public class FillUpDataBaseServlet extends HttpServlet {
 				gameDao.store(game);
 			}
 			System.out.println("FIN");
-			
-			}catch (Exception e){
-				System.out.println("Month is not an integer");
-			}
+
+		}catch (Exception e){
+			System.out.println("Month is not an integer");
+		}
 		break;
 		case("Get All Games"):
-		xmlResult = requestsLauncher.getAllGames();
+			xmlResult = requestsLauncher.getAllGames();
 		ArrayList<Game> gamesList = parser.parseAllGames(xmlResult);
 		System.out.println("GAMEs");
 		for (Game game : gamesList){
@@ -170,9 +220,9 @@ public class FillUpDataBaseServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
-			
+
 		}
-		
+
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/views/admin.jsp"); 
 		dispatcher.forward(request,response);
 	}

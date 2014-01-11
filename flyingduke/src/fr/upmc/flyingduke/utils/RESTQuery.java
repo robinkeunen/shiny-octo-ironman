@@ -49,7 +49,7 @@ public class RESTQuery {
 
 	
 	public String getGameByUUID(String gameUUID){
-		String requestURL =  "http://api.sportsdatallc.org/nba-t3/games/" + gameUUID +"/boxscore.xml?api_key=" + ApiKey;
+		String requestURL =  "http://api.sportsdatallc.org/nba-t3/games/" + gameUUID +"/summary.xml?api_key=" + ApiKey;
 		URL url = null;
 		BufferedReader reader = null;
 		String xml = "";
