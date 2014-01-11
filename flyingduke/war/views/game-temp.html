@@ -18,8 +18,7 @@
     <link href="/stylesheets/game-custom.css" rel="stylesheet">
 
     <!-- Glyphicons -->  
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
-
+      
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 
@@ -56,6 +55,47 @@
     <div class="container">
       <!-- Example row of columns -->
       <div class="row">
+          
+          <!-- bet forms comes before in phones -->
+        <div class="col-xs-12 visible-xs">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Place a bet</h3>
+            </div>
+            
+            <div class="panel-body">
+                <form class="form-horizontal">
+                    <div class="form-froup">
+                        <button type="button" class="btn btn-primary btn-lg btn-block"> <!-- add active with js -->
+                            Lakers Los Angeles </button>
+                        <button type="button" class="btn btn-danger btn-lg btn-block ">
+                            San Francisco Giants </button>
+                    </div>
+                    
+                    <div class="form-group invisible"></div>
+                        
+                    <div class="form-group">
+                        <div class="col-xs-8">
+                            <div class="input-group ">
+                                <span class="input-group-addon">$</span>
+                                <input type="text" class="form-control text-right input-lg" placeholder="10">
+                            </div>
+                        </div>
+                        
+                        <div class="col-xs-4">
+                            <button type="button" class="btn btn-success btn-lg btn-block">
+                                Bet <span class="glyphicon glyphicon-chevron-down"> </span></button>
+                        </div>
+
+                    </div>
+                
+               </form>
+            </div>
+          </div>
+          </div>
+          </div>
+          <!-- End bet form -->
+          
           <div class="col-sm-6 col-lg-4">
           <div class="panel panel-default">
             <div class="panel-heading">
@@ -167,8 +207,9 @@
           
           <div class="clearfix visible-md visible-sm col-sm-3"></div>
           
-          
-        <div class="col-sm-6  col-lg-4">
+        
+        <!-- bet form for large screens -->
+        <div class="col-sm-6  col-lg-4 hidden-xs">
           <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Place a bet</h3>
@@ -204,12 +245,15 @@
             </div>
           </div>
           </div>
+          
+          <!-- End bet form -->
+          
       </div>
     </div>
 
      <div class="container">
          <hr>
-         <footer>
+         <footer class="text-right">
              <p>This website was built as an assignment for the aar course</p>
          </footer>
       </div> <!-- /container -->
