@@ -20,7 +20,10 @@ public class TeamDao {
 	private static final String NAME = "NAME";
 	private static final String ALIAS = "ALIAS";
 	private static final String PLAYERS = "PLAYERS";
-
+	private static final String WIN_RATIO = "WIN_RATIO";
+	private static final String POINTS_FOR = "POINTS_FOR";
+	private static final String POINTS_AGAINST = "POINTS_AGAINST"; 
+	
 	private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
 	/**
@@ -54,12 +57,16 @@ public class TeamDao {
 		teamEntity.setProperty(TEAM_KIND, team.getUUID());
 		teamEntity.setProperty(NAME, team.getName());
 		teamEntity.setProperty(ALIAS, team.getAlias());
+		teamEntity.setProperty(WIN_RATIO, team.getWinRatio());
+		teamEntity.setProperty(POINTS_FOR, team.getPointsFor());
+		teamEntity.setProperty(POINTS_AGAINST, team.getPointsAgainst());
+		
 		if (team.getPlayers() != null) {
-			List <EmbeddedEntity> players = new LinkedList<EmbeddedEntity>();
+			List <EmbeddedEntity> playersEE = new LinkedList<EmbeddedEntity>();
 			for (Player player: team.getPlayers()){
-				//players.add(player.getUUID());
+				playersEE.add(PlayerEntityBuilder.makePlayerEntity(player));
 			}
-			//teamEntity.setProperty(PLAYERS, playerUUIDs);
+			teamEntity.setProperty(PLAYERS, playersEE);
 		}
 
 		System.out.println("store" + team.toString());
@@ -70,14 +77,17 @@ public class TeamDao {
 		// get properties
 		Object name = entity.getProperty(NAME);
 		Object alias = entity.getProperty(ALIAS);
+		Object winRatioO = entity.getProperty(WIN_RATIO);
+		Object pointsForO = entity.getProperty(POINTS_FOR);
+		Object pointsAgainstO = entity.getProperty(POINTS_AGAINST);
 
 		List<Player> players = null;
 		if (entity.hasProperty(PLAYERS)) {
 			@SuppressWarnings("unchecked")
-			List<String> playerUUIDs = (List<String>) entity.getProperty(PLAYERS);
+			List<EmbeddedEntity> playerEEs = (List<EmbeddedEntity>) entity.getProperty(PLAYERS);
 			players = new LinkedList<>();
-			for (String playerUUID: playerUUIDs) {
-				players.add(new Player(playerUUID));
+			for (EmbeddedEntity playerEE: playerEEs) {
+				players.add(PlayerEntityBuilder.playerFromEntity(playerEE));
 			}
 		}
 
@@ -87,6 +97,13 @@ public class TeamDao {
 			team.setName((String) name);
 		if (alias != null)
 			team.setAlias((String) alias);
+		if (winRatioO != null)
+			team.setWinRatio((double) winRatioO);
+		if (pointsForO != null)
+			team.setPointsFor((double) pointsForO);
+		if (pointsAgainstO !=null)
+			team.setPointsAgainst((double) pointsAgainstO);
+			
 		if (players != null)
 			team.setPlayers(players); 		
 		return team;
@@ -109,6 +126,28 @@ public class TeamDao {
 			ee.setProperty(POSITION, player.getPosition());
 			
 			return ee;
+		}
+
+		public static Player playerFromEntity(EmbeddedEntity playerEE) {
+			// get properties
+			String uuid =  (String) playerEE.getProperty(UUID);
+			Object firstNameO = playerEE.getProperty(FIRST_NAME);
+			Object lastNameO = playerEE.getProperty(LAST_NAME);
+			Object jerseyO = playerEE.getProperty(JERSEY);
+			Object positionO = playerEE.getProperty(POSITION);
+			
+			// build player
+			Player player = new Player(uuid);
+			if (firstNameO != null)
+				player.setFirstName((String) firstNameO);
+			if (lastNameO != null)
+				player.setLastName((String) lastNameO);
+			if (jerseyO != null)
+				player.setJersey(((Long) jerseyO).intValue());
+			if (positionO != null)
+				player.setPosition((String) positionO);
+			
+			return player;
 		}
 	}
 	

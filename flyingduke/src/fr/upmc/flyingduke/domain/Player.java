@@ -31,7 +31,9 @@ public class Player {
 	 */
 	@Override
 	public String toString() {
-		return "Player { " + super.toString() + " } position=" + position + "]";
+		return "Player [uuid=" + uuid + ", firstName=" + firstName
+				+ ", lastName=" + lastName + ", jersey=" + jersey
+				+ ", position=" + position + "]";
 	}
 
 	/**
