@@ -22,7 +22,6 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 import fr.upmc.flyingduke.domain.Game;
-import fr.upmc.flyingduke.domain.Team;
 import fr.upmc.flyingduke.domain.Game.OddsContainer;
 import fr.upmc.flyingduke.exceptions.MissingUUIDException;
 

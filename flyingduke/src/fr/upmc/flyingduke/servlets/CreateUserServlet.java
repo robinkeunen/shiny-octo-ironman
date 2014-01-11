@@ -2,7 +2,6 @@ package fr.upmc.flyingduke.servlets;
 
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +16,7 @@ import fr.upmc.flyingduke.domain.FDUser;
 import fr.upmc.flyingduke.domain.dao.FDUserDao;
 import fr.upmc.flyingduke.exceptions.ExistingUserException;
 
+@SuppressWarnings("serial")
 public class CreateUserServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -28,13 +28,13 @@ public class CreateUserServlet extends HttpServlet {
 		UserService userService = UserServiceFactory.getUserService();
 		User googleUser = userService.getCurrentUser();
 		System.out.println(googleUser.getEmail());
-		FDUserDao fdUserDao = new FDUserDao();
+
 		try {
-			FDUser user = fdUserDao.create(googleUser);
+			FDUser user = FDUserDao.create(googleUser);
 			user.setFirstName(request.getParameter("firstName"));
 			user.setLastName(request.getParameter("lastName"));
 			user.setWallet(100);
-			fdUserDao.update(user);
+			FDUserDao.update(user);
 			response.sendRedirect("/views/home.jsp");
 		} catch (ExistingUserException | EntityNotFoundException e) {
 			e.printStackTrace();

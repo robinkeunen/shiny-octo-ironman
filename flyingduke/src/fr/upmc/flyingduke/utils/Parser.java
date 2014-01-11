@@ -2,14 +2,9 @@ package fr.upmc.flyingduke.utils;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,10 +20,7 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
 import fr.upmc.flyingduke.domain.Game;
 import fr.upmc.flyingduke.domain.Player;
 import fr.upmc.flyingduke.domain.Team;
-import fr.upmc.flyingduke.domain.dao.GameDao;
 import fr.upmc.flyingduke.domain.dao.TeamDao;
-import fr.upmc.flyingduke.servlets.HomeServlet;
-import fr.upmc.flyingduke.domain.Player;
 import fr.upmc.flyingduke.exceptions.MissingUUIDException;
 
 public class Parser {
@@ -144,8 +136,6 @@ public class Parser {
 	public ArrayList<Game> parseGamesForDate(String xmlToParse){
 		ArrayList<Game> gamesList = new ArrayList<Game>();
 		try{
-			GameDao gameDao = new GameDao();
-			TeamDao teamDao = new TeamDao();
 			DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			InputSource is = new InputSource();
 			is.setCharacterStream(new StringReader(xmlToParse));
@@ -189,10 +179,7 @@ public class Parser {
 		try{
 			double home_winpct, away_winpct, home_PointsFor, home_PointsAgainst, away_PointsFor, away_PointsAgainst;
 			home_winpct = away_winpct = home_PointsAgainst = home_PointsFor =away_PointsAgainst = away_PointsFor = 0.0;
-			HashMap gameOdds = new HashMap();
-			GameDao gameDao = new GameDao();
-			TeamDao teamDao = new TeamDao();
-			Calendar calendar = new GregorianCalendar();
+
 			DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			InputSource is = new InputSource();
 			is.setCharacterStream(new StringReader(xmlToParse));
@@ -255,20 +242,20 @@ public class Parser {
 				double homeOdds = 1.0 + away_winpct/home_winpct;
 				game.setOdds(homeOdds,awayOdds);
 				try {
-					Team homeTeamDB = teamDao.deepGet(homeTeamId);
-					Team awayTeamDB =teamDao.deepGet(awayTeamId);
+					Team homeTeamDB = TeamDao.deepGet(homeTeamId);
+					Team awayTeamDB = TeamDao.deepGet(awayTeamId);
 					homeTeamDB.setWinRatio(home_winpct);
 					homeTeamDB.setPointsFor(home_PointsFor);
 					homeTeamDB.setPointsAgainst(home_PointsAgainst);
 					awayTeamDB.setWinRatio(away_winpct);
 					awayTeamDB.setPointsFor(away_PointsFor);
 					awayTeamDB.setPointsAgainst(away_PointsAgainst);
-					teamDao.store(awayTeamDB);
-					teamDao.store(homeTeamDB);
+					TeamDao.store(awayTeamDB);
+					TeamDao.store(homeTeamDB);
 
 					System.out.println(game.getUUID());
 					System.out.println("NOM Home :");
-					Game gamesql = gameDao.get(game.getUUID());
+					//Game gamesql = GameDao.get(game.getUUID());
 					System.out.println("NOM EXTERIEUR :");
 				} catch (MissingUUIDException e) {
 					e.printStackTrace();

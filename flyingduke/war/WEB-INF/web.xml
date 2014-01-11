@@ -6,15 +6,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
 
 	<servlet>
-		<servlet-name>Flyingduke</servlet-name>
-		<servlet-class>fr.upmc.flyingduke.servlets.FlyingdukeServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Flyingduke</servlet-name>
-		<url-pattern>/flyingduke</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
 		<servlet-name>CreateUserServlet</servlet-name>
 		<servlet-class>fr.upmc.flyingduke.servlets.CreateUserServlet</servlet-class>
 	</servlet>
