@@ -85,7 +85,9 @@ public class GameDao {
 
 		Entity entity = new Entity(GAME_KIND, game.getUUID());
 		entity.setProperty(HOME_TEAM_UUID, game.getHomeTeam().getUUID());
+		TeamDao.store(game.getHomeTeam());
 		entity.setProperty(AWAY_TEAM_UUID, game.getAwayTeam().getUUID());
+		TeamDao.store(game.getAwayTeam());
 		entity.setProperty(DATE, game.getDate());
 
 		// inner entity for odds
