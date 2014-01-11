@@ -11,7 +11,7 @@ import java.util.GregorianCalendar;
 
 public class RESTQuery {
 
-	private final String ApiKey = "rguqxedqsff7aspmq9uxvqed";
+	private final String ApiKey = "csv2n895fs3tyq5w5wsrkmhs";
 
 	/**
 	 * Builds a REST query to get the games schedule for a day.

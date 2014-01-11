@@ -97,9 +97,11 @@ List<Player> playersAway = awayTeam.getPlayers();
         </div>
         <div class="navbar-collapse collapse">
           <form class="navbar-form navbar-right" role="form">
-          <form class="navbar-form navbar-right" role="form">
-              <span class="label">getUsername</span>
-              <a class="btn btn-sm btn-success" href="get login url">
+              <a href="/user" class="label">getUsername</a>
+              <a href="/user" class="label">
+              	<span class="glyphicon glyphicon-dashboard"></span>
+              </a>
+              <a class="btn btn-sm btn-success" href="<%= userService.createLoginURL(request.getRequestURI()) %>">
                 Sign out
               </a>
           </form>
@@ -110,7 +112,43 @@ List<Player> playersAway = awayTeam.getPlayers();
     <div class="container">
       <!-- Example row of columns -->
       <div class="row">
-          <div class="col-sm-6 col-lg-4">
+      
+       <!-- bet form for large screens -->
+        <div class="col-xs-12 col-sm-offset-2 col-sm-8 hidden-lg hidden-md">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Place a bet</h3>
+            </div>
+            
+            <div class="panel-body">
+                <form action="/match" method="post" class="form-horizontal">
+                <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="input-group ">
+                                <span class="input-group-addon">$</span>
+                                <input type="text" name="betValue" class="form-control text-right input-lg" placeholder="10">
+                            </div>
+                        </div>			
+                    </div> 
+                
+                    <div class="form-froup">
+                        <button type="submit" value="home" name="team" class="btn btn-primary btn-lg btn-block"> 
+                            <%=homeTeam.getName() %> </button>
+                        <button type="submit" value="away" name="team" class="btn btn-danger btn-lg btn-block ">
+                            <%=awayTeam.getName() %> </button>
+                    </div>
+                    
+                    <div class="form-group invisible"></div>
+                        
+                                         
+               </form>
+            </div>
+          </div>
+          </div>
+          </div>
+          <!-- End bet form -->
+          
+          <div class="col-sm-6 col-md-4">
           <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title"><%=homeTeam.getName() %> <small>Home</small></h3>
@@ -123,7 +161,7 @@ List<Player> playersAway = awayTeam.getPlayers();
                         <ul class="list-unstyled">
                             <li>Win ratio:  <%=homeTeam.getWinRatio()%></li>
                             <li>Points for: <%=homeTeam.getPointsFor() %></li>
-                            <li>Points againts: <%=homeTeam.getPointsAgainst() %></li>
+                            <li>Points against: <%=homeTeam.getPointsAgainst() %></li>
                         </ul>
                     </div>
                     <div class="cos-xs-6">
@@ -147,7 +185,7 @@ List<Player> playersAway = awayTeam.getPlayers();
           </div>
       </div>
           
-        <div class="col-sm-6 col-lg-4">
+        <div class="col-sm-6 col-md-4">
           <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title"><%=awayTeam.getName()%> <small>Away</small></h3>
@@ -159,7 +197,7 @@ List<Player> playersAway = awayTeam.getPlayers();
                         <ul class="list-unstyled">
                             <li>Win ratio:  <%=awayTeam.getWinRatio()%></li>
                             <li>Points for: <%=awayTeam.getPointsFor() %></li>
-                            <li>Points againts: <%=awayTeam.getPointsAgainst() %></li>
+                            <li>Points against: <%=awayTeam.getPointsAgainst() %></li>
                         </ul>
                     </div>
                     <div class="cos-xs-6">
@@ -188,49 +226,52 @@ List<Player> playersAway = awayTeam.getPlayers();
           <div class="clearfix visible-md visible-sm col-sm-3"></div>
           
           
-        <div class="col-sm-6  col-lg-4">
+         <!-- bet form for large screens -->
+        <div class="col-sm-6  col-md-4 visible-md visible-lg">
           <div class="panel panel-default">
+          
             <div class="panel-heading">
                 <h3 class="panel-title">Place a bet</h3>
             </div>
             
             <div class="panel-body">
-                <form class="form-horizontal">
+                <form action="/match" method="post" class="form-horizontal">
+                <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="input-group ">
+                                <span class="input-group-addon">$</span>
+                                <input type="text" name="betValue" class="form-control text-right input-lg" placeholder="10">
+                            </div>
+                        </div>			
+                    </div> 
+                
                     <div class="form-froup">
-                        <button type="button" class="btn btn-primary btn-lg btn-block"> <!-- add active with js -->
+                        <button type="submit" value="home" name="team" class="btn btn-primary btn-lg btn-block"> 
                             <%=homeTeam.getName() %> </button>
-                        <button type="button" class="btn btn-danger btn-lg btn-block ">
+                        <button type="submit" value="away" name="team" class="btn btn-danger btn-lg btn-block ">
                             <%=awayTeam.getName() %> </button>
                     </div>
                     
                     <div class="form-group invisible"></div>
                         
-                    <div class="form-group">
-                        <div class="col-xs-8">
-                            <div class="input-group ">
-                                <span class="input-group-addon">$</span>
-                                <input type="text" class="form-control text-right input-lg" placeholder="10">
-                            </div>
-                        </div>
-                        
-                        <div class="col-xs-4">
-                            <button type="button" class="btn btn-success btn-lg btn-block">
-                                Bet <span class="glyphicon glyphicon-chevron-down"> </span></button>
-                        </div>
-						
-                    </div>
-                                    
+                                         
                </form>
             </div>
           </div>
           </div>
+          <!-- End bet form -->
+          
       </div>
     </div>
 
      <div class="container">
          <hr>
-         <footer>
-             <p>This website was built as an assignment for the aar course</p>
+         <footer class="text-right">
+             <p>This website was built as an assignment for the aar course 
+          <span class="visible-xs text-muted ">xs</span>
+          <span class="visible-sm text-muted ">sm</span>
+          <span class="visible-md text-muted ">md</span>
+          <span class="visible-lg text-muted ">lg</span></p>
          </footer>
       </div> <!-- /container -->
 

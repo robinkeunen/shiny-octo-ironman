@@ -43,8 +43,11 @@
         </div>
         <div class="navbar-collapse collapse">
           <form class="navbar-form navbar-right" role="form">
-              <span class="label">getUsername</span>
-              <a class="btn btn-sm btn-success" href="get login url">
+              <a href="/user" class="label">getUsername</a>
+              <a href="/user" class="label">
+              	<span class="glyphicon glyphicon-dashboard"></span>
+              </a>
+              <a class="btn btn-sm btn-success" href="<%= userService.createLoginURL(request.getRequestURI()) %>">
                 Sign out
               </a>
           </form>
@@ -112,11 +115,12 @@
     
       <hr>
       <footer class="text-right">
-        <p>This website was built as an assignment for the aar course</p>
-          <p class="visible-xs text-muted ">xs</p>
-          <p class="visible-sm text-muted ">sm</p>
-          <p class="visible-md text-muted ">md</p>
-          <p class="visible-lg text-muted ">lg</p>
+        <p>This website was built as an assignment for the aar course 
+          <span class="visible-xs text-muted ">xs</span>
+          <span class="visible-sm text-muted ">sm</span>
+          <span class="visible-md text-muted ">md</span>
+          <span class="visible-lg text-muted ">lg</span></p>
+          
       </footer>
     </div> <!-- /container -->
 

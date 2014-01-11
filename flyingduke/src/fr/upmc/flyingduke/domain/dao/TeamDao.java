@@ -82,7 +82,7 @@ public class TeamDao {
 		Object pointsAgainstO = entity.getProperty(POINTS_AGAINST);
 
 		List<Player> players = null;
-		if (entity.hasProperty(PLAYERS)) {
+		if (entity.getProperty(PLAYERS) != null) {
 			@SuppressWarnings("unchecked")
 			List<EmbeddedEntity> playerEEs = (List<EmbeddedEntity>) entity.getProperty(PLAYERS);
 			players = new LinkedList<>();

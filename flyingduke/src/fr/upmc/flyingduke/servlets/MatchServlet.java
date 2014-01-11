@@ -31,10 +31,10 @@ public class MatchServlet extends HttpServlet {
 		System.out.println("azerty");
 		System.out.println(request.getParameter("game"));
 		String gameUUID = request.getParameter("gameid");
-		GameDao gameDao = new GameDao();
-		Game game;
+
+		Game game = null;;
 		try {
-			game = gameDao.get(gameUUID);
+			game = GameDao.get(gameUUID);
 			ctxt.setAttribute("game", game);
 		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
@@ -44,23 +44,24 @@ public class MatchServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// get context attributes
 		ServletContext ctxt = getServletContext();
 		Boolean erreur = true;
 		FDUser fdUser = (FDUser) ctxt.getAttribute("fdUser");
-		FDUserDao fdUserDao = new FDUserDao();
 		Game game = (Game) ctxt.getAttribute("game");
-		System.out.println("MatchDoPost");
+		
+		// get form parameters
+		System.out.println("\n\nMatch:DoPost");
 		String betValueString = request.getParameter("betValue");
 		try{
 			Integer betValue = Integer.parseInt(betValueString);
 			if (betValue <= 0 || betValue > fdUser.getWallet()){
-				System.out.println("erreur Servlet");
+				System.out.println("MatchServlet: wrong value, user has " + fdUser.getWallet());
 				ctxt.setAttribute("erreur", erreur);
 				response.sendRedirect("/views/match.jsp");
 				return;
 			}
-			BetDao betDao = new BetDao();
-			Bet bet = betDao.create(fdUser);
+			Bet bet = BetDao.create(fdUser);
 			bet.setAmount(betValue);
 			String team = request.getParameter("team");
 			if (team.equalsIgnoreCase("home")){
@@ -75,9 +76,9 @@ public class MatchServlet extends HttpServlet {
 			bet.setComputed(false);
 			bet.setGameUUID(game.getUUID());
 			System.out.println(game.getUUID());
-			betDao.update(bet);
+			BetDao.update(bet);
 			fdUser.setWallet(fdUser.getWallet()-betValue);
-			fdUserDao.update(fdUser);
+			FDUserDao.update(fdUser);
 			response.sendRedirect("/views/home.jsp");
 		}catch(Exception e){
 			System.out.println("erreur Cast");
