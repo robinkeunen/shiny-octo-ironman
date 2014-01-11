@@ -217,9 +217,9 @@ List<Player> playersAway = awayTeam.getPlayers();
                             <button type="button" class="btn btn-success btn-lg btn-block">
                                 Bet <span class="glyphicon glyphicon-chevron-down"> </span></button>
                         </div>
-
+						
                     </div>
-                
+                                    
                </form>
             </div>
           </div>

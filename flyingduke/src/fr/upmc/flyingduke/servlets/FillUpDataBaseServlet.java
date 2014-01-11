@@ -150,6 +150,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 									Double gainDouble = (bet.getAmount() * bet.getOdds());
 									int gain = gainDouble.intValue();
 									fdUser.setWallet(fdUser.getWallet() + gain);
+									bet.setComputed(true);
 									try {
 										userDao.update(fdUser);
 									} catch (EntityNotFoundException e) {
