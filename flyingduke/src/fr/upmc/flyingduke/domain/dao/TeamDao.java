@@ -20,7 +20,10 @@ public class TeamDao {
 	private static final String NAME = "NAME";
 	private static final String ALIAS = "ALIAS";
 	private static final String PLAYERS = "PLAYERS";
-
+	private static final String WIN_RATIO = "WIN_RATIO";
+	private static final String POINTS_FOR = "POINTS_FOR";
+	private static final String POINTS_AGAINST = "POINTS_AGAINST"; 
+	
 	private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
 	/**
@@ -54,6 +57,10 @@ public class TeamDao {
 		teamEntity.setProperty(TEAM_KIND, team.getUUID());
 		teamEntity.setProperty(NAME, team.getName());
 		teamEntity.setProperty(ALIAS, team.getAlias());
+		teamEntity.setProperty(WIN_RATIO, team.getWinRatio());
+		teamEntity.setProperty(POINTS_FOR, team.getPointsFor());
+		teamEntity.setProperty(POINTS_AGAINST, team.getPointsAgainst());
+		
 		if (team.getPlayers() != null) {
 			List <EmbeddedEntity> playersEE = new LinkedList<EmbeddedEntity>();
 			for (Player player: team.getPlayers()){
@@ -70,6 +77,9 @@ public class TeamDao {
 		// get properties
 		Object name = entity.getProperty(NAME);
 		Object alias = entity.getProperty(ALIAS);
+		Object winRatioO = entity.getProperty(WIN_RATIO);
+		Object pointsForO = entity.getProperty(POINTS_FOR);
+		Object pointsAgainstO = entity.getProperty(POINTS_AGAINST);
 
 		List<Player> players = null;
 		if (entity.hasProperty(PLAYERS)) {
@@ -87,6 +97,13 @@ public class TeamDao {
 			team.setName((String) name);
 		if (alias != null)
 			team.setAlias((String) alias);
+		if (winRatioO != null)
+			team.setWinRatio((double) winRatioO);
+		if (pointsForO != null)
+			team.setPointsFor((double) pointsForO);
+		if (pointsAgainstO !=null)
+			team.setPointsAgainst((double) pointsAgainstO);
+			
 		if (players != null)
 			team.setPlayers(players); 		
 		return team;

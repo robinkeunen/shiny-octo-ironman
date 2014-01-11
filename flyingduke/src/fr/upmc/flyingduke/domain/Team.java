@@ -7,8 +7,9 @@ public class Team {
 	private String name;
 	private String alias;
 	private List<Player> players;
-	
-	
+	private double winRatio;
+	private double pointsFor;
+	private double pointsAgainst;
 
 	public Team(String uuid) {
 		this.uuid = uuid;
@@ -61,6 +62,48 @@ public class Team {
 	public String toString() {
 		return "Team [uuid=" + uuid + ", name=" + name + ", alias=" + alias
 				+ ", players=[" + players + "]]";
+	}
+
+	/**
+	 * @return the winRatio
+	 */
+	public double getWinRatio() {
+		return winRatio;
+	}
+
+	/**
+	 * @param winRatio the winRatio to set
+	 */
+	public void setWinRatio(double winRatio) {
+		this.winRatio = winRatio;
+	}
+
+	/**
+	 * @return the pointsFor
+	 */
+	public double getPointsFor() {
+		return pointsFor;
+	}
+
+	/**
+	 * @param pointsFor the pointsFor to set
+	 */
+	public void setPointsFor(double pointsFor) {
+		this.pointsFor = pointsFor;
+	}
+
+	/**
+	 * @return the pointsAgainst
+	 */
+	public double getPointsAgainst() {
+		return pointsAgainst;
+	}
+
+	/**
+	 * @param pointsAgainst the pointsAgainst to set
+	 */
+	public void setPointsAgainst(double pointsAgainst) {
+		this.pointsAgainst = pointsAgainst;
 	}
 
 
