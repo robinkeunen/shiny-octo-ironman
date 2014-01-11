@@ -8,8 +8,8 @@ public class Game {
 
 
 	private String uuid;
-	private Team awayTeam;
-	private Team homeTeam;
+	private String awayTeamUUID;
+	private String homeTeamUUID;
 	private Date date;
 	private OddsContainer odds;
 	
@@ -17,28 +17,6 @@ public class Game {
 		this.uuid = uuid;
 	}
 	
-	
-	public Team getAwayTeam() {
-		return awayTeam;
-	}
-	/**
-	 * @param awayTeam the awayTeam to set
-	 */
-	public void setAwayTeam(Team awayTeam)  {
-		this.awayTeam = awayTeam;
-	}
-	/**
-	 * @return the homeTeam
-	 */
-	public Team getHomeTeam() {
-		return homeTeam;
-	}
-	/**
-	 * @param homeTeam the homeTeam to set
-	 */
-	public void setHomeTeam(Team homeTeam) {
-		this.homeTeam = homeTeam;
-	}
 	/**
 	 * @return the date
 	 */
@@ -71,8 +49,8 @@ public class Game {
 		DateFormat df = DateFormat.getInstance();
 		df.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 		
-		return "Game [uuid=" + uuid + ", awayTeam=" + awayTeam.getUUID() + ", homeTeam="
-				+ homeTeam.getUUID() + ", date=" + df.format(date) + ", odds="
+		return "Game [uuid=" + uuid + ", awayTeam=" + awayTeamUUID + ", homeTeam="
+				+ homeTeamUUID + ", date=" + df.format(date) + ", odds="
 				+ odds +"]";
 	}
 
@@ -112,6 +90,34 @@ public class Game {
 		public String toString() {
 			return "[ " + home + ", " + away + "]"; 
 		}
+	}
+
+	/**
+	 * @return the awayTeamUUID
+	 */
+	public String getAwayTeamUUID() {
+		return awayTeamUUID;
+	}
+
+	/**
+	 * @param awayTeamUUID the awayTeamUUID to set
+	 */
+	public void setAwayTeamUUID(String awayTeamUUID) {
+		this.awayTeamUUID = awayTeamUUID;
+	}
+
+	/**
+	 * @return the homeTeamUUID
+	 */
+	public String getHomeTeamUUID() {
+		return homeTeamUUID;
+	}
+
+	/**
+	 * @param homeTeamUUID the homeTeamUUID to set
+	 */
+	public void setHomeTeamUUID(String homeTeamUUID) {
+		this.homeTeamUUID = homeTeamUUID;
 	}
 
 	

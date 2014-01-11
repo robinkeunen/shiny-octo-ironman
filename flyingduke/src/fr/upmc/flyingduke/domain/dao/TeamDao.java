@@ -28,12 +28,12 @@ public class TeamDao {
 
 	/**
 	 * Reconstitutes the team for the given uuid.
-	 * Players have only their uuid field set.
+	 * Players are completely set set.
 	 * @param uuid
 	 * @return
 	 * @throws EntityNotFoundException 
 	 */
-	public static Team shallowGet(String uuid) throws EntityNotFoundException {
+	public static Team deepGet(String uuid) throws EntityNotFoundException {
 
 		// get Entity
 		Key key = KeyFactory.createKey(TEAM_KIND, uuid);
@@ -150,5 +150,5 @@ public class TeamDao {
 			return player;
 		}
 	}
-	
+
 }

@@ -87,8 +87,8 @@ public class FlyingdukeServlet extends HttpServlet {
 
 			// game
 			Game game = new Game(UUID.randomUUID().toString());
-			game.setAwayTeam(away);
-			game.setHomeTeam(home);
+			game.setAwayTeamUUID(away.getUUID());
+			game.setHomeTeamUUID(home.getUUID());
 			game.setDate(new Date());
 
 			// user 
@@ -127,18 +127,10 @@ public class FlyingdukeServlet extends HttpServlet {
 			try {
 				page.println("\nget games, set odds, store, restore");
 				String someuuid = "eccdde3e-f6ec-4f33-8f23-a269dc80b374";
-				Game gameq = GameDao.shallowGet(someuuid);
+				Game gameq = GameDao.get(someuuid);
 				gameq.setOdds(1.25, 1.1);
 				GameDao.store(gameq);
-				page.println(GameDao.shallowGet(someuuid));
-				
-				page.println("\ndeep game get");
-				Game deepGame = GameDao.deepGet(someuuid);
-				page.println(deepGame);
-				Team tp = deepGame.getHomeTeam();
-				tp.setPlayers(plist1);
-				page.println(tp);
-				page.println(deepGame.getAwayTeam());
+				page.println(GameDao.get(someuuid));
 				
 			} catch (EntityNotFoundException | MissingUUIDException e) {
 				// TODO Auto-generated catch block

@@ -38,38 +38,19 @@ public class GameDao {
 	private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
 	/**
-	 * Returns a shallow Game instance : the team fields only have their uuid set.
+	 * Returns a  Game instance>
 	 * TODO If the requested game is not in the DAO, a REST request is sent. 
 	 * @param uuid
 	 * @return the game for the uuid
 	 * @throws EntityNotFoundException
 	 */
-	public static Game shallowGet(String uuid) throws EntityNotFoundException {
+	public static Game get(String uuid) throws EntityNotFoundException {
 
 		// get Entity
 		Key key = KeyFactory.createKey(GAME_KIND, uuid);
 		Entity entity = datastore.get(key);
 
 		Game game = gameFromEntity(entity);
-
-		return game;
-	}
-
-
-	/**
-	 * Returns a Deep Game instance : the team fields have their field set.
-	 * TODO If the requested game is not in the DAO, a REST request is sent.
-	 * @param uuid
-	 * @return
-	 * @throws EntityNotFoundException 
-	 */
-	public static Game deepGet(String uuid) throws EntityNotFoundException {
-		
-		Key key = KeyFactory.createKey(GAME_KIND, uuid);
-		Entity entity = datastore.get(key);
-		
-		Game game = gameFromEntity(entity);
-		game = getTeams(game);
 
 		return game;
 	}
@@ -84,10 +65,8 @@ public class GameDao {
 			throw new MissingUUIDException();
 
 		Entity entity = new Entity(GAME_KIND, game.getUUID());
-		entity.setProperty(HOME_TEAM_UUID, game.getHomeTeam().getUUID());
-		TeamDao.store(game.getHomeTeam());
-		entity.setProperty(AWAY_TEAM_UUID, game.getAwayTeam().getUUID());
-		TeamDao.store(game.getAwayTeam());
+		entity.setProperty(HOME_TEAM_UUID, game.getHomeTeamUUID());
+		entity.setProperty(AWAY_TEAM_UUID, game.getAwayTeamUUID());
 		entity.setProperty(DATE, game.getDate());
 
 		// inner entity for odds
@@ -122,7 +101,7 @@ public class GameDao {
 		List<Game> games = new LinkedList<>();
 		Game game = null;
 		for (Entity entity: pq.asIterable(FetchOptions.Builder.withLimit(gameLimit))) {
-			game = getTeams(gameFromEntity(entity));
+			game = gameFromEntity(entity);
 			games.add(game);
 		}
 		return games;
@@ -172,7 +151,7 @@ public class GameDao {
 		List<Game> games = new LinkedList<>();
 		Game game = null;
 		for (Entity entity: pq.asIterable()) {
-			game = getTeams(gameFromEntity(entity));
+			game = gameFromEntity(entity);
 			games.add(game);
 		}
 
@@ -189,9 +168,9 @@ public class GameDao {
 		// build game
 		Game game = new Game(entity.getKey().getName());
 		if (homeTeamUUID != null)
-			game.setAwayTeam(new Team((String) awayTeamUUID));
+			game.setAwayTeamUUID((String) awayTeamUUID);
 		if (awayTeamUUID != null)
-			game.setHomeTeam(new Team((String) homeTeamUUID));
+			game.setHomeTeamUUID((String) homeTeamUUID);
 		if (date != null)
 			game.setDate((Date) date);		
 		if (oddsO != null) {
@@ -202,16 +181,5 @@ public class GameDao {
 		}
 		return game;
 	}
-	
-	private static Game getTeams(Game game)  {
-		try {
-			Team homeTeam = TeamDao.shallowGet(game.getHomeTeam().getUUID());
-			Team awayTeam = TeamDao.shallowGet(game.getAwayTeam().getUUID());
-			game.setHomeTeam(homeTeam);
-			game.setAwayTeam(awayTeam);	
-		} catch (EntityNotFoundException e) {
-			System.out.println("WARNING: Teams not found for " + game);
-		}
-		return game;
-	}
+
 }
