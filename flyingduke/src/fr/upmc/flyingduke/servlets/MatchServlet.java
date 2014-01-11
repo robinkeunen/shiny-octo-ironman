@@ -24,15 +24,17 @@ public class MatchServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
+		System.out.println("DOGET MATCH!!");
 		ServletContext ctxt = getServletContext();
 		System.out.println("lalalaal");
 		System.out.println("ici");
+		System.out.println("azerty");
 		System.out.println(request.getParameter("game"));
-		String gameUUID = request.getParameter("game");
+		String gameUUID = request.getParameter("gameid");
 		GameDao gameDao = new GameDao();
 		Game game;
 		try {
-			game = gameDao.shallowGet(gameUUID);
+			game = gameDao.deepGet(gameUUID);
 			System.out.println(game.getUUID());
 			ctxt.setAttribute("game", game);
 		} catch (EntityNotFoundException e) {

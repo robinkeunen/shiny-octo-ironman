@@ -50,9 +50,9 @@ if (erreur != null && erreur){
 GAME
 <br/>
 <form action="/match" Method="POST">
-<input type="radio" name="team" value="home" checked="checked"/> Home <%= game.getHomeTeam().getUUID()%> Odds <%= twoDigitsFormat.format(game.getOdds().getHome())%>
+<input type="radio" name="team" value="home" checked="checked"/> Home <%= game.getHomeTeam().getName()%> Odds <%= twoDigitsFormat.format(game.getOdds().getHome())%>
 <br/>
-<input type="radio" value="away" name="team"/> Away <%= game.getAwayTeam().getUUID()%> Odds <%= twoDigitsFormat.format(game.getOdds().getAway())%>
+<input type="radio" value="away" name="team"/> Away <%= game.getAwayTeam().getName()%> Odds <%= twoDigitsFormat.format(game.getOdds().getAway())%>
 <br/>
 
 Value <input type="text" name="betValue"><br/>

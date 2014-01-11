@@ -41,7 +41,7 @@ public class Parser {
 			for (int i = 0; i < teams.getLength(); i++) {
 				Element teamXml = (Element) teams.item(i);
 				String teamUUID = teamXml.getAttribute("id");
-				String teamName = teamXml.getAttribute("name");
+				String teamName = teamXml.getAttribute("market") + " " + teamXml.getAttribute("name");
 				String teamAlias = teamXml.getAttribute("alias");
 				Team team = new Team(teamUUID);
 				team.setAlias(teamAlias);
@@ -74,10 +74,10 @@ public class Parser {
 				Element awayTeamElement = (Element) awayTeams.item(0);
 				//Get Id, name and alias for Away and Home Teams
 				Team homeTeam = new Team(homeTeamElement.getAttribute("id"));
-				homeTeam.setName(homeTeamElement.getAttribute("name"));
+				homeTeam.setName(homeTeamElement.getAttribute("market") + " " + homeTeamElement.getAttribute("name"));
 				homeTeam.setAlias(homeTeamElement.getAttribute("alias"));
 				Team awayTeam = new Team(awayTeamElement.getAttribute("id"));
-				awayTeam.setName(awayTeamElement.getAttribute("name"));
+				awayTeam.setName(awayTeamElement.getAttribute("market") + " " + awayTeamElement.getAttribute("name"));
 				awayTeam.setAlias(awayTeamElement.getAttribute("alias"));
 				//Set Game's date
 				String dateXml = gameXml.getAttribute("scheduled");
@@ -117,10 +117,10 @@ public class Parser {
 				Element awayTeamElement = (Element) awayTeams.item(0);
 				//Get Id, name and alias for Away and Home Teams
 				Team homeTeam = new Team(homeTeamElement.getAttribute("id"));
-				homeTeam.setName(homeTeamElement.getAttribute("name"));
+				homeTeam.setName(homeTeamElement.getAttribute("market") + " " + homeTeamElement.getAttribute("name"));
 				homeTeam.setAlias(homeTeamElement.getAttribute("alias"));
 				Team awayTeam = new Team(awayTeamElement.getAttribute("id"));
-				awayTeam.setName(awayTeamElement.getAttribute("name"));
+				awayTeam.setName(awayTeamElement.getAttribute("market") + " " + awayTeamElement.getAttribute("name"));
 				awayTeam.setAlias(awayTeamElement.getAttribute("alias"));
 				//Set Game's AwayTeam, homeTeam and date
 				game.setAwayTeam(awayTeam);
@@ -146,6 +146,7 @@ public class Parser {
 			InputSource is = new InputSource();
 			is.setCharacterStream(new StringReader(xmlToParse));
 			Document doc = db.parse(is);
+			Thread.sleep(1000);
 			//Fetch Team Statistics and XML parsing
 			RESTQuery queryLauncher = new RESTQuery();
 			String xmlStats = queryLauncher.getTeamsStatistics();
@@ -169,15 +170,18 @@ public class Parser {
 				Element awayTeamElement = (Element) awayTeams.item(0);
 				//Get Id, name and alias for Away and Home Teams
 				Team homeTeam = new Team(homeTeamElement.getAttribute("id"));
-				homeTeam.setName(homeTeamElement.getAttribute("name"));
+				homeTeam.setName(homeTeamElement.getAttribute("market") + " " + homeTeamElement.getAttribute("name"));
 				homeTeam.setAlias(homeTeamElement.getAttribute("alias"));
 				Team awayTeam = new Team(awayTeamElement.getAttribute("id"));
-				awayTeam.setName(awayTeamElement.getAttribute("name"));
+				awayTeam.setName(awayTeamElement.getAttribute("market") + " " + awayTeamElement.getAttribute("name"));
 				awayTeam.setAlias(awayTeamElement.getAttribute("alias"));
 				//Set Game's AwayTeam, homeTeam and date
 				game.setAwayTeam(awayTeam);
 				game.setHomeTeam(homeTeam);
-				game.setDate(calendar.getTime());
+				String dateXml = gameXml.getAttribute("scheduled");
+				System.out.println("DATE : " +dateXml);
+				Date date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").parse(dateXml);
+				game.setDate(date);
 				//Get win pourcentages for away and home Team
 				for(int j=0;j<teamsStats.getLength();j++){
 					Element teamStatXml = (Element) teamsStats.item(j);

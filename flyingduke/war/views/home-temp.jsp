@@ -139,29 +139,22 @@ List<Game> gamesList = gameDao.gameForDay(today);
                         <div class="col-sm-1"></div>
                     </div>
                 </div>
-            
-          
+                
                  <ul class="list-group">
-            <%
-DecimalFormat twoDigitsFormat = new DecimalFormat("##.##");
-for(Game game : gamesList){ 
-	%>   
-                     <a href="/match?gameid=<%=game.getUUID() %>" class="list-group-item">
+                     <a href="#" class="list-group-item">
                         <div class="row">
-                            <div class="col-xs-12 col-sm-3"><%= game.getDate()%></div>
-                            <div class="col-xs-9 col-sm-3"><%= game.getHomeTeam().getName()%> </div>
-                            <div class="col-xs-3 col-sm-1"><%=twoDigitsFormat.format(game.getOdds().getHome()) %> </div>
-                            <div class="col-xs-9 col-sm-3"><%= game.getAwayTeam().getName()%> </div>
-                            <div class="col-xs-3 col-sm-1"><%=twoDigitsFormat.format(game.getOdds().getAway()) %></div>
+                            <div class="col-xs-12 col-sm-3">23 Feb 2014 19:00</div>
+                            <div class="col-xs-9 col-sm-3">North Too Kalorik</div>
+                            <div class="col-xs-3 col-sm-1">1.2</div>
+                            <div class="col-xs-9 col-sm-3">San Francisco Giants</div>
+                            <div class="col-xs-3 col-sm-1">1.5</div>
                             <div class="col-xs-2 col-sm-1 btn-link active hidden-xs">
                                     <span class="glyphicon glyphicon-arrow-right"></span>
                             </div>
                         </div>
                      </a>
-                     <%} %>
                 </ul>       
             </div>
-            
                 
                   </div>
 

@@ -96,7 +96,6 @@ public class GameDao {
 			embeddedEntity.setProperty(ODDS_AWAY, odds.getAway());
 			entity.setProperty(ODDS, embeddedEntity);
 		}
-
 		System.out.println("store " + game.toString());
 		datastore.put(entity);
 	}

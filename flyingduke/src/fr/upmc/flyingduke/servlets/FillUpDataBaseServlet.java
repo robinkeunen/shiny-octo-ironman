@@ -16,6 +16,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -46,7 +47,16 @@ public class FillUpDataBaseServlet extends HttpServlet {
 					System.out.println(game.getDate());
 					try {
 						gameDao.store(game);
+						System.out.println(game.getUUID());
+						System.out.println("NOM Home :");
+						System.out.println( game.getHomeTeam().getName());
+						Game gamesql = gameDao.deepGet(game.getUUID());
+						System.out.println("NOM EXTERIEUR :");
+						System.out.println( game.getAwayTeam().getName());
 					} catch (MissingUUIDException e) {
+						e.printStackTrace();
+					} catch (EntityNotFoundException e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}	
