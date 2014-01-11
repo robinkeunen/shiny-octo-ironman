@@ -8,9 +8,9 @@
 <%@ page import="fr.upmc.flyingduke.domain.Team" %>
 <%@ page import="fr.upmc.flyingduke.domain.dao.FDUserDao" %>
 <%@ page import="fr.upmc.flyingduke.domain.dao.TeamDao" %>
-<%@ page import="java.text.DecimalFormat" %>
 <%@ page import="java.util.List" %>
 <%@ page import="fr.upmc.flyingduke.domain.Player" %>
+<%@ page import="java.text.DecimalFormat" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
@@ -127,7 +127,7 @@ List<Player> playersAway = awayTeam.getPlayers();
                         </ul>
                     </div>
                     <div class="cos-xs-6">
-                        <h1 class="text-center">1.25</h1>
+                        <h1 class="text-center"><%=twoDigitsFormat.format(game.getOdds().getHome()) %></h1>
                     </div>
                 </div>
             </div>
@@ -163,7 +163,7 @@ List<Player> playersAway = awayTeam.getPlayers();
                         </ul>
                     </div>
                     <div class="cos-xs-6">
-                        <h1 class="text-center">1.25</h1>
+                        <h1 class="text-center"><%=twoDigitsFormat.format(game.getOdds().getAway()) %></h1>
                     </div>
                 </div>
             </div>
