@@ -135,7 +135,9 @@ public class FlyingdukeServlet extends HttpServlet {
 				page.println("\ndeep game get");
 				Game deepGame = GameDao.deepGet(someuuid);
 				page.println(deepGame);
-				page.println(deepGame.getHomeTeam());
+				Team tp = deepGame.getHomeTeam();
+				tp.setPlayers(plist1);
+				page.println(tp);
 				page.println(deepGame.getAwayTeam());
 				
 			} catch (EntityNotFoundException | MissingUUIDException e) {
