@@ -3,6 +3,7 @@ package fr.upmc.flyingduke.servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -107,7 +108,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
 			int hour = today.get(Calendar.HOUR_OF_DAY);
 			System.out.println("avant le if");
-			if (hour >= 0 && hour < 6){
+			/*if (hour >= 0 && hour < 6){
 				//if it's before 6 A.M, fetch games of yesterday
 				yesterday.add(Calendar.DATE, -1);
 				gameList = gameDao.gameForDay(yesterday);  
@@ -115,7 +116,9 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			}else{
 				//else fetch today's games
 				gameList = gameDao.gameForDay(today);  
-			}
+			}*/
+			yesterday.add(Calendar.DATE, -1);
+			gameList = gameDao.gameForDay(yesterday);  
 			System.out.println("apres le if");
 			RESTQuery queryLauncher = new RESTQuery();
 			BetDao betDao = new BetDao();
@@ -123,6 +126,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			List<FDUser> usersList = userDao.getAllFDUsers();
 			for(Game game : gameList){
 				System.out.println("UUID : " + game.getUUID());
+				System.out.println("DATE : " + game.getDate());
 				String xmlBoxScore = queryLauncher.getGameByUUID(game.getUUID());
 				String over = parser.parseGameBoxScore(xmlBoxScore);
 				//Sleep for 1s because of the API limits
@@ -136,6 +140,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 					BetChoice winningTeam = BetChoice.AWAY;
 					if (over.equalsIgnoreCase("home")){
 						winningTeam = BetChoice.HOME; 
+						System.out.println("Victoire à domicile");
 					}
 					for (FDUser fdUser : usersList){
 						List<Bet> listBetsUser = betDao.getBets2Compute(fdUser);
@@ -145,13 +150,13 @@ public class FillUpDataBaseServlet extends HttpServlet {
 									Double gainDouble = (bet.getAmount() * bet.getOdds());
 									int gain = gainDouble.intValue();
 									fdUser.setWallet(fdUser.getWallet() + gain);
+									try {
+										userDao.update(fdUser);
+									} catch (EntityNotFoundException e) {
+										System.out.println("Update of user impossible");
+									}
 								}
 							}
-						}
-						try {
-							userDao.update(fdUser);
-						} catch (EntityNotFoundException e) {
-							System.out.println("Update of user impossible");
 						}
 					}
 				}
@@ -195,8 +200,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			String month = Integer.toString(monthInt);
 			xmlResult = requestsLauncher.getGamesByDate(request.getParameter("day"), request.getParameter("month"), request.getParameter("year"));
 			System.out.println(dayInt + " " + monthInt + " " + yearInt);
-			Date date = new Date(yearInt -1900,monthInt,dayInt);
-			ArrayList<Game> gamesList = parser.parseGamesForDate(xmlResult, date);
+			ArrayList<Game> gamesList = parser.parseGamesForDate(xmlResult);
 			System.out.println("Fin du parser");
 			for (Game game : gamesList){
 				System.out.println(game.getDate());

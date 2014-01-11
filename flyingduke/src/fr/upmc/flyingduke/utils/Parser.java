@@ -141,7 +141,7 @@ public class Parser {
 	}
 
 
-	public ArrayList<Game> parseGamesForDate(String xmlToParse, Date date){
+	public ArrayList<Game> parseGamesForDate(String xmlToParse){
 		ArrayList<Game> gamesList = new ArrayList<Game>();
 		try{
 			GameDao gameDao = new GameDao();
@@ -155,6 +155,8 @@ public class Parser {
 			for (int i = 0; i < games.getLength(); i++) {
 				Element gameXml = (Element) games.item(i);
 				String gameUUID = gameXml.getAttribute("id");
+				String dateXml = gameXml.getAttribute("scheduled");
+				Date date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").parse(dateXml);
 				Game game = new Game(gameUUID);
 				NodeList homeTeams = gameXml.getElementsByTagName("home");
 				NodeList awayTeams = gameXml.getElementsByTagName("away");
