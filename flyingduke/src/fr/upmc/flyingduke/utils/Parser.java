@@ -138,8 +138,8 @@ public class Parser {
 	public ArrayList<Game> parseGamesForDay(String xmlToParse){
 		ArrayList<Game> gamesList = new ArrayList<Game>();
 		try{
-			double home_winpct = 0.00;
-			double away_winpct = 0.00;
+			double home_winpct, away_winpct, home_PointsFor, home_PointsAgainst, away_PointsFor, away_PointsAgainst;
+			home_winpct = away_winpct = home_PointsAgainst = home_PointsFor =away_PointsAgainst = away_PointsFor = 0.0;
 			HashMap gameOdds = new HashMap();
 			Calendar calendar = new GregorianCalendar();
 			DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -175,9 +175,7 @@ public class Parser {
 				Team awayTeam = new Team(awayTeamElement.getAttribute("id"));
 				awayTeam.setName(awayTeamElement.getAttribute("market") + " " + awayTeamElement.getAttribute("name"));
 				awayTeam.setAlias(awayTeamElement.getAttribute("alias"));
-				//Set Game's AwayTeam, homeTeam and date
-				game.setAwayTeam(awayTeam);
-				game.setHomeTeam(homeTeam);
+				//Set date of the game
 				String dateXml = gameXml.getAttribute("scheduled");
 				System.out.println("DATE : " +dateXml);
 				Date date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").parse(dateXml);
@@ -188,10 +186,23 @@ public class Parser {
 					String teamStatId = teamStatXml.getAttribute("id");
 					if(teamStatId.equalsIgnoreCase(homeTeam.getUUID())){
 						home_winpct = Double.parseDouble(teamStatXml.getAttribute("win_pct"));
+						home_PointsFor = Double.parseDouble(teamStatXml.getAttribute("points_for"));
+						home_PointsAgainst = Double.parseDouble(teamStatXml.getAttribute("points_against"));
 					}else if(teamStatId.equalsIgnoreCase(awayTeam.getUUID())){
 						away_winpct = Double.parseDouble(teamStatXml.getAttribute("win_pct"));
+						away_PointsFor = Double.parseDouble(teamStatXml.getAttribute("points_for"));
+						away_PointsAgainst = Double.parseDouble(teamStatXml.getAttribute("points_against"));
 					}
 				}
+				homeTeam.setWinRatio(home_winpct);
+				homeTeam.setPointsFor(home_PointsFor);
+				homeTeam.setPointsAgainst(home_PointsAgainst);
+				awayTeam.setWinRatio(away_winpct);
+				awayTeam.setPointsFor(away_PointsFor);
+				awayTeam.setPointsAgainst(away_PointsAgainst);
+			//Set Game's AwayTeam, homeTeam
+				game.setAwayTeam(awayTeam);
+				game.setHomeTeam(homeTeam);
 				//Set game's odds
 				double awayOdds = 1.25 + home_winpct/away_winpct;
 				double homeOdds = 1.0 + away_winpct/home_winpct;

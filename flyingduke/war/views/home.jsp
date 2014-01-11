@@ -148,6 +148,7 @@ for(Game game : gamesList){
 	%>   
                      <a href="/match?gameid=<%=game.getUUID() %>" class="list-group-item">
                         <div class="row">
+                        WIN !! : <%=game.getAwayTeam().getWinRatio() %>
                             <div class="col-xs-12 col-sm-3"><%= game.getDate()%></div>
                             <div class="col-xs-9 col-sm-3"><%= game.getHomeTeam().getName()%> </div>
                             <div class="col-xs-3 col-sm-1"><%=twoDigitsFormat.format(game.getOdds().getHome()) %> </div>

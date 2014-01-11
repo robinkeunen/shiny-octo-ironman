@@ -35,7 +35,7 @@ public class MatchServlet extends HttpServlet {
 		Game game;
 		try {
 			game = gameDao.deepGet(gameUUID);
-			System.out.println(game.getUUID());
+			System.out.println("PLAYERS SERVLET :" + game.getAwayTeam().getPlayers());
 			ctxt.setAttribute("game", game);
 		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
