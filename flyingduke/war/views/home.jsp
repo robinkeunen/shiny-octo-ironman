@@ -6,7 +6,9 @@
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
 <%@ page import="fr.upmc.flyingduke.domain.FDUser" %>
 <%@ page import="fr.upmc.flyingduke.domain.Game" %>
+<%@ page import="fr.upmc.flyingduke.domain.Team" %>
 <%@ page import="fr.upmc.flyingduke.domain.dao.FDUserDao" %>
+<%@ page import="fr.upmc.flyingduke.domain.dao.TeamDao" %>
 <%@ page import="fr.upmc.flyingduke.domain.dao.GameDao" %>
 <%@ page import="fr.upmc.flyingduke.utils.*" %>
 <%@ page import="java.util.Calendar" %>
@@ -144,15 +146,17 @@ List<Game> gamesList = gameDao.gameForDay(today);
                  <ul class="list-group">
             <%
 DecimalFormat twoDigitsFormat = new DecimalFormat("##.##");
+TeamDao teamDao = new TeamDao();
 for(Game game : gamesList){ 
+	Team homeTeam = teamDao.deepGet(game.getHomeTeamUUID());
+	Team awayTeam = teamDao.deepGet(game.getAwayTeamUUID());
 	%>   
                      <a href="/match?gameid=<%=game.getUUID() %>" class="list-group-item">
                         <div class="row">
-                        WIN !! : <%=game.getAwayTeam().getWinRatio() %>
                             <div class="col-xs-12 col-sm-3"><%= game.getDate()%></div>
-                            <div class="col-xs-9 col-sm-3"><%= game.getHomeTeam().getName()%> </div>
+                            <div class="col-xs-9 col-sm-3"><%= homeTeam.getName()%> </div>
                             <div class="col-xs-3 col-sm-1"><%=twoDigitsFormat.format(game.getOdds().getHome()) %> </div>
-                            <div class="col-xs-9 col-sm-3"><%= game.getAwayTeam().getName()%> </div>
+                            <div class="col-xs-9 col-sm-3"><%= awayTeam.getName()%> </div>
                             <div class="col-xs-3 col-sm-1"><%=twoDigitsFormat.format(game.getOdds().getAway()) %></div>
                             <div class="col-xs-2 col-sm-1 btn-link active hidden-xs">
                                     <span class="glyphicon glyphicon-arrow-right"></span>

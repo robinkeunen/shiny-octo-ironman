@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -21,9 +23,13 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
+import fr.upmc.flyingduke.domain.Bet;
+import fr.upmc.flyingduke.domain.FDUser;
 import fr.upmc.flyingduke.domain.Game;
 import fr.upmc.flyingduke.domain.Player;
 import fr.upmc.flyingduke.domain.Team;
+import fr.upmc.flyingduke.domain.dao.BetDao;
+import fr.upmc.flyingduke.domain.dao.FDUserDao;
 import fr.upmc.flyingduke.domain.dao.GameDao;
 import fr.upmc.flyingduke.domain.dao.TeamDao;
 import fr.upmc.flyingduke.exceptions.MissingUUIDException;
@@ -47,19 +53,15 @@ public class FillUpDataBaseServlet extends HttpServlet {
 					System.out.println(game.getDate());
 					try {
 						gameDao.store(game);
+						
 						System.out.println(game.getUUID());
 						System.out.println("NOM Home :");
-						System.out.println( game.getHomeTeam().getName());
-						Game gamesql = gameDao.deepGet(game.getUUID());
 						System.out.println("NOM EXTERIEUR :");
-						System.out.println( game.getAwayTeam().getName());
-					} catch (MissingUUIDException e) {
+						} catch (MissingUUIDException e) {
 						e.printStackTrace();
-					} catch (EntityNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					} 
 				}	
+				
 			}else if (action.equalsIgnoreCase("getAllGames")){
 				xmlResult = requestsLauncher.getAllGames();
 				ArrayList<Game> gamesList = parser.parseAllGames(xmlResult);
@@ -92,6 +94,17 @@ public class FillUpDataBaseServlet extends HttpServlet {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+				}
+			}else if(action.equalsIgnoreCase("betsComputing")){
+				Calendar today = Calendar.getInstance();
+				today.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
+				today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
+				BetDao betDao = new BetDao();
+				FDUserDao userDao = new FDUserDao();
+				List<FDUser> usersList = userDao.getAllFDUsers();
+				for (FDUser fdUser : usersList){
+					List<Bet> listBetsUser = betDao.getBets2Compute(fdUser);
+					
 				}
 			}
 			

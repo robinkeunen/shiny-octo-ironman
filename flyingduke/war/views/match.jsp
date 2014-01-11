@@ -5,7 +5,9 @@
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
 <%@ page import="fr.upmc.flyingduke.domain.FDUser" %>
 <%@ page import="fr.upmc.flyingduke.domain.Game" %>
+<%@ page import="fr.upmc.flyingduke.domain.Team" %>
 <%@ page import="fr.upmc.flyingduke.domain.dao.FDUserDao" %>
+<%@ page import="fr.upmc.flyingduke.domain.dao.TeamDao" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="java.util.List" %>
 <%@ page import="fr.upmc.flyingduke.domain.Player" %>
@@ -74,8 +76,11 @@ if (erreur != null && erreur){
 	erreur=false;
 	ctxt.setAttribute("erreur",erreur);
 }
-//List<Player> playersHome = game.getHomeTeam().getPlayers();
-//List<Player> playersAway = game.getAwayTeam().getPlayers();
+TeamDao teamDao = new TeamDao();
+Team homeTeam = teamDao.deepGet(game.getHomeTeamUUID());
+Team awayTeam = teamDao.deepGet(game.getAwayTeamUUID());
+List<Player> playersHome = homeTeam.getPlayers();
+List<Player> playersAway = awayTeam.getPlayers();
 %>
 
 
@@ -92,6 +97,7 @@ if (erreur != null && erreur){
         </div>
         <div class="navbar-collapse collapse">
           <form class="navbar-form navbar-right" role="form">
+          <form class="navbar-form navbar-right" role="form">
               <span class="label">getUsername</span>
               <a class="btn btn-sm btn-success" href="get login url">
                 Sign out
@@ -107,7 +113,7 @@ if (erreur != null && erreur){
           <div class="col-sm-6 col-lg-4">
           <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title"><%=game.getHomeTeam().getName() %> <small>Home</small></h3>
+                <h3 class="panel-title"><%=homeTeam.getName() %> <small>Home</small></h3>
                     
                 </div>            
             
@@ -115,9 +121,9 @@ if (erreur != null && erreur){
                 <div class="row">
                     <div class="col-xs-6">
                         <ul class="list-unstyled">
-                            <li>Win ratio:  <%=game.getHomeTeam().getWinRatio()%></li>
-                            <li>Points for: <%=game.getHomeTeam().getPointsFor() %></li>
-                            <li>Points againts: <%=game.getHomeTeam().getPointsAgainst() %></li>
+                            <li>Win ratio:  <%=homeTeam.getWinRatio()%></li>
+                            <li>Points for: <%=homeTeam.getPointsFor() %></li>
+                            <li>Points againts: <%=homeTeam.getPointsAgainst() %></li>
                         </ul>
                     </div>
                     <div class="cos-xs-6">
@@ -127,15 +133,15 @@ if (erreur != null && erreur){
             </div>
             <table class="table table-striped ">
              
-              <%//for(Player player : playersHome){
+              <%for(Player player : playersHome){
               	%>
               
                 <tr>
-                    <td><%//player.getFirstName() %></td>
-                    <td><%//player.getLastName() %></td>
-                    <td><%//player.getPosition() %></td>
+                    <td><%=player.getFirstName() %></td>
+                    <td><%=player.getLastName() %></td>
+                    <td><%=player.getPosition() %></td>
                 </tr>
-                <%//} %>
+                <%} %>
               </table>
 
           </div>
@@ -144,16 +150,16 @@ if (erreur != null && erreur){
         <div class="col-sm-6 col-lg-4">
           <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title"><%=game.getAwayTeam().getName()%> <small>Away</small></h3>
+                <h3 class="panel-title"><%=awayTeam.getName()%> <small>Away</small></h3>
             </div>
             
             <div class="panel-body">
                 <div class="row">
                     <div class="col-xs-6">
                         <ul class="list-unstyled">
-                            <li>Win ratio:  <%=game.getAwayTeam().getWinRatio()%></li>
-                            <li>Points for: <%=game.getAwayTeam().getPointsFor() %></li>
-                            <li>Points againts: <%=game.getAwayTeam().getPointsAgainst() %></li>
+                            <li>Win ratio:  <%=awayTeam.getWinRatio()%></li>
+                            <li>Points for: <%=awayTeam.getPointsFor() %></li>
+                            <li>Points againts: <%=awayTeam.getPointsAgainst() %></li>
                         </ul>
                     </div>
                     <div class="cos-xs-6">
@@ -165,15 +171,15 @@ if (erreur != null && erreur){
             
             <table class="table table-striped ">
              
-              <%//for(Player player : playersHome){
+              <%for(Player player : playersAway){
               	%>
               
                 <tr>
-                    <td><%//player.getFirstName() %></td>
-                    <td><%//player.getLastName() %></td>
-                    <td><%//player.getPosition() %></td>
+                    <td><%=player.getFirstName() %></td>
+                    <td><%=player.getLastName() %></td>
+                    <td><%=player.getPosition() %></td>
                 </tr>
-                <%//} %>
+                <%} %>
               </table>
               </div>
           </div>
@@ -192,9 +198,9 @@ if (erreur != null && erreur){
                 <form class="form-horizontal">
                     <div class="form-froup">
                         <button type="button" class="btn btn-primary btn-lg btn-block"> <!-- add active with js -->
-                            <%=game.getHomeTeam().getName() %> </button>
+                            <%=homeTeam.getName() %> </button>
                         <button type="button" class="btn btn-danger btn-lg btn-block ">
-                            <%=game.getAwayTeam().getName() %> </button>
+                            <%=awayTeam.getName() %> </button>
                     </div>
                     
                     <div class="form-group invisible"></div>

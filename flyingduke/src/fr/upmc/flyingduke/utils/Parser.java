@@ -20,12 +20,16 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.google.appengine.api.datastore.EntityNotFoundException;
+
 import fr.upmc.flyingduke.domain.Game;
 import fr.upmc.flyingduke.domain.Player;
 import fr.upmc.flyingduke.domain.Team;
 import fr.upmc.flyingduke.domain.dao.GameDao;
+import fr.upmc.flyingduke.domain.dao.TeamDao;
 import fr.upmc.flyingduke.servlets.HomeServlet;
 import fr.upmc.flyingduke.domain.Player;
+import fr.upmc.flyingduke.exceptions.MissingUUIDException;
 
 public class Parser {
 
@@ -73,20 +77,23 @@ public class Parser {
 				Element homeTeamElement = (Element) homeTeams.item(0);
 				Element awayTeamElement = (Element) awayTeams.item(0);
 				//Get Id, name and alias for Away and Home Teams
-				Team homeTeam = new Team(homeTeamElement.getAttribute("id"));
+				/*Team homeTeam = new Team(homeTeamElement.getAttribute("id"));
 				homeTeam.setName(homeTeamElement.getAttribute("market") + " " + homeTeamElement.getAttribute("name"));
 				homeTeam.setAlias(homeTeamElement.getAttribute("alias"));
 				Team awayTeam = new Team(awayTeamElement.getAttribute("id"));
 				awayTeam.setName(awayTeamElement.getAttribute("market") + " " + awayTeamElement.getAttribute("name"));
 				awayTeam.setAlias(awayTeamElement.getAttribute("alias"));
+				*/
+				String homeTeamId = homeTeamElement.getAttribute("id");
+				String awayTeamId = awayTeamElement.getAttribute("id");
 				//Set Game's date
 				String dateXml = gameXml.getAttribute("scheduled");
 				Date date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").parse(dateXml);
 				System.out.println("DATE : " + date);
 				game.setDate(date);
 				//Set Game's AwayTeam, homeTeam
-				game.setAwayTeam(awayTeam);
-				game.setHomeTeam(homeTeam);
+				game.setAwayTeamUUID(awayTeamId);
+				game.setHomeTeamUUID(homeTeamId);
 				//Add the game to the ArrayList previously created
 				gamesList.add(game);
 			}
@@ -101,6 +108,8 @@ public class Parser {
 	public ArrayList<Game> parseGamesForDate(String xmlToParse, Date date){
 		ArrayList<Game> gamesList = new ArrayList<Game>();
 		try{
+			GameDao gameDao = new GameDao();
+			TeamDao teamDao = new TeamDao();
 			DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			InputSource is = new InputSource();
 			is.setCharacterStream(new StringReader(xmlToParse));
@@ -116,15 +125,17 @@ public class Parser {
 				Element homeTeamElement = (Element) homeTeams.item(0);
 				Element awayTeamElement = (Element) awayTeams.item(0);
 				//Get Id, name and alias for Away and Home Teams
-				Team homeTeam = new Team(homeTeamElement.getAttribute("id"));
-				homeTeam.setName(homeTeamElement.getAttribute("market") + " " + homeTeamElement.getAttribute("name"));
-				homeTeam.setAlias(homeTeamElement.getAttribute("alias"));
-				Team awayTeam = new Team(awayTeamElement.getAttribute("id"));
-				awayTeam.setName(awayTeamElement.getAttribute("market") + " " + awayTeamElement.getAttribute("name"));
-				awayTeam.setAlias(awayTeamElement.getAttribute("alias"));
+				//Team homeTeam = new Team(homeTeamElement.getAttribute("id"));
+				//homeTeam.setName(homeTeamElement.getAttribute("market") + " " + homeTeamElement.getAttribute("name"));
+				//homeTeam.setAlias(homeTeamElement.getAttribute("alias"));
+				//Team awayTeam = new Team(awayTeamElement.getAttribute("id"));
+				String homeTeamId = homeTeamElement.getAttribute("id");
+				String awayTeamId = awayTeamElement.getAttribute("id");
+				//awayTeam.setName(awayTeamElement.getAttribute("market") + " " + awayTeamElement.getAttribute("name"));
+				//awayTeam.setAlias(awayTeamElement.getAttribute("alias"));
 				//Set Game's AwayTeam, homeTeam and date
-				game.setAwayTeam(awayTeam);
-				game.setHomeTeam(homeTeam);
+				game.setAwayTeamUUID(awayTeamId);
+				game.setHomeTeamUUID(homeTeamId);
 				game.setDate(date);
 				//Add the game to the ArrayList previously created
 				gamesList.add(game);
@@ -141,6 +152,8 @@ public class Parser {
 			double home_winpct, away_winpct, home_PointsFor, home_PointsAgainst, away_PointsFor, away_PointsAgainst;
 			home_winpct = away_winpct = home_PointsAgainst = home_PointsFor =away_PointsAgainst = away_PointsFor = 0.0;
 			HashMap gameOdds = new HashMap();
+			GameDao gameDao = new GameDao();
+			TeamDao teamDao = new TeamDao();
 			Calendar calendar = new GregorianCalendar();
 			DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			InputSource is = new InputSource();
@@ -169,12 +182,14 @@ public class Parser {
 				Element homeTeamElement = (Element) homeTeams.item(0);
 				Element awayTeamElement = (Element) awayTeams.item(0);
 				//Get Id, name and alias for Away and Home Teams
-				Team homeTeam = new Team(homeTeamElement.getAttribute("id"));
-				homeTeam.setName(homeTeamElement.getAttribute("market") + " " + homeTeamElement.getAttribute("name"));
-				homeTeam.setAlias(homeTeamElement.getAttribute("alias"));
-				Team awayTeam = new Team(awayTeamElement.getAttribute("id"));
-				awayTeam.setName(awayTeamElement.getAttribute("market") + " " + awayTeamElement.getAttribute("name"));
-				awayTeam.setAlias(awayTeamElement.getAttribute("alias"));
+				//Team homeTeam = new Team(homeTeamElement.getAttribute("id"));
+				//homeTeam.setName(homeTeamElement.getAttribute("market") + " " + homeTeamElement.getAttribute("name"));
+				//homeTeam.setAlias(homeTeamElement.getAttribute("alias"));
+				String homeTeamId = homeTeamElement.getAttribute("id");
+				String awayTeamId = awayTeamElement.getAttribute("id");
+				//Team awayTeam = new Team(awayTeamElement.getAttribute("id"));
+				//awayTeam.setName(awayTeamElement.getAttribute("market") + " " + awayTeamElement.getAttribute("name"));
+				//awayTeam.setAlias(awayTeamElement.getAttribute("alias"));
 				//Set date of the game
 				String dateXml = gameXml.getAttribute("scheduled");
 				System.out.println("DATE : " +dateXml);
@@ -184,29 +199,44 @@ public class Parser {
 				for(int j=0;j<teamsStats.getLength();j++){
 					Element teamStatXml = (Element) teamsStats.item(j);
 					String teamStatId = teamStatXml.getAttribute("id");
-					if(teamStatId.equalsIgnoreCase(homeTeam.getUUID())){
+					if(teamStatId.equalsIgnoreCase(homeTeamId)){
 						home_winpct = Double.parseDouble(teamStatXml.getAttribute("win_pct"));
 						home_PointsFor = Double.parseDouble(teamStatXml.getAttribute("points_for"));
 						home_PointsAgainst = Double.parseDouble(teamStatXml.getAttribute("points_against"));
-					}else if(teamStatId.equalsIgnoreCase(awayTeam.getUUID())){
+					}else if(teamStatId.equalsIgnoreCase(awayTeamId)){
 						away_winpct = Double.parseDouble(teamStatXml.getAttribute("win_pct"));
 						away_PointsFor = Double.parseDouble(teamStatXml.getAttribute("points_for"));
 						away_PointsAgainst = Double.parseDouble(teamStatXml.getAttribute("points_against"));
 					}
 				}
-				homeTeam.setWinRatio(home_winpct);
-				homeTeam.setPointsFor(home_PointsFor);
-				homeTeam.setPointsAgainst(home_PointsAgainst);
-				awayTeam.setWinRatio(away_winpct);
-				awayTeam.setPointsFor(away_PointsFor);
-				awayTeam.setPointsAgainst(away_PointsAgainst);
 			//Set Game's AwayTeam, homeTeam
-				game.setAwayTeam(awayTeam);
-				game.setHomeTeam(homeTeam);
+				game.setAwayTeamUUID(awayTeamId);
+				game.setHomeTeamUUID(homeTeamId);
 				//Set game's odds
 				double awayOdds = 1.25 + home_winpct/away_winpct;
 				double homeOdds = 1.0 + away_winpct/home_winpct;
 				game.setOdds(homeOdds,awayOdds);
+				try {
+					Team homeTeamDB = teamDao.deepGet(homeTeamId);
+					Team awayTeamDB =teamDao.deepGet(awayTeamId);
+					homeTeamDB.setWinRatio(home_winpct);
+					homeTeamDB.setPointsFor(home_PointsFor);
+					homeTeamDB.setPointsAgainst(home_PointsAgainst);
+					awayTeamDB.setWinRatio(away_winpct);
+					awayTeamDB.setPointsFor(away_PointsFor);
+					awayTeamDB.setPointsAgainst(away_PointsAgainst);
+					teamDao.store(awayTeamDB);
+					teamDao.store(homeTeamDB);
+					
+					System.out.println(game.getUUID());
+					System.out.println("NOM Home :");
+					Game gamesql = gameDao.get(game.getUUID());
+					System.out.println("NOM EXTERIEUR :");
+					} catch (MissingUUIDException e) {
+					e.printStackTrace();
+				} catch (EntityNotFoundException e) {
+					
+				}
 			//Add the game to the ArrayList previously created
 				gamesList.add(game);
 			}
