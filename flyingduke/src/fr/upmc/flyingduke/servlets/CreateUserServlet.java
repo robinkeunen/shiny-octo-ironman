@@ -2,6 +2,7 @@ package fr.upmc.flyingduke.servlets;
 
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +36,8 @@ public class CreateUserServlet extends HttpServlet {
 			user.setLastName(request.getParameter("lastName"));
 			user.setWallet(100);
 			FDUserDao.update(user);
-			response.sendRedirect("/views/home.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/home.jsp");
+		    dispatcher.forward(request, response);
 		} catch (ExistingUserException | EntityNotFoundException e) {
 			e.printStackTrace();
 		}

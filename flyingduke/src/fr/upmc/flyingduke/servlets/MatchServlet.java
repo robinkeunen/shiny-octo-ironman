@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -36,7 +37,9 @@ public class MatchServlet extends HttpServlet {
 		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
 		}
-		response.sendRedirect("views/match.jsp");
+		
+		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/views/match.jsp"); 
+		dispatcher.forward(request,response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -94,7 +97,14 @@ public class MatchServlet extends HttpServlet {
 			System.out.println("error Cast");
 			ctxt.setAttribute("error", error);
 			ctxt.setAttribute("errorMessage", "Bet must be a number");
-			response.sendRedirect("/views/match.jsp");
+			
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/views/match.jsp"); 
+			try {
+				dispatcher.forward(request,response);
+			} catch (ServletException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 
 	}
