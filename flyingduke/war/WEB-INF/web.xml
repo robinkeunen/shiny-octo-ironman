@@ -64,6 +64,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 			<web-resource-name>admin</web-resource-name>
 			<url-pattern>/administration</url-pattern>
 		</web-resource-collection>
+		<web-resource-collection>
+			<web-resource-name>fillup</web-resource-name>
+			<url-pattern>/FillUp</url-pattern>
+		</web-resource-collection>
+		
 		<auth-constraint>
 			<role-name>admin</role-name>
 		</auth-constraint>

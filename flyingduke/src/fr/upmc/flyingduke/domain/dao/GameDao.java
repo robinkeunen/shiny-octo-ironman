@@ -23,6 +23,7 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 import fr.upmc.flyingduke.domain.Game;
 import fr.upmc.flyingduke.domain.Game.OddsContainer;
+import fr.upmc.flyingduke.domain.Game.ScoreContainer;
 import fr.upmc.flyingduke.exceptions.MissingUUIDException;
 
 public class GameDao {
@@ -31,6 +32,7 @@ public class GameDao {
 	private static final String AWAY_TEAM_UUID = "AWAY_TEAM_UUID";
 	private static final String DATE = "DATE";
 	private static final String ODDS = "ODDS";
+	private static final String SCORE = "SCORE";
 	private static final String ODDS_HOME = "ODDS_HOME";
 	private static final String ODDS_AWAY = "ODDS_AWAY";
 
@@ -76,6 +78,12 @@ public class GameDao {
 			embeddedEntity.setProperty(ODDS_AWAY, odds.getAway());
 			entity.setProperty(ODDS, embeddedEntity);
 		}
+		
+		ScoreContainer score = game.getScores();
+		if (score != null) {
+			entity.setProperty(SCORE, ScoreBuilder.makeScoreEntity(score));
+		}
+		
 		System.out.println("store " + game.toString());
 		datastore.put(entity);
 	}
@@ -163,6 +171,7 @@ public class GameDao {
 		Object awayTeamUUID = entity.getProperty(AWAY_TEAM_UUID);
 		Object date = entity.getProperty(DATE);
 		Object oddsO = entity.getProperty(ODDS);
+		Object scoreO = entity.getProperty(SCORE);
 
 		// build game
 		Game game = new Game(entity.getKey().getName());
@@ -178,7 +187,41 @@ public class GameDao {
 					(Double) oddsEE.getProperty(ODDS_HOME),
 					(Double) oddsEE.getProperty(ODDS_AWAY));
 		}
+		if (scoreO != null) {
+			ScoreContainer sc = 
+					ScoreBuilder.scoreFromEntity((EmbeddedEntity) scoreO);
+			game.setScores(sc.getHome(), sc.getAway());
+		}			
+		
 		return game;
+	}
+	
+	private static class ScoreBuilder {
+		private static final String HOME_SCORE = "HOME_SCORE";
+		private static final String AWAY_SCORE = "AWAY_SCORE";
+		
+		public static EmbeddedEntity makeScoreEntity(ScoreContainer scores) {
+			EmbeddedEntity ee = new EmbeddedEntity();
+			ee.setProperty(HOME_SCORE , scores.getHome());
+			ee.setProperty(AWAY_SCORE, scores.getHome());
+
+			return ee;
+		}
+		
+		public static ScoreContainer scoreFromEntity(EmbeddedEntity ee) {
+			Object homeO = ee.getProperty(HOME_SCORE);
+			Object awayO = ee.getProperty(AWAY_SCORE);
+			
+			int home = 0;
+			int away = 0;
+			if (homeO != null) 
+				home = ((Long) homeO).intValue(); 
+			if (awayO != null)
+				away = ((Long) awayO).intValue();
+			
+			return new ScoreContainer(home, away);			
+		}
+		
 	}
 
 }
