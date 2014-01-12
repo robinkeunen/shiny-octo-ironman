@@ -61,11 +61,11 @@ public class Parser {
 			Element gameXml = (Element) games.item(0);
 			String gameStatus = gameXml.getAttribute("status");
 			String homeTeamid = gameXml.getAttribute("home_team");
-			if (gameStatus.equalsIgnoreCase("closed")){
+			if (gameStatus.equalsIgnoreCase("closed") || gameStatus.equalsIgnoreCase("complete")){
 				NodeList teams = doc.getElementsByTagName("team");
 				String winningTeam = "";
 				int winningTeamScore = 0;
-				for (int i = 0; i < games.getLength(); i++) {
+				for (int i = 0; i < teams.getLength(); i++) {
 					Element teamXml = (Element) teams.item(i);
 					int teamScore = Integer.parseInt(teamXml.getAttribute("points"));
 					if (teamScore > winningTeamScore){

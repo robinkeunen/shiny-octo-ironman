@@ -97,19 +97,17 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			Calendar today = Calendar.getInstance();
 			today.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
 			today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
-			//int hour = today.get(Calendar.HOUR_OF_DAY);
-			System.out.println("avant le if");
-			/*if (hour >= 0 && hour < 6){
+			int hour = today.get(Calendar.HOUR_OF_DAY);
+			System.out.println("avant le if de betComputings");
+			if (hour >= 0 && hour < 6){
 				//if it's before 6 A.M, fetch games of yesterday
 				yesterday.add(Calendar.DATE, -1);
-				gameList = gameDao.gameForDay(yesterday);  
+				gameList = GameDao.gameForDay(yesterday);  
 				System.out.println(gameList);
 			}else{
 				//else fetch today's games
-				gameList = gameDao.gameForDay(today);  
-			}*/
-			yesterday.add(Calendar.DATE, -1);
-			gameList = GameDao.gameForDay(yesterday);  
+				gameList = GameDao.gameForDay(today);  
+			}
 			System.out.println("apres le if");
 			RESTQuery queryLauncher = new RESTQuery();
 
@@ -133,20 +131,30 @@ public class FillUpDataBaseServlet extends HttpServlet {
 						System.out.println("Victoire a domicile");
 					}
 					for (FDUser fdUser : usersList){
+						System.out.println("USERName : " + fdUser.getFirstName());
 						List<Bet> listBetsUser = BetDao.getBets2Compute(fdUser);
 						for (Bet bet : listBetsUser){
-							if (bet.getGameUUID().equalsIgnoreCase(game.getUUID())){
+							System.out.println("GAMEIDBet " + bet.getGameUUID());
+							System.out.println("GameId " + game.getUUID());
+							if (!bet.isComputed() && bet.getGameUUID().equalsIgnoreCase(game.getUUID())){
+								System.out.println("Il y a un bet a faire d'un amount de " + bet.getAmount());
+								System.out.println("winningTEAM  :" + winningTeam);
+								System.out.println("betTeam  :" + bet.getChoice());
+								
+								bet.setComputed(true);
 								if(bet.getChoice().equals(winningTeam)){
+									System.out.println("Il a gagné");
 									Double gainDouble = (bet.getAmount() * bet.getOdds());
 									int gain = gainDouble.intValue();
 									fdUser.setWallet(fdUser.getWallet() + gain);
-									bet.setComputed(true);
+								}
 									try {
+										BetDao.update(bet);
 										FDUserDao.update(fdUser);
 									} catch (EntityNotFoundException e) {
 										System.out.println("Update of user impossible");
 									}
-								}
+								
 							}
 						}
 					}

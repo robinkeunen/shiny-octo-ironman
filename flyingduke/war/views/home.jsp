@@ -80,6 +80,7 @@ today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calenda
 List<Game> gamesList = gameDao.gameForDay(today);
 ServletContext ctxt = getServletContext();
 ctxt.setAttribute("betDone",false);
+ctxt.setAttribute("error", false);
 %>
 
 

@@ -50,12 +50,12 @@ public class MatchServlet extends HttpServlet {
 		now.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
 		now.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH),now.get(Calendar.HOUR_OF_DAY),now.get(Calendar.MINUTE));
 		//Check if the Game has started
-		if (now.getTimeInMillis() > game.getDate().getTime()){
+		/*if (now.getTimeInMillis() > game.getDate().getTime()){
 			ctxt.setAttribute("error", error);
 			ctxt.setAttribute("errorMessage", "Game has already started. Bets are closed.");
 			response.sendRedirect("/views/match.jsp");
 			return;
-		}
+		}*/
 		// get form parameters
 		String betValueString = request.getParameter("betValue");
 		try{
