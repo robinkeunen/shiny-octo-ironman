@@ -5,13 +5,13 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class Game {
-
-
+	
 	private String uuid;
 	private String awayTeamUUID;
 	private String homeTeamUUID;
 	private Date date;
 	private OddsContainer odds;
+	private ScoreContainer scores;
 	
 	public Game(String uuid) {
 		this.uuid = uuid;
@@ -64,32 +64,12 @@ public class Game {
 		this.odds = new OddsContainer(home, away);
 	}
 	
-	public class OddsContainer {
-		private double home;
-		private double away;
-		
-		OddsContainer(double home, double away) {
-			this.home = home;
-			this.away = away;
-		}
-
-		/**
-		 * @return the home
-		 */
-		public double getHome() {
-			return home;
-		}
-
-		/**
-		 * @return the away
-		 */
-		public double getAway() {
-			return away;
-		}
-		
-		public String toString() {
-			return "[ " + home + ", " + away + "]"; 
-		}
+	public ScoreContainer getScores() {
+		return scores;
+	}
+	
+	public void setScores(int home, int away) {
+		this.scores = new ScoreContainer(home, away);
 	}
 
 	/**
@@ -119,6 +99,61 @@ public class Game {
 	public void setHomeTeamUUID(String homeTeamUUID) {
 		this.homeTeamUUID = homeTeamUUID;
 	}
+	
+	public class OddsContainer {
+		private double home;
+		private double away;
+		
+		OddsContainer(double home, double away) {
+			this.home = home;
+			this.away = away;
+		}
+
+		/**
+		 * @return the home
+		 */
+		public double getHome() {
+			return home;
+		}
+
+		/**
+		 * @return the away
+		 */
+		public double getAway() {
+			return away;
+		}
+		
+		public String toString() {
+			return "[ " + home + ", " + away + "]"; 
+		}
+	}
+	
+	public static class ScoreContainer {
+		private int home;
+		private int away;
+		
+		public ScoreContainer(int home, int away) {
+			this.home = home;
+			this.away = away;
+		}
+
+		/**
+		 * @return the home
+		 */
+		public int getHome() {
+			return home;
+		}
+
+		/**
+		 * @return the away
+		 */
+		public int getAway() {
+			return away;
+		}
+
+		
+	}
+	
 
 	
 }

@@ -35,7 +35,7 @@ public class BetDao {
 	 * @param punter the fduser placing the bet
 	 * @return
 	 */
-	public static Bet create(FDUser punter) {
+	public Bet create(FDUser punter) {
 		// create fduser and bet key
 		Key punterKey = KeyFactory
 				.createKey(FDUserDao.FD_USER_KIND, punter.getId());
@@ -54,7 +54,7 @@ public class BetDao {
 	 * @param bet the Bet to save
 	 * @throws EntityNotFoundException thrown if the bet has not been created in base.
 	 */
-	public static void update(Bet bet) throws EntityNotFoundException {
+	public void update(Bet bet) throws EntityNotFoundException {
 		System.out.println("put " + bet.toString());
 
 		// Check if bet is in base
@@ -81,7 +81,7 @@ public class BetDao {
 	 * @throws EntityNotFoundException thrown if the fduser for the punterId
 	 * does not exist in the base
 	 */
-	public static Bet get(long id, long punterId) throws EntityNotFoundException {
+	public Bet get(long id, long punterId) throws EntityNotFoundException {
 
 		// get entity
 		Key key = createBetKey(id, punterId);
@@ -97,7 +97,7 @@ public class BetDao {
 	 * @param fduser the fduser who placed the bet
 	 * @return a list of all the bets for the given user
 	 */
-	public static List<Bet> getBetForFDUser(FDUser fduser) {
+	public List<Bet> getBetForFDUser(FDUser fduser) {
 		// build parent key
 		Key fduserKey = KeyFactory.createKey(FDUserDao.FD_USER_KIND, fduser.getId());
 
@@ -118,7 +118,7 @@ public class BetDao {
 	 * @param fduser the fduser who placed the bet
 	 * @return a list of all the bets for the given user where computed == false
 	 */
-	public static List<Bet> getBets2Compute(FDUser fduser) {
+	public List<Bet> getBets2Compute(FDUser fduser) {
 		Key fduserKey = KeyFactory.createKey(FDUserDao.FD_USER_KIND, fduser.getId());
 
 		// build filter
@@ -140,7 +140,7 @@ public class BetDao {
 	}
 
 
-	private static Key createBetKey(long betId, long punterId) {
+	private Key createBetKey(long betId, long punterId) {
 		Key punterKey = KeyFactory
 				.createKey(FDUserDao.FD_USER_KIND, punterId);
 		Key key = KeyFactory
@@ -148,7 +148,7 @@ public class BetDao {
 		return key;
 	}
 
-	private static Bet betFromEntity(Entity entity) {
+	private Bet betFromEntity(Entity entity) {
 
 		// get properties
 		Object gameUUID = entity.getProperty(GAME_UUID); 

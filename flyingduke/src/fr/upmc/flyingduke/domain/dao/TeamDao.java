@@ -25,6 +25,14 @@ public class TeamDao {
 	private static final String POINTS_AGAINST = "POINTS_AGAINST"; 
 	
 	private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+	
+	private PlayerEntityBuilder playerEntityBuilder;
+	
+	public TeamDao() {
+		super();
+		this.playerEntityBuilder = new PlayerEntityBuilder();
+	}
+
 
 	/**
 	 * Reconstitutes the team for the given uuid.
@@ -33,7 +41,7 @@ public class TeamDao {
 	 * @return
 	 * @throws EntityNotFoundException 
 	 */
-	public static Team deepGet(String uuid) throws EntityNotFoundException {
+	public  Team deepGet(String uuid) throws EntityNotFoundException {
 
 		// get Entity
 		Key key = KeyFactory.createKey(TEAM_KIND, uuid);
@@ -49,7 +57,7 @@ public class TeamDao {
 	 * @param team
 	 * @throws MissingUUIDException 
 	 */
-	public static void store(Team team) throws MissingUUIDException { 
+	public  void store(Team team) throws MissingUUIDException { 
 		if (team.getUUID() == null)
 			throw new MissingUUIDException();
 
@@ -64,7 +72,7 @@ public class TeamDao {
 		if (team.getPlayers() != null) {
 			List <EmbeddedEntity> playersEE = new LinkedList<EmbeddedEntity>();
 			for (Player player: team.getPlayers()){
-				playersEE.add(PlayerEntityBuilder.makePlayerEntity(player));
+				playersEE.add(playerEntityBuilder.makePlayerEntity(player));
 			}
 			teamEntity.setProperty(PLAYERS, playersEE);
 		}
@@ -73,7 +81,7 @@ public class TeamDao {
 		datastore.put(teamEntity);
 	}
 
-	private static Team teamFromEntity(Entity entity) {
+	private  Team teamFromEntity(Entity entity) {
 		// get properties
 		Object name = entity.getProperty(NAME);
 		Object alias = entity.getProperty(ALIAS);
@@ -87,7 +95,7 @@ public class TeamDao {
 			List<EmbeddedEntity> playerEEs = (List<EmbeddedEntity>) entity.getProperty(PLAYERS);
 			players = new LinkedList<>();
 			for (EmbeddedEntity playerEE: playerEEs) {
-				players.add(PlayerEntityBuilder.playerFromEntity(playerEE));
+				players.add(playerEntityBuilder.playerFromEntity(playerEE));
 			}
 		}
 
@@ -109,7 +117,7 @@ public class TeamDao {
 		return team;
 	}
 	
-	private static class PlayerEntityBuilder {
+	private  class PlayerEntityBuilder {
 		
 		private static final String UUID = "UUID";
 		private static final String FIRST_NAME = "FIRST_NAME";
@@ -117,7 +125,7 @@ public class TeamDao {
 		private static final String JERSEY = "JERSEY";
 		private static final String POSITION = "POSITION";
 		
-		public static EmbeddedEntity makePlayerEntity(Player player) {
+		public EmbeddedEntity makePlayerEntity(Player player) {
 			EmbeddedEntity ee = new EmbeddedEntity();
 			ee.setProperty(UUID, player.getUUID());
 			ee.setProperty(FIRST_NAME, player.getFirstName());
@@ -128,7 +136,7 @@ public class TeamDao {
 			return ee;
 		}
 
-		public static Player playerFromEntity(EmbeddedEntity playerEE) {
+		public Player playerFromEntity(EmbeddedEntity playerEE) {
 			// get properties
 			String uuid =  (String) playerEE.getProperty(UUID);
 			Object firstNameO = playerEE.getProperty(FIRST_NAME);

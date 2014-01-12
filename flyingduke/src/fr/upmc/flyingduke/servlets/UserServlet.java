@@ -26,6 +26,9 @@ public class UserServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println(":UserServlet");
 		
+		FDUserDao fdUserDao = new FDUserDao();
+		BetDao betDao = new BetDao();
+		
 		FDUser fdUser = null;
 		UserService userService = UserServiceFactory.getUserService();
 		User googleUser = userService.getCurrentUser();
@@ -38,7 +41,7 @@ public class UserServlet extends HttpServlet {
 			return;
 		}
 		System.out.println("MAIL : " + googleUser.getEmail());
-		if ((fdUser = FDUserDao.getFromGoogleUser(googleUser)) == null){
+		if ((fdUser = fdUserDao.getFromGoogleUser(googleUser)) == null){
 			try {
 				response.sendRedirect("/views/createUser.jsp");
 			} catch (IOException e) {
@@ -50,7 +53,7 @@ public class UserServlet extends HttpServlet {
 		ServletContext ctxt = getServletContext();
 		ctxt.setAttribute("fdUser", fdUser);
 		
-		List<Bet> bets = BetDao.getBetForFDUser(fdUser);
+		List<Bet> bets = betDao.getBetForFDUser(fdUser);
 		List<Bet> futureBets = new LinkedList<Bet>();
 		List<Bet> pastBets =  new LinkedList<Bet>();
 		

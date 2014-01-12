@@ -23,7 +23,8 @@ public class HomeServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		List<Game> futureGames = GameDao.futureGames(10); 
+		GameDao gameDao = new GameDao();
+		List<Game> futureGames = gameDao.futureGames(10); 
 		req.setAttribute(ServletAttributes.FUTURE_GAMES, futureGames);
 		
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/views/home.jsp"); 

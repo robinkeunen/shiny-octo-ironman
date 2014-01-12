@@ -32,7 +32,8 @@ public class MatchServlet extends HttpServlet {
 
 		Game game = null;;
 		try {
-			game = GameDao.get(gameUUID);
+			GameDao gameDao = new GameDao();
+			game = gameDao.get(gameUUID);
 			ctxt.setAttribute("game", game);
 		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
@@ -49,9 +50,13 @@ public class MatchServlet extends HttpServlet {
 		FDUser fdUser = (FDUser) ctxt.getAttribute("fdUser");
 		Game game = (Game) ctxt.getAttribute("game");
 		
+		BetDao betDao = new BetDao();
+		FDUserDao fdUserDao = new FDUserDao();
+		
 		Calendar now = Calendar.getInstance();
 		now.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
 		now.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH),now.get(Calendar.HOUR_OF_DAY),now.get(Calendar.MINUTE));
+		
 		//Check if the Game has started
 		/*if (now.getTimeInMillis() > game.getDate().getTime()){
 			ctxt.setAttribute("error", error);
@@ -59,6 +64,7 @@ public class MatchServlet extends HttpServlet {
 			response.sendRedirect("/views/match.jsp");
 			return;
 		}*/
+		
 		// get form parameters
 		String betValueString = request.getParameter("betValue");
 		try{
@@ -74,7 +80,7 @@ public class MatchServlet extends HttpServlet {
 				response.sendRedirect("/views/match.jsp");
 				return;
 			}
-			Bet bet = BetDao.create(fdUser);
+			Bet bet = betDao.create(fdUser);
 			bet.setAmount(betValue);
 			String team = request.getParameter("team");
 			if (team.equalsIgnoreCase("home")){
@@ -87,9 +93,9 @@ public class MatchServlet extends HttpServlet {
 			}
 			bet.setComputed(false);
 			bet.setGameUUID(game.getUUID());
-			BetDao.update(bet);
+			betDao.update(bet);
 			fdUser.setWallet(fdUser.getWallet()-betValue);
-			FDUserDao.update(fdUser);
+			fdUserDao.update(fdUser);
 			Boolean betDone = true;
 			ctxt.setAttribute("betDone", betDone);
 			response.sendRedirect("/views/match.jsp");

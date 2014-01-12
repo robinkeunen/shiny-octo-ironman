@@ -242,16 +242,17 @@ public class Parser {
 				double homeOdds = 1.0 + away_winpct/home_winpct;
 				game.setOdds(homeOdds,awayOdds);
 				try {
-					Team homeTeamDB = TeamDao.deepGet(homeTeamId);
-					Team awayTeamDB = TeamDao.deepGet(awayTeamId);
+					TeamDao teamDao = new TeamDao();
+					Team homeTeamDB = teamDao.deepGet(homeTeamId);
+					Team awayTeamDB = teamDao.deepGet(awayTeamId);
 					homeTeamDB.setWinRatio(home_winpct);
 					homeTeamDB.setPointsFor(home_PointsFor);
 					homeTeamDB.setPointsAgainst(home_PointsAgainst);
 					awayTeamDB.setWinRatio(away_winpct);
 					awayTeamDB.setPointsFor(away_PointsFor);
 					awayTeamDB.setPointsAgainst(away_PointsAgainst);
-					TeamDao.store(awayTeamDB);
-					TeamDao.store(homeTeamDB);
+					teamDao.store(awayTeamDB);
+					teamDao.store(homeTeamDB);
 
 					System.out.println(game.getUUID());
 					System.out.println("NOM Home :");

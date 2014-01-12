@@ -36,7 +36,7 @@ public class FDUserDao {
 	 * @param id the id must be created through the datastore
 	 * @return the fduser in base for the given id
 	 */
-	public static FDUser get(long id) throws EntityNotFoundException {
+	public FDUser get(long id) throws EntityNotFoundException {
 
 		// get Entity
 		Key key = KeyFactory.createKey(ancestor, FD_USER_KIND, id);
@@ -51,7 +51,7 @@ public class FDUserDao {
 	 * @param user the google user must be unique.
 	 * @throws ExistingUserException 
 	 */
-	public static FDUser create(User googleuser) throws ExistingUserException {
+	public FDUser create(User googleuser) throws ExistingUserException {
 		FDUser fduser = getFromGoogleUser(googleuser);
 		if (fduser != null) {
 			throw new ExistingUserException();
@@ -75,7 +75,7 @@ public class FDUserDao {
 	 * @throws EntityNotFoundException thrown if the user is not in the base.
 	 * Users must be created from FDUserDao.create()
 	 */
-	public static void update(FDUser user) throws EntityNotFoundException {
+	public void update(FDUser user) throws EntityNotFoundException {
 		System.out.println("put " + user.toString());
 
 		// check if user is in base
@@ -98,7 +98,7 @@ public class FDUserDao {
 	 * @param googleuser the parameter for the search
 	 * @return the (unique) fduser matching the given google account or null if the user is not in base
 	 */
-	public static FDUser getFromGoogleUser(User googleuser) {
+	public FDUser getFromGoogleUser(User googleuser) {
 		Filter userFilter = 
 				new FilterPredicate(GOOGLE_USER, FilterOperator.EQUAL, googleuser);
 
@@ -122,7 +122,7 @@ public class FDUserDao {
 
 	}
 	
-	public static List<FDUser> getAllFDUsers() {
+	public List<FDUser> getAllFDUsers() {
 		
 		// prepare query
 		Query query = new Query(FD_USER_KIND, ancestor);
@@ -141,7 +141,7 @@ public class FDUserDao {
 	 * Deletes the user for the given google account
 	 * @param googleuser
 	 */
-	public static void deleteUser(User googleuser) {
+	public void deleteUser(User googleuser) {
 		Filter userFilter = 
 				new FilterPredicate(GOOGLE_USER, FilterOperator.EQUAL, googleuser);
 
@@ -155,7 +155,7 @@ public class FDUserDao {
 
 	}
 
-	private static FDUser fdUserFromEntity(Entity entity) {
+	private FDUser fdUserFromEntity(Entity entity) {
 		
 		Object firstName = entity.getProperty(FIRST_NAME);
 		Object lastName = entity.getProperty(LAST_NAME);

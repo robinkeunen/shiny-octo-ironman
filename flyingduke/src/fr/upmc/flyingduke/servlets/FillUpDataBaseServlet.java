@@ -40,6 +40,11 @@ public class FillUpDataBaseServlet extends HttpServlet {
 		String xmlResult="";
 		RESTQuery requestsLauncher = new RESTQuery();
 		Parser parser = new Parser();
+		
+		GameDao gameDao = new GameDao();
+		TeamDao teamDao = new TeamDao();
+		BetDao betDao = new BetDao();
+		FDUserDao fdUserDao = new FDUserDao();
 
 		if (action.equalsIgnoreCase("getGamesDay")){
 			xmlResult = requestsLauncher.getGamesForDay();
@@ -47,7 +52,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			for (Game game : gamesList){
 				System.out.println(game.getDate());
 				try {
-					GameDao.store(game);
+					gameDao.store(game);
 
 					System.out.println(game.getUUID());
 					System.out.println("NOM Home :");
@@ -62,7 +67,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			ArrayList<Game> gamesList = parser.parseAllGames(xmlResult);
 			for (Game game : gamesList){
 				try {
-					GameDao.store(game);
+					gameDao.store(game);
 				} catch (MissingUUIDException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -78,7 +83,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 					Thread.sleep(1000);
 					ArrayList<Player> playersList = parser.parsePlayersTeam(xmlPlayersTeam);
 					team.setPlayers(playersList);
-					TeamDao.store(team);
+					teamDao.store(team);
 					System.out.println("NAME");
 					System.out.println(team.getName());
 				} catch (ParserConfigurationException | SAXException e1) {
@@ -102,16 +107,16 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			if (hour >= 0 && hour < 12){
 				//if it's before 6 A.M, fetch games of yesterday
 				yesterday.add(Calendar.DATE, -1);
-				gameList = GameDao.gameForDay(yesterday);  
+				gameList = gameDao.gameForDay(yesterday);  
 				System.out.println(gameList);
 			}else{
 				//else fetch today's games
-				gameList = GameDao.gameForDay(today);  
+				gameList = gameDao.gameForDay(today);  
 			}
 			System.out.println("apres le if");
 			RESTQuery queryLauncher = new RESTQuery();
 
-			List<FDUser> usersList = FDUserDao.getAllFDUsers();
+			List<FDUser> usersList = fdUserDao.getAllFDUsers();
 			for(Game game : gameList){
 				System.out.println("UUID : " + game.getUUID());
 				System.out.println("DATE : " + game.getDate());
@@ -132,7 +137,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 					}
 					for (FDUser fdUser : usersList){
 						System.out.println("USERName : " + fdUser.getFirstName());
-						List<Bet> listBetsUser = BetDao.getBets2Compute(fdUser);
+						List<Bet> listBetsUser = betDao.getBets2Compute(fdUser);
 						for (Bet bet : listBetsUser){
 							System.out.println("GAMEIDBet " + bet.getGameUUID());
 							System.out.println("GameId " + game.getUUID());
@@ -149,8 +154,8 @@ public class FillUpDataBaseServlet extends HttpServlet {
 									fdUser.setWallet(fdUser.getWallet() + gain);
 								}
 									try {
-										BetDao.update(bet);
-										FDUserDao.update(fdUser);
+										betDao.update(bet);
+										fdUserDao.update(fdUser);
 									} catch (EntityNotFoundException e) {
 										System.out.println("Update of user impossible");
 									}
@@ -172,6 +177,9 @@ public class FillUpDataBaseServlet extends HttpServlet {
 		RESTQuery requestsLauncher = new RESTQuery();
 		Parser parser = new Parser();
 
+		GameDao gameDao = new GameDao();
+		TeamDao teamDao = new TeamDao();
+		
 		String button = request.getParameter("button");
 		String xmlResult = "";
 		System.out.println(button);
@@ -181,7 +189,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 		ArrayList<Team> teamsList = parser.parseAllTeams(xmlResult);
 		for (Team team : teamsList){
 			try {
-				TeamDao.store(team);
+				teamDao.store(team);
 			} catch (MissingUUIDException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -204,7 +212,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			System.out.println("Fin du parser");
 			for (Game game : gamesList){
 				System.out.println(game.getDate());
-				GameDao.store(game);
+				gameDao.store(game);
 			}
 			System.out.println("FIN");
 
@@ -218,7 +226,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 		System.out.println("GAMEs");
 		for (Game game : gamesList){
 			try {
-				GameDao.store(game);
+				gameDao.store(game);
 			} catch (MissingUUIDException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
