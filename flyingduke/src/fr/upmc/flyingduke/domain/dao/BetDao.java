@@ -141,6 +141,10 @@ public class BetDao {
 
 		return bets;
 	}
+	
+	public List<Bet> getLastBets(int max) {
+		Key ancestor = KeyFactory.createKey(kind, id);
+	}
 
 
 	private Key createBetKey(long betId, long punterId) {

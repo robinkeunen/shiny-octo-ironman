@@ -286,56 +286,7 @@ List<Player> playersAway = awayTeam.getPlayers();
           }
           %>
 		
-		<div class="visible-md visible-lg" id="bet1">
-			<div class="panel panel-info ">  
-               <div class="panel-heading text-center"> 
-                  punter name 
-                </div> 
-            	
-                 <div class="panel-body"> 
-                    <div class="btn-group text-center center-block col-xs-8"> 
-                         <div class="btn btn-default btn-lg col-xs-6"> SFG </div> 
-                         <div class="btn btn-danger btn-lg col-xs-6"> NYN </div> 
-                    </div> 
-					<div class="btn btn-default btn-lg col-xs-4" id="amount"> 12.00$ </div> 
-                  </div>
-               </div>
-             </div>
-		</div>
 		
-		<div class="visible-md visible-lg" id="bet2">
-			<div class="panel panel-info ">  
-               <div class="panel-heading text-center" id="punter1"> 
-                  punter name 
-                </div> 
-            	
-                 <div class="panel-body"> 
-                    <div class="btn-group text-center center-block col-xs-8"> 
-                         <div class="btn btn-default btn-lg col-xs-6"> SFG </div> 
-                         <div class="btn btn-danger btn-lg col-xs-6"> NYN </div> 
-                    </div> 
-					<div class="btn btn-default btn-lg col-xs-4" id="amount"> 12.00$ </div> 
-                  </div>
-               </div>
-             </div>
-		</div>
-		
-		<div class="visible-md visible-lg" id="bet3">
-			<div class="panel panel-info ">  
-               <div class="panel-heading text-center"> 
-                  punter name 
-                </div> 
-            	
-                 <div class="panel-body"> 
-                    <div class="btn-group text-center center-block col-xs-8"> 
-                         <div class="btn btn-default btn-lg col-xs-6"> SFG </div> 
-                         <div class="btn btn-danger btn-lg col-xs-6"> NYN </div> 
-                    </div> 
-					<div class="btn btn-default btn-lg col-xs-4" id="amount"> 12.00$ </div> 
-                  </div>
-               </div>
-             </div>
-		</div>
 	
           </div>
           <!-- End bet form -->
