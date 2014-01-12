@@ -16,15 +16,8 @@ public class AdminServlet extends HttpServlet {
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		System.out.println("AdminServlet: JESUISLA");
+		System.out.println("AdminServlet: in");
 
-		System.out.println("Fin de la query");
-
-		System.out.println("apres sleep");
-
-		//Parser parser = new Parser();
-		//parser.parseGamesForDay(xmlResult);
-		
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
 

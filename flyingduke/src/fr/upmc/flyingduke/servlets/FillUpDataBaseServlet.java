@@ -143,7 +143,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 								
 								bet.setComputed(true);
 								if(bet.getChoice().equals(winningTeam)){
-									System.out.println("Il a gagné");
+									System.out.println("Il a gagne");
 									Double gainDouble = (bet.getAmount() * bet.getOdds());
 									int gain = gainDouble.intValue();
 									fdUser.setWallet(fdUser.getWallet() + gain);
@@ -162,6 +162,8 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			}
 		}
 
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/administration");
+	    dispatcher.forward(request, response);
 
 	}
 

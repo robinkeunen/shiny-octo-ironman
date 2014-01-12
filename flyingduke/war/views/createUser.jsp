@@ -48,7 +48,7 @@ if ((fdUser = FDUserDao.getFromGoogleUser(googleUser)) != null){
 	response.sendRedirect("/views/home.jsp");
 	return;
 }
-System.out.println("User verified");
+System.out.println("CreateUser: User verified");
 %>
 
           
@@ -62,9 +62,6 @@ System.out.println("User verified");
         <h2 class="form-signin-heading">Please Register</h2>
         <input type="text" name="firstName" class="form-control" placeholder="First name" required autofocus>
         <input type="text" name="lastName" class="form-control" placeholder="Last name" required>
-        <label class="checkbox">
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
         <button class="btn btn-lg btn-primary btn-block" type=submit name="buttonCreate" value="Create User">Sign in</button>
       </form>
 
