@@ -59,7 +59,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 					System.out.println("NOM EXTERIEUR :");
 				} catch (MissingUUIDException e) {
 					request.setAttribute("exception", e);
-					RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/views/servererror.jsp");
 					dispatcher.forward(request, response);				} 
 			}	
 
@@ -71,7 +71,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 					gameDao.store(game);
 				} catch (MissingUUIDException e) {
 					request.setAttribute("exception", e);
-					RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/views/servererror.jsp");
 					dispatcher.forward(request, response);				}
 			}
 		}else if(action.equalsIgnoreCase("getAllTeams")){
@@ -89,15 +89,15 @@ public class FillUpDataBaseServlet extends HttpServlet {
 					System.out.println(team.getName());
 				} catch (ParserConfigurationException | SAXException e1) {
 					request.setAttribute("exception", e1);
-					RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/views/servererror.jsp");
 					dispatcher.forward(request, response);				
 				}catch (MissingUUIDException e) {
 					request.setAttribute("exception", e);
-					RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/views/servererror.jsp");
 					dispatcher.forward(request, response);				
 				} catch (InterruptedException e) {
 					request.setAttribute("exception", e);
-					RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/views/servererror.jsp");
 					dispatcher.forward(request, response);				
 				}
 			}
@@ -133,7 +133,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					request.setAttribute("exception", e);
-					RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/views/servererror.jsp");
 				    dispatcher.forward(request, response);				}
 				if (!over.equalsIgnoreCase("NotOver")){
 					System.out.println("Partie terminee");
@@ -166,7 +166,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 								} catch (EntityNotFoundException e) {
 									System.out.println("Update of user impossible");
 									request.setAttribute("exception", e);
-									RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+									RequestDispatcher dispatcher = request.getRequestDispatcher("/views/servererror.jsp");
 								    dispatcher.forward(request, response);
 								}
 
@@ -202,7 +202,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 				teamDao.store(team);
 			} catch (MissingUUIDException e) {
 				request.setAttribute("exception", e);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/views/servererror.jsp");
 			    dispatcher.forward(request, response);			}
 		}
 

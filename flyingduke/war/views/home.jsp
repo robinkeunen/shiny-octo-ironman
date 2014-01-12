@@ -69,12 +69,12 @@ FDUserDao fdUserDao = new FDUserDao();
 GameDao gameDao = new GameDao();
 System.out.println("MAIL : " + googleUser.getEmail());
 if ((fdUser = fdUserDao.getFromGoogleUser(googleUser)) == null){
-	System.out.println("Redirection vers création");
+	System.out.println("home.jsp: Redirect to user creation");
 	response.sendRedirect("/views/createUser.jsp");
 	return;
 }
 
-System.out.println("la Verification User finie");
+System.out.println("home.jsp: End of user verification");
 Calendar today = Calendar.getInstance();
 today.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
 today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
@@ -82,6 +82,7 @@ List<Game> gamesList = gameDao.gameForDay(today);
 ServletContext ctxt = getServletContext();
 ctxt.setAttribute("betDone",false);
 ctxt.setAttribute("error", false);
+
 %>
 
 
@@ -100,7 +101,7 @@ ctxt.setAttribute("error", false);
           <a class="navbar-brand" href="/home">Flying duke</a>
         </div>
         <div class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right" role="form">
+          <form class="navbar-form navbar-right" role="form"> 
               <a href="/user" class="label"><%= fdUser.getFirstName() %> <%= fdUser.getLastName() %></a>
               <a href="/user" class="label">
               	<span class="glyphicon glyphicon-dashboard"></span>
@@ -128,7 +129,7 @@ ctxt.setAttribute("error", false);
                 <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel"><h2>More about this website</h2></h4>
+                    <h4 class="modal-title" id="myModalLabel"><h2>More about this web site</h2></h4>
                   </div>
                   <div class="modal-body">
 
@@ -177,7 +178,7 @@ ctxt.setAttribute("error", false);
     <div class="container">
       <!-- Example row of columns -->
       <div class="row">
-        <div class="col-lg-10">
+        <div class="col-lg-10"> 
             <h2>Upcoming games</h2>
             
             <div class="panel panel-default">
@@ -203,13 +204,13 @@ for(Game game : gamesList){
 	Team awayTeam = teamDao.deepGet(game.getAwayTeamUUID());
 	%>   
                      <a href="/match?gameid=<%=game.getUUID() %>" class="list-group-item">
-                        <div class="row">
+                        <div class="row">  
                             <div class="col-xs-12 col-sm-3"><%= new SimpleDateFormat("MM'/'dd' - 'HH:mm").format(game.getDate())%></div>
                             <div class="col-xs-9 col-sm-3"><%= homeTeam.getName()%> </div>
                             <div class="col-xs-3 col-sm-1"><%=twoDigitsFormat.format(game.getOdds().getHome()) %> </div>
                             <div class="col-xs-9 col-sm-3"><%= awayTeam.getName()%> </div>
                             <div class="col-xs-3 col-sm-1"><%=twoDigitsFormat.format(game.getOdds().getAway()) %></div>
-                            <div class="col-xs-2 col-sm-1 btn-link active hidden-xs">
+                            <div class="col-xs-2 col-sm-1 btn-link active hidden-xs"> 
                                     <span class="glyphicon glyphicon-arrow-right"></span>
                             </div>
                         </div>

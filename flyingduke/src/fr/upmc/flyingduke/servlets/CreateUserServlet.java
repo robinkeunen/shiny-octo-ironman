@@ -26,6 +26,7 @@ public class CreateUserServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException, ServletException {
+		System.out.println("CreateUserServlet:post");
 		UserService userService = UserServiceFactory.getUserService();
 		User googleUser = userService.getCurrentUser();
 		System.out.println(googleUser.getEmail());
