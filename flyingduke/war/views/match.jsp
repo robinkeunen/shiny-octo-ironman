@@ -138,14 +138,14 @@ List<Player> playersAway = awayTeam.getPlayers();
                </form>
             </div>
           </div>
-          </div>
           
           <%
           System.out.println("Match.jsp: error on top");
           Boolean error = (Boolean) ctxt.getAttribute("error");
           if (error != null && error){
           	%>
-        		<div class="alert alert-danger hidden-lg hidden-md"><%=ctxt.getAttribute("errorMessage") %></div>
+        		<div class="hidden-lg hidden-md alert alert-danger ">
+        			<%=ctxt.getAttribute("errorMessage") %></div>
         		<%
         	}
           Boolean betDone = (Boolean) ctxt.getAttribute("betDone");
@@ -157,6 +157,7 @@ List<Player> playersAway = awayTeam.getPlayers();
         		ctxt.setAttribute("betDone", betDone);
           }
           %>
+          </div>
           
           </div>
           <!-- End bet form -->
