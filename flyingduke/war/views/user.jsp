@@ -3,6 +3,9 @@
 <%@ page import="com.google.appengine.api.users.UserService" %>
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
 <%@ page import="fr.upmc.flyingduke.domain.FDUser" %>
+<%@ page import="fr.upmc.flyingduke.domain.Bet" %>
+<%@ page import="java.util.List" %>
+
 <%@ page import="fr.upmc.flyingduke.domain.dao.FDUserDao" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
@@ -50,6 +53,9 @@ if ((fdUser = FDUserDao.getFromGoogleUser(googleUser)) == null){
 	return;
 }
 System.out.println("la Verification User finie");
+List<Bet> futureBets = (List<Bet>) request.getAttribute("futureBets");
+List<Bet> pastBets = (List<Bet>) request.getAttribute("pastBets");
+
 %>
 </head>
 <body>
@@ -91,7 +97,7 @@ System.out.println("la Verification User finie");
                         </div>
               
                         <div class="panel-body">
-                            <div class="center-clock text-center" ><h1 id="money" >25$</h1></div>
+                            <div class="center-clock text-center" ><h1 id="money" ><%=fdUser.getWallet() %>$</h1></div>
                         </div>
                     </div>
                  </div>

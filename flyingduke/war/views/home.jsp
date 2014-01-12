@@ -229,7 +229,7 @@ for(Game game : gamesList){
                         </div>
               
                         <div class="panel-body">
-                            <div class="center-clock text-center" ><h1 id="money" >25$</h1></div>
+                            <div class="center-clock text-center" ><h1 id="money" ><%=fdUser.getWallet()%>$</h1></div>
                         </div>
                     </div>
                  </div>
