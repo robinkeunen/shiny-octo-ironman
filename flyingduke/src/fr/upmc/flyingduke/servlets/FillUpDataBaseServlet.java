@@ -110,7 +110,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
 			int hour = today.get(Calendar.HOUR_OF_DAY);
 			System.out.println("avant le if de betComputings");
-			if (hour >= 0 && hour < 6){
+			if (hour >= 0 && hour < 12){
 				//if it's before 6 A.M, fetch games of yesterday
 				yesterday.add(Calendar.DATE, -1);
 				gameList = gameDao.gameForDay(yesterday);  
