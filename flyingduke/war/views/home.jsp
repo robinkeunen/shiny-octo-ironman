@@ -58,21 +58,23 @@
     
     <%
 FDUser fdUser = null;
-System.out.println("doGet HomeServlet");
+    FDUserDao fdUserDao = new FDUserDao();
+    GameDao gameDao = new GameDao();
+    System.out.println("doGet HomeServlet");
 UserService userService = UserServiceFactory.getUserService();
 User googleUser = userService.getCurrentUser();
 if (googleUser == null){
 	response.sendRedirect(userService.createLoginURL(request.getRequestURI()));
 	return;
 }
-FDUserDao fdUserDao = new FDUserDao();
-GameDao gameDao = new GameDao();
+System.out.println("la");
 System.out.println("MAIL : " + googleUser.getEmail());
 if ((fdUser = fdUserDao.getFromGoogleUser(googleUser)) == null){
 	System.out.println("home.jsp: Redirect to user creation");
 	response.sendRedirect("/views/createUser.jsp");
 	return;
 }
+System.out.println("la");
 
 System.out.println("home.jsp: End of user verification");
 Calendar today = Calendar.getInstance();
@@ -82,7 +84,6 @@ List<Game> gamesList = gameDao.gameForDay(today);
 ServletContext ctxt = getServletContext();
 ctxt.setAttribute("betDone",false);
 ctxt.setAttribute("error", false);
-
 %>
 
 

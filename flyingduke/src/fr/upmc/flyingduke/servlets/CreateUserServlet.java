@@ -35,11 +35,12 @@ public class CreateUserServlet extends HttpServlet {
 		try {
 			FDUserDao fdUserDao = new FDUserDao();
 			FDUser user = fdUserDao.create(googleUser);
-			String firstName = escapeHtml(request.getParameter("firstName"));
-			String lastName = escapeHtml(request.getParameter("lastName"));
+			String firstName = request.getParameter("firstName");
+			String lastName = request.getParameter("lastName");
 			user.setFirstName(firstName);
 			user.setLastName(lastName);
-			user.setWallet(100);
+			double wallet = 100.0;
+			user.setWallet(wallet);
 			fdUserDao.update(user);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/home.jsp");
 		    dispatcher.forward(request, response);
