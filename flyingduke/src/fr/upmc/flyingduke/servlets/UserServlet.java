@@ -36,7 +36,11 @@ public class UserServlet extends HttpServlet {
 			try {
 				response.sendRedirect(userService.createLoginURL(request.getRequestURI()));
 			} catch (IOException e) {
-				e.printStackTrace();
+				try {
+					response.sendRedirect("/error");
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 			return;
 		}
@@ -45,7 +49,11 @@ public class UserServlet extends HttpServlet {
 			try {
 				response.sendRedirect("/views/createUser.jsp");
 			} catch (IOException e) {
-				e.printStackTrace();
+				try {
+					response.sendRedirect("/error");
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 			return;
 		}
@@ -75,8 +83,11 @@ public class UserServlet extends HttpServlet {
 		    dispatcher.forward(request, response);
 
 		} catch (IOException | ServletException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				response.sendRedirect("/error");
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 }

@@ -36,7 +36,7 @@ public class MatchServlet extends HttpServlet {
 			game = gameDao.get(gameUUID);
 			ctxt.setAttribute("game", game);
 		} catch (EntityNotFoundException e) {
-			e.printStackTrace();
+			response.sendRedirect("/error");
 		}
 		
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/views/match.jsp"); 
@@ -108,8 +108,7 @@ public class MatchServlet extends HttpServlet {
 			try {
 				dispatcher.forward(request,response);
 			} catch (ServletException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				response.sendRedirect("/error");
 			}
 		}
 

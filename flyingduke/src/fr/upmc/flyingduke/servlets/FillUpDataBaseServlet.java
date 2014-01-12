@@ -58,7 +58,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 					System.out.println("NOM Home :");
 					System.out.println("NOM EXTERIEUR :");
 				} catch (MissingUUIDException e) {
-					e.printStackTrace();
+					response.sendRedirect("/error");
 				} 
 			}	
 
@@ -69,8 +69,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 				try {
 					gameDao.store(game);
 				} catch (MissingUUIDException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					response.sendRedirect("/error");
 				}
 			}
 		}else if(action.equalsIgnoreCase("getAllTeams")){
@@ -87,12 +86,11 @@ public class FillUpDataBaseServlet extends HttpServlet {
 					System.out.println("NAME");
 					System.out.println(team.getName());
 				} catch (ParserConfigurationException | SAXException e1) {
-					e1.printStackTrace();
+					response.sendRedirect("/error");
 				}catch (MissingUUIDException e) {
-					e.printStackTrace();
+					response.sendRedirect("/error");
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					response.sendRedirect("/error");
 				}
 			}
 		}else if(action.equalsIgnoreCase("betsComputing")){
@@ -126,7 +124,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					response.sendRedirect("/error");
 				}
 				if (!over.equalsIgnoreCase("NotOver")){
 					System.out.println("Partie terminee");
@@ -191,8 +189,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			try {
 				teamDao.store(team);
 			} catch (MissingUUIDException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				response.sendRedirect("/error");
 			}
 		}
 
@@ -228,8 +225,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			try {
 				gameDao.store(game);
 			} catch (MissingUUIDException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				response.sendRedirect("/error");
 			}
 		}
 
