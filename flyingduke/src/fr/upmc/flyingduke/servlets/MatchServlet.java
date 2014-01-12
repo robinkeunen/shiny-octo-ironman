@@ -69,9 +69,9 @@ public class MatchServlet extends HttpServlet {
 		}*/
 
 		// get form parameters
-		String betValueString = escapeHtml(request.getParameter("betValue"));
+		String betValueString = request.getParameter("betValue");
 		try{
-			Integer betValue = Integer.parseInt(betValueString);
+			Double betValue = Double.parseDouble(betValueString);
 			if (betValue <= 0){
 				ctxt.setAttribute("error", error);
 				ctxt.setAttribute("errorMessage", "Bet must be over 0$");

@@ -5,6 +5,8 @@ import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -174,15 +176,16 @@ public class Parser {
 		return gamesList;
 	}
 
-	public ArrayList<Game> parseGamesForDay(String xmlToParse){
+	public ArrayList<Game> parseGamesForDay(List<String> xmlToParseList){
 		ArrayList<Game> gamesList = new ArrayList<Game>();
+		for (String xml : xmlToParseList){
 		try{
 			double home_winpct, away_winpct, home_PointsFor, home_PointsAgainst, away_PointsFor, away_PointsAgainst;
 			home_winpct = away_winpct = home_PointsAgainst = home_PointsFor =away_PointsAgainst = away_PointsFor = 0.0;
 
 			DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			InputSource is = new InputSource();
-			is.setCharacterStream(new StringReader(xmlToParse));
+			is.setCharacterStream(new StringReader(xml));
 			Document doc = db.parse(is);
 			Thread.sleep(1000);
 			//Fetch Team Statistics and XML parsing
@@ -268,6 +271,7 @@ public class Parser {
 			}
 		}	catch(Exception e){
 			e.printStackTrace();
+		}
 		}
 		return gamesList;
 	}

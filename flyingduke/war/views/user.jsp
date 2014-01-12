@@ -13,6 +13,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.HashMap" %>
+<%@ page import="java.text.DecimalFormat" %>
 
 <%@ page import="fr.upmc.flyingduke.domain.dao.FDUserDao" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -49,6 +50,7 @@
 FDUser fdUser;
 FDUserDao fdUserDao = new FDUserDao();
 System.out.println("doGet HomeServlet");
+DecimalFormat twoDigitsFormat = new DecimalFormat("##.##");
 UserService userService = UserServiceFactory.getUserService();
 User googleUser = userService.getCurrentUser();
 if (googleUser == null){
@@ -125,7 +127,7 @@ System.out.println("Sortie");
                         </div>
               
                         <div class="panel-body">
-                            <div class="center-clock text-center" ><h1 id="money" ><%=fdUser.getWallet() %>$</h1></div>
+                            <div class="center-clock text-center" ><h1 id="money" ><%=twoDigitsFormat.format(fdUser.getWallet()) %>$</h1></div>
                         </div>
                     </div>
                  </div>
@@ -150,8 +152,6 @@ System.out.println("Sortie");
               Team awayTeam = teamDao.deepGet(game.getAwayTeamUUID());
               String betTeamAlias = "";
               String notbetTeamAlias= "";
-              Double gainDouble = (bet.getAmount() * bet.getOdds());
-			  int gain = gainDouble.intValue();			
               double betOdds = bet.getOdds();
               if (bet.getChoice().equals(BetChoice.HOME)){
               	betTeamAlias = homeTeam.getAlias();
@@ -170,12 +170,12 @@ System.out.println("Sortie");
               
                         <div class="panel-body">
                             <div class="btn-group text-center center-block">
-                                <div class="btn btn-primary btn-lg col-xs-6"><%= betTeamAlias%> <small><%= betOdds%></small></div>
+                                <div class="btn btn-primary btn-lg col-xs-6"><%= betTeamAlias%> <small><%= twoDigitsFormat.format(betOdds)%></small></div>
                                 <div class="btn btn-default btn-lg col-xs-6"><%= notbetTeamAlias%></div>
                                 </div>
                             <div class="text-center center-block" >
                                 <div class="invisible">invisible</div>
-                                <h2 id="money"><abbr title="Bid"><%=bet.getAmount() %>$</abbr></h2>
+                                <h2 id="money"><abbr title="Bid"><%=twoDigitsFormat.format(bet.getAmount()) %>$</abbr></h2>
                             </div>
                         </div>
                     </div>
@@ -201,8 +201,7 @@ System.out.println("Sortie");
               Team awayTeam = teamDao.deepGet(game.getAwayTeamUUID());
               String winTeamAlias = "";
               String loseTeamAlias= "";
-              Double gainDouble = (bet.getAmount() * bet.getOdds());
-			  int gain = gainDouble.intValue();			
+              Double gain = (bet.getAmount() * bet.getOdds());			
               double betOdds = bet.getOdds();
               if (homeScore > awayScore){
               	winTeamAlias = homeTeam.getAlias();
@@ -221,12 +220,12 @@ System.out.println("Sortie");
             
                         <div class="panel-body">
                             <div class="btn-group text-center center-block">
-                                <div class="btn btn-danger btn-lg col-xs-6"><%= loseTeamAlias%> <small><%= betOdds%></small></div>
+                                <div class="btn btn-danger btn-lg col-xs-6"><%= loseTeamAlias%> <small><%= twoDigitsFormat.format(betOdds) %></small></div>
                                 <div class="btn btn-default btn-lg col-xs-6"><%= winTeamAlias%></div>
                                 </div>
                             <div class="text-center center-block" >
                                 <div class="invisible">invisible</div>
-                                <h2 id="money"><abbr title="Gain"><%= gain%></abbr></h2>
+                                <h2 id="money"><abbr title="Gain">0</abbr></h2>
                             </div>
                         </div>
                         
@@ -246,8 +245,7 @@ System.out.println("Sortie");
               Team awayTeam = teamDao.deepGet(game.getAwayTeamUUID());
               String winTeamAlias = "";
               String loseTeamAlias= "";
-              Double gainDouble = (bet.getAmount() * bet.getOdds());
-			  int gain = gainDouble.intValue();			
+              Double gain = (bet.getAmount() * bet.getOdds());			
               double betOdds = bet.getOdds();
               if (homeScore > awayScore){
               	winTeamAlias = homeTeam.getAlias();
@@ -265,12 +263,12 @@ System.out.println("Sortie");
               
                         <div class="panel-body">
                             <div class="btn-group text-center center-block">
-                                <div class="btn btn-success btn-lg col-xs-6"><%=winTeamAlias %> <small><%=betOdds%></small></div>
+                                <div class="btn btn-success btn-lg col-xs-6"><%=winTeamAlias %> <small><%=twoDigitsFormat.format(betOdds) %></small></div>
                                 <div class="btn btn-default btn-lg col-xs-6"><%=loseTeamAlias %> </div>
                                 </div>
                             <div class="text-center center-block" >
                                 <div class="invisible">invisible</div>
-                                <h2 id="money"><abbr title="Gain"><%=gain %></abbr></h2>
+                                <h2 id="money"><abbr title="Gain"><%=twoDigitsFormat.format(gain) %></abbr></h2>
                             </div>
                         </div>
                         

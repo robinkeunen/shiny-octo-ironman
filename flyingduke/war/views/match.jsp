@@ -254,7 +254,7 @@ List<Player> playersAway = awayTeam.getPlayers();
                         <div class="col-xs-12">
                             <div class="input-group ">
                                 <span class="input-group-addon">$</span>
-                                <input type="text" name="betValue" class="form-control text-right input-lg" placeholder="You have <%= fdUser.getWallet() %> $" required>
+                                <input type="text" name="betValue" class="form-control text-right input-lg" placeholder="You have <%= twoDigitsFormat.format(fdUser.getWallet()) %> $" required>
                             </div>
                         </div>			
                     </div> 

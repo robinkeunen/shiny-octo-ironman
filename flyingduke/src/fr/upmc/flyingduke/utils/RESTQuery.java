@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 public class RESTQuery {
 
@@ -141,22 +143,37 @@ public class RESTQuery {
 		}
 		return xml;
 	}
-	public String getGamesForDay() {
-		
+	public List<String> getGamesForDay() throws InterruptedException {
+		List<String> xmlResults = new ArrayList<String>();
 		// get strings for the date
 		Calendar calendar = new GregorianCalendar();
 		String day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
 		// Calendar months start at 0, API months start at 1
 		String month = String.valueOf(calendar.get(Calendar.MONTH) + 1); 
 		String year = String.valueOf(calendar.get(Calendar.YEAR));
-
+		Boolean tomorrow = false;
+		String xml = "";
+		
+		for (int i=0; i<2;i++){
+		
+		if (tomorrow){
+			Calendar tomorrowCal = Calendar.getInstance();
+			tomorrowCal.add(Calendar.DATE, +1);
+			System.out.println("JOURNEE ! : " + tomorrowCal.get(Calendar.DATE));
+			day = String.valueOf(tomorrowCal.get(Calendar.DATE));
+			month = String.valueOf(tomorrowCal.get(Calendar.MONTH) + 1);
+			year = String.valueOf(tomorrowCal.get(Calendar.YEAR));
+			System.out.println("LA DATE EST " + day + " " + month + " " + year);
+		}
+		tomorrow = true;
 		// build request
 		String requestURL = "http://api.sportsdatallc.org/nba-t3/games/" 
 				+ year + "/" + month + "/" + day
 				+ "/schedule.xml?api_key=" + ApiKey + "";
 		URL url = null;
 		BufferedReader reader = null;
-		String xml = "";
+		
+		
 		try {
 			url = new URL(requestURL);
 			reader = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -167,15 +184,26 @@ public class RESTQuery {
 		while ((line = reader.readLine()) != null){
 			xml += line + "\n";
 		}
+		Thread.sleep(1000);
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println("ENTRE DEUX APPELS");
+		System.out.println();
+		System.out.println();
+		System.out.println(xml);
+		xmlResults.add(xml);
 		reader.close();
+		xml="";
 		} catch (IOException e) {
 			System.out.println("at line public String getGamesForDay(Calendar calendar) {");
 			e.printStackTrace();
 		} catch (NullPointerException e) {
 			System.out.println("at line public String getGamesForDay(Calendar calendar) {");
 		}
+		}
 
-		return xml;
+		return xmlResults;
 	}
 public String getTeamsStatistics() {
 		

@@ -37,7 +37,8 @@ public class FillUpDataBaseServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		String action = request.getParameter("action");
-		String xmlResult="";
+		String xmlResult = "";
+		List<String> xmlResultList = new ArrayList<String>();
 		RESTQuery requestsLauncher = new RESTQuery();
 		Parser parser = new Parser();
 
@@ -47,8 +48,13 @@ public class FillUpDataBaseServlet extends HttpServlet {
 		FDUserDao fdUserDao = new FDUserDao();
 
 		if (action.equalsIgnoreCase("getGamesDay")){
-			xmlResult = requestsLauncher.getGamesForDay();
-			ArrayList<Game> gamesList = parser.parseGamesForDay(xmlResult);
+			try {
+				xmlResultList = requestsLauncher.getGamesForDay();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			ArrayList<Game> gamesList = parser.parseGamesForDay(xmlResultList);
 			for (Game game : gamesList){
 				System.out.println(game.getDate());
 				try {
@@ -110,7 +116,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
 			int hour = today.get(Calendar.HOUR_OF_DAY);
 			System.out.println("avant le if de betComputings");
-			if (hour >= 0 && hour < 13){
+			if (hour >= 0 && hour < 6){
 				//if it's before 6 A.M, fetch games of yesterday
 				yesterday.add(Calendar.DATE, -1);
 				gameList = gameDao.gameForDay(yesterday);  
@@ -157,8 +163,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 								bet.setComputed(true);
 								if(bet.getChoice().equals(winningTeam)){
 									System.out.println("Il a gagne");
-									Double gainDouble = (bet.getAmount() * bet.getOdds());
-									int gain = gainDouble.intValue();
+									Double gain = (bet.getAmount() * bet.getOdds());
 									fdUser.setWallet(fdUser.getWallet() + gain);
 								}
 								try {

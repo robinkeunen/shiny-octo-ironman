@@ -58,6 +58,7 @@
     
     <%
 FDUser fdUser = null;
+    DecimalFormat twoDigitsFormat = new DecimalFormat("##.##");
     FDUserDao fdUserDao = new FDUserDao();
     GameDao gameDao = new GameDao();
     System.out.println("doGet HomeServlet");
@@ -77,10 +78,17 @@ if ((fdUser = fdUserDao.getFromGoogleUser(googleUser)) == null){
 System.out.println("la");
 
 System.out.println("home.jsp: End of user verification");
+Calendar tomorrow = Calendar.getInstance();
 Calendar today = Calendar.getInstance();
 today.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
 today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
-List<Game> gamesList = gameDao.gameForDay(today);
+tomorrow.add(Calendar.DATE, +1);
+List<Game> gamesListToday = gameDao.gameForDay(today);
+List<Game> gamesListTomorrow = gameDao.gameForDay(tomorrow);
+List<Game> gamesList = gamesListToday;
+System.out.println("Creation de la liste des games d'aujourd'hui et demain");
+gamesList.addAll(gamesListTomorrow);
+System.out.println("Creation terminée");
 ServletContext ctxt = getServletContext();
 ctxt.setAttribute("betDone",false);
 ctxt.setAttribute("error", false);
@@ -198,7 +206,6 @@ ctxt.setAttribute("error", false);
           
                  <ul class="list-group">
             <%
-DecimalFormat twoDigitsFormat = new DecimalFormat("##.##");
 TeamDao teamDao = new TeamDao();
 for(Game game : gamesList){ 
 	Team homeTeam = teamDao.deepGet(game.getHomeTeamUUID());
@@ -233,7 +240,7 @@ for(Game game : gamesList){
                         </div>
               
                         <div class="panel-body">
-                            <div class="center-clock text-center" ><h1 id="money" ><%=fdUser.getWallet()%>$</h1></div>
+                            <div class="center-clock text-center" ><h1 id="money" ><%=twoDigitsFormat.format(fdUser.getWallet()) %>$</h1></div>
                         </div>
                     </div>
                  </div>
