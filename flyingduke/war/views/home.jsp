@@ -206,11 +206,11 @@ ctxt.setAttribute("error", false);
           
                  <ul class="list-group">
             <%
-TeamDao teamDao = new TeamDao();
-for(Game game : gamesList){ 
-	Team homeTeam = teamDao.deepGet(game.getHomeTeamUUID());
-	Team awayTeam = teamDao.deepGet(game.getAwayTeamUUID());
-	%>   
+				TeamDao teamDao = new TeamDao();
+				for(Game game : gamesList){ 
+					Team homeTeam = teamDao.deepGet(game.getHomeTeamUUID());
+					Team awayTeam = teamDao.deepGet(game.getAwayTeamUUID());
+			%>   
                      <a href="/match?gameid=<%=game.getUUID() %>" class="list-group-item">
                         <div class="row">  
                             <div class="col-xs-12 col-sm-3"><%= new SimpleDateFormat("MM'/'dd' - 'HH:mm").format(game.getDate())%></div>
