@@ -12,6 +12,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
@@ -143,7 +144,11 @@ public class BetDao {
 	}
 	
 	public List<Bet> getLastBets(int max) {
-		Key ancestor = KeyFactory.createKey(kind, id);
+		Filter filter = null;
+		
+		Query query = new Query(BET_KIND).setAncestor(FDUserDao.ancestor).setFilter(filter);		
+		
+		return null;
 	}
 
 

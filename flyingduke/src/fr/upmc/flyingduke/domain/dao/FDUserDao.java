@@ -29,7 +29,7 @@ public class FDUserDao {
 	private static final String WALLET = "WALLET";
 
 	private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-	private final static Key ancestor = KeyFactory.createKey(FD_USER_KIND, "USER_ANCESTOR");
+	final static Key ancestor = KeyFactory.createKey(FD_USER_KIND, "USER_ANCESTOR");
 
 	/**
 	 * Retrieves the fduser in base for the given id;
