@@ -13,6 +13,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.HashMap" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.text.DecimalFormat" %>
 
 <%@ page import="fr.upmc.flyingduke.domain.dao.FDUserDao" %>
@@ -150,28 +151,33 @@ System.out.println("Sortie");
               int awayScore = game.getScores().getAway();
               Team homeTeam = teamDao.deepGet(game.getHomeTeamUUID());
               Team awayTeam = teamDao.deepGet(game.getAwayTeamUUID());
-              String betTeamAlias = "";
-              String notbetTeamAlias= "";
+              
+              boolean betHome = false;
+              String homeBtnClass = "btn-default";
+              String awayBtnClass = "btn-primary";
+              
               double betOdds = bet.getOdds();
+              
               if (bet.getChoice().equals(BetChoice.HOME)){
-              	betTeamAlias = homeTeam.getAlias();
-              	notbetTeamAlias = awayTeam.getAlias();
-              }else{
-              notbetTeamAlias = homeTeam.getAlias();
-              betTeamAlias = awayTeam.getAlias();
+              	betHome = true;
+              	homeBtnClass = "btn-primary";
+              	awayBtnClass = "btn-default";
               }
+              
+              SimpleDateFormat df = new SimpleDateFormat("MM'/'dd' - 'HH:mm");
+              
               %>
                                                  
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="panel panel-info ">
                         <div class="panel-heading text-center"> 
-                            <%=game.getDate() %>
+                            <%= df.format(game.getDate()) %>
                         </div>
               
                         <div class="panel-body">
                             <div class="btn-group text-center center-block">
-                                <div class="btn btn-primary btn-lg col-xs-6"><%= betTeamAlias%> <small><%= twoDigitsFormat.format(betOdds)%></small></div>
-                                <div class="btn btn-default btn-lg col-xs-6"><%= notbetTeamAlias%></div>
+                                <div class="btn <%= homeBtnClass %> btn-lg col-xs-6"><%= homeTeam.getAlias() %> <small></small></div>
+                                <div class="btn <%= awayBtnClass %> btn-lg col-xs-6"><%= awayTeam.getAlias() %> <small></small></div>
                                 </div>
                             <div class="text-center center-block" >
                                 <div class="invisible">invisible</div>
@@ -180,7 +186,7 @@ System.out.println("Sortie");
                         </div>
                     </div>
                 </div>
-                <%} 
+                <%}
                 System.out.println("Sortie");%>
               
               </div> 

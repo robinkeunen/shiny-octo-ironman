@@ -8,6 +8,7 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
@@ -15,6 +16,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.Query.SortDirection;
 
 import fr.upmc.flyingduke.domain.Bet;
 import fr.upmc.flyingduke.domain.BetChoice;
@@ -143,12 +145,25 @@ public class BetDao {
 		return bets;
 	}
 	
-	public List<Bet> getLastBets(int max) {
-		Filter filter = null;
+	public List<Bet> getBetsForTeam(String uuid, int max) {
+		Filter filter = new FilterPredicate(
+				GAME_UUID, 
+				FilterOperator.EQUAL, 
+				uuid);
 		
-		Query query = new Query(BET_KIND).setAncestor(FDUserDao.ancestor).setFilter(filter);		
+		Query query = new Query(BET_KIND).setAncestor(FDUserDao.ancestor);
+		query.setFilter(filter);
+		query.addSort(DATE, SortDirection.DESCENDING);
 		
-		return null;
+		PreparedQuery pq = datastore.prepare(query);
+		
+		List<Bet> bets = new LinkedList<>();
+		for (Entity entity: pq.asIterable(FetchOptions.Builder.withLimit(max))) {
+			Bet bet = betFromEntity(entity);
+			bets.add(bet);
+		}
+		
+		return bets;
 	}
 
 
