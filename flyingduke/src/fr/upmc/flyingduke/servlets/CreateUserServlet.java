@@ -31,11 +31,12 @@ public class CreateUserServlet extends HttpServlet {
 		System.out.println(googleUser.getEmail());
 
 		try {
-			FDUser user = FDUserDao.create(googleUser);
+			FDUserDao fdUserDao = new FDUserDao();
+			FDUser user = fdUserDao.create(googleUser);
 			user.setFirstName(request.getParameter("firstName"));
 			user.setLastName(request.getParameter("lastName"));
 			user.setWallet(100);
-			FDUserDao.update(user);
+			fdUserDao.update(user);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/home.jsp");
 		    dispatcher.forward(request, response);
 		} catch (ExistingUserException | EntityNotFoundException e) {
