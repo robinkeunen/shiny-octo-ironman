@@ -44,8 +44,7 @@
     <![endif]-->
     
     <%
-FDUserDao fdUserQuery = new FDUserDao();
-FDUser fdUser;
+FDUser fdUser = null;
 DecimalFormat twoDigitsFormat = new DecimalFormat("##.##");
 
 UserService userService = UserServiceFactory.getUserService();
@@ -55,7 +54,7 @@ if (googleUser == null){
 	return;
 }
 System.out.println("MAIL : " + googleUser.getEmail());
-if ((fdUser = fdUserQuery.getFromGoogleUser(googleUser)) == null){
+if ((fdUser = FDUserDao.getFromGoogleUser(googleUser)) == null){
 	response.sendRedirect("/views/createUser.jsp");
 	return;
 }
@@ -121,7 +120,7 @@ List<Player> playersAway = awayTeam.getPlayers();
                         <div class="col-xs-12">
                             <div class="input-group ">
                                 <span class="input-group-addon">$</span>
-                                <input type="text" name="betValue" class="form-control text-right input-lg" placeholder="10" required autofocus>
+                                <input type="text" name="betValue" class="form-control text-right input-lg" placeholder="You have <%= fdUser.getWallet() %> $" required autofocus>
                             </div>
                         </div>			
                     </div> 
@@ -233,7 +232,7 @@ List<Player> playersAway = awayTeam.getPlayers();
                         <div class="col-xs-12">
                             <div class="input-group ">
                                 <span class="input-group-addon">$</span>
-                                <input type="text" name="betValue" class="form-control text-right input-lg" placeholder="10">
+                                <input type="text" name="betValue" class="form-control text-right input-lg" placeholder="You have <%= fdUser.getWallet() %> $">
                             </div>
                         </div>			
                     </div> 

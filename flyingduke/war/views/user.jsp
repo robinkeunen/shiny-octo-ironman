@@ -1,9 +1,17 @@
+<%@page import="com.google.appengine.api.datastore.EntityNotFoundException"%>
+<%@page import="fr.upmc.flyingduke.domain.dao.GameDao"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.google.appengine.api.users.User" %>
 <%@ page import="com.google.appengine.api.users.UserService" %>
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
 <%@ page import="fr.upmc.flyingduke.domain.FDUser" %>
+<%@ page import="fr.upmc.flyingduke.domain.Bet" %>
 <%@ page import="fr.upmc.flyingduke.domain.dao.FDUserDao" %>
+<%@ page import="fr.upmc.flyingduke.domain.dao.GameDao" %>
+<%@ page import="fr.upmc.flyingduke.domain.Game" %>
+<%@ page import="fr.upmc.flyingduke.domain.Team" %>
+<%@ page import="fr.upmc.flyingduke.domain.dao.TeamDao" %>
+<%@ page import="java.util.List" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
@@ -50,6 +58,11 @@ if ((fdUser = FDUserDao.getFromGoogleUser(googleUser)) == null){
 	return;
 }
 System.out.println("la Verification User finie");
+List<Bet> futureBets = (List<Bet>) request.getAttribute("futurebets");
+List<Bet> pastBets = (List<Bet>) request.getAttribute("pastbets");
+System.out.println("user.jsp:futurebets " + futureBets);
+System.out.println("user.jsp:pastbets " + pastBets);
+
 %>
 </head>
 <body>
@@ -91,7 +104,7 @@ System.out.println("la Verification User finie");
                         </div>
               
                         <div class="panel-body">
-                            <div class="center-clock text-center" ><h1 id="money" >25$</h1></div>
+                            <div class="center-clock text-center" ><h1 id="money" ><%= fdUser.getWallet() %>$</h1></div>
                         </div>
                     </div>
                  </div>
@@ -106,26 +119,41 @@ System.out.println("la Verification User finie");
             </div>
             
             <div class="row">
-                                                 
+                <%
+                for (Bet bet: futureBets) {
+                	Game game = null;
+                	String homeAlias = null;
+                	String awayAlias = null;
+                	try {
+	                	game = GameDao.get(bet.getGameUUID());
+	                	homeAlias = TeamDao.deepGet(game.getHomeTeamUUID()).getAlias();
+	                	awayAlias = TeamDao.deepGet(game.getAwayTeamUUID()).getAlias();
+                	} catch (EntityNotFoundException e) {
+                		e.printStackTrace();
+                	}
+                	
+                %>                   
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="panel panel-info ">
                         <div class="panel-heading text-center"> 
-                            23 Feb 2014 19:00 
+                            <%= game.getDate() %>
                         </div>
               
                         <div class="panel-body">
                             <div class="btn-group text-center center-block">
-                                <div class="btn btn-primary btn-lg col-xs-6">NLK <small>1.2</small></div>
-                                <div class="btn btn-default btn-lg col-xs-6">SFG <small>1.5</small></div>
+                                <div class="btn btn-primary btn-lg col-xs-6"> <%= homeAlias %> <small><%= game.getOdds().getHome() %></small></div>
+                                <div class="btn btn-default btn-lg col-xs-6"> <%= awayAlias %> <small><%= game.getOdds().getAway() %></small></div>
                                 </div>
                             <div class="text-center center-block" >
                                 <div class="invisible">invisible</div>
-                                <h2 id="money"><abbr title="Bid">13$</abbr></h2>
+                                <h2 id="money"><abbr title="Bid"><%= bet.getAmount() %>$</abbr></h2>
                             </div>
                         </div>
                     </div>
                 </div>
-              
+              <%
+                }
+              %>
               </div> 
                 <div class="row">
                 <div class="panel panel-default ">
@@ -135,24 +163,34 @@ System.out.println("la Verification User finie");
            
             <div class="row">
             
-            <div class="col-lg-3 col-md-4 col-sm-6">
+            <%
+                for (Bet bet: pastBets) {
+                	Game game = GameDao.get(bet.getGameUUID());
+                	String homeAlias = TeamDao.deepGet(game.getHomeTeamUUID()).getAlias();
+                	String awayAlias = TeamDao.deepGet(game.getAwayTeamUUID()).getAlias();
+                	
+                %>                   
+                <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="panel panel-info ">
                         <div class="panel-heading text-center"> 
-                            23 Feb 2014 19:00 
+                            <%= game.getDate() %>
                         </div>
               
                         <div class="panel-body">
                             <div class="btn-group text-center center-block">
-                                <div class="btn btn-danger btn-lg col-xs-6">NLK <small>1.2</small></div>
-                                <div class="btn btn-default btn-lg col-xs-6">SFG <small>1.5</small></div>
+                                <div class="btn btn-primary btn-lg col-xs-6"> <%= homeAlias %> <small><%= game.getOdds().getHome() %></small></div>
+                                <div class="btn btn-default btn-lg col-xs-6"> <%= awayAlias %> <small><%= game.getOdds().getAway() %></small></div>
                                 </div>
                             <div class="text-center center-block" >
                                 <div class="invisible">invisible</div>
-                                <h2 id="money"><abbr title="Gain">0$</abbr></h2>
+                                <h2 id="money"><abbr title="Bid"><%= bet.getAmount() %>$</abbr></h2>
                             </div>
                         </div>
                     </div>
                 </div>
+              <%
+                }
+              %>
                 
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="panel panel-info ">

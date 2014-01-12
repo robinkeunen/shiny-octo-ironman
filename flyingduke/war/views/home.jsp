@@ -74,10 +74,9 @@ if ((fdUser = FDUserDao.getFromGoogleUser(googleUser)) == null){
 
 System.out.println("la Verification User finie");
 Calendar today = Calendar.getInstance();
-GameDao gameDao = new GameDao();
 today.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
 today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
-List<Game> gamesList = gameDao.gameForDay(today);
+List<Game> gamesList = GameDao.gameForDay(today);
 ServletContext ctxt = getServletContext();
 ctxt.setAttribute("betDone",false);
 %>
@@ -115,7 +114,7 @@ ctxt.setAttribute("betDone",false);
     <div class="jumbotron">
       <div class="container">
         <h1>Welcome!</h1>
-        <p>This is an awesome gambling website created by <em>Antoine the Pilgrim</em>, <em>Robin the Hipster</em> and the <em>Invisible Basil</em>! Register, get 100$ and start gambling on NBA matches! You might get rich sooner than later!</p>
+        <p>This is an awesome gambling website created by <em>Antoine the Pilgrim</em>, <em>Robin the Hipster</em> and the <em>Invincible Basil</em>! Register, get 100$ and start gambling on NBA matches! You might get rich sooner than later!</p>
         <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
           More &raquo;
         </button>
@@ -225,7 +224,7 @@ for(Game game : gamesList){
                  <div class="col-xs-12">
                      <div class="panel panel-primary ">
                         <div href="#" class="panel-heading"> 
-                            <strong>Robin Keunen</strong>
+                            <strong><%= fdUser.getFirstName() %> <%= fdUser.getLastName() %></strong>
                         </div>
               
                         <div class="panel-body">
