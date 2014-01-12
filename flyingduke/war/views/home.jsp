@@ -13,6 +13,8 @@
 <%@ page import="fr.upmc.flyingduke.utils.*" %>
 <%@ page import="java.util.Calendar" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.TimeZone" %>
 <%@ page import="java.text.DecimalFormat" %>
@@ -73,16 +75,6 @@ if ((fdUser = FDUserDao.getFromGoogleUser(googleUser)) == null){
 System.out.println("la Verification User finie");
 Calendar today = Calendar.getInstance();
 GameDao gameDao = new GameDao();
-
-/*RESTQuery queryLauncher = new RESTQuery();
-Parser parser = new Parser();
-String XMLresult = queryLauncher.getGamesForDay();
-ArrayList<Game> list = parser.parseGamesForDay(XMLresult);
-for (Game game : list){
-	gameDao.store(game);
-	System.out.println(game.getOdds().getHome());
-}
-*/
 today.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
 today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
 List<Game> gamesList = gameDao.gameForDay(today);
@@ -210,7 +202,7 @@ for(Game game : gamesList){
 	%>   
                      <a href="/match?gameid=<%=game.getUUID() %>" class="list-group-item">
                         <div class="row">
-                            <div class="col-xs-12 col-sm-3"><%= game.getDate()%></div>
+                            <div class="col-xs-12 col-sm-3"><%= new SimpleDateFormat("MM'/'dd'-'HH:mm").format(game.getDate())%></div>
                             <div class="col-xs-9 col-sm-3"><%= homeTeam.getName()%> </div>
                             <div class="col-xs-3 col-sm-1"><%=twoDigitsFormat.format(game.getOdds().getHome()) %> </div>
                             <div class="col-xs-9 col-sm-3"><%= awayTeam.getName()%> </div>
