@@ -176,7 +176,7 @@ ctxt.setAttribute("error", false);
     <div class="container">
       <!-- Example row of columns -->
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-lg-10">
             <h2>Upcoming games</h2>
             
             <div class="panel panel-default">
@@ -203,7 +203,7 @@ for(Game game : gamesList){
 	%>   
                      <a href="/match?gameid=<%=game.getUUID() %>" class="list-group-item">
                         <div class="row">
-                            <div class="col-xs-12 col-sm-3"><%= new SimpleDateFormat("MM'/'dd'-'HH:mm").format(game.getDate())%></div>
+                            <div class="col-xs-12 col-sm-3"><%= new SimpleDateFormat("MM'/'dd' - 'HH:mm").format(game.getDate())%></div>
                             <div class="col-xs-9 col-sm-3"><%= homeTeam.getName()%> </div>
                             <div class="col-xs-3 col-sm-1"><%=twoDigitsFormat.format(game.getOdds().getHome()) %> </div>
                             <div class="col-xs-9 col-sm-3"><%= awayTeam.getName()%> </div>
@@ -220,10 +220,21 @@ for(Game game : gamesList){
                 
                   </div>
 
-        <div class="col-md-4 hidden-sm">
-          <h2>User panel</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        <div class="col-lg-2 visible-lg">
+        	<h2 class="invisible">User panel</h2>
+             <div class="row">  
+                 <div class="col-xs-12">
+                     <div class="panel panel-primary ">
+                        <div href="#" class="panel-heading"> 
+                            <strong>Robin Keunen</strong>
+                        </div>
+              
+                        <div class="panel-body">
+                            <div class="center-clock text-center" ><h1 id="money" >25$</h1></div>
+                        </div>
+                    </div>
+                 </div>
+             </div>
         </div>
 
           
