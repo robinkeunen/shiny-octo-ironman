@@ -66,7 +66,7 @@ h1 {
 }
 
 abbr[title] {
-  border-bottom: 1px dotted;
+  /*border-bottom: 1px dotted;*/
 }
 
 b,
@@ -667,7 +667,7 @@ dd {
 abbr[title],
 abbr[data-original-title] {
   cursor: help;
-  border-bottom: 1px dotted #999999;
+  /*border-bottom: 1px dotted #999999;*/
 }
 
 .initialism {

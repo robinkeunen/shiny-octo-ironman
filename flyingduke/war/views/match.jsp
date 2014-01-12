@@ -262,9 +262,7 @@ List<Player> playersAway = awayTeam.getPlayers();
         		error=false;
         		ctxt.setAttribute("erreur", error);
         	}
-          %>
-		
-	
+          %>	
           </div>
           <!-- End bet form -->
           
