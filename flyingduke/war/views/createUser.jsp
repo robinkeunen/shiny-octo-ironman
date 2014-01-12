@@ -35,7 +35,6 @@
       
       <%
 FDUser fdUser;
-System.out.println("doGet HomeServlet");
 UserService userService = UserServiceFactory.getUserService();
 User googleUser = userService.getCurrentUser();
 if (googleUser == null){
@@ -43,12 +42,7 @@ if (googleUser == null){
 	return;
 }
 FDUserDao fdUserDao = new FDUserDao();
-System.out.println("MAIL : " + googleUser.getEmail());
-if ((fdUser = fdUserDao.getFromGoogleUser(googleUser)) == null){
-	System.out.println("Redirection vers création");
-	response.sendRedirect("/views/home.jsp");
-	return;
-}
+System.out.println("createUser.jsp: MAIL : " + googleUser.getEmail());
 System.out.println("CreateUser: User verified");
 %>
 

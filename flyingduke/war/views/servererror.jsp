@@ -35,6 +35,7 @@
 </head>
 
 <body>
+<% System.out.println("servererror.jsp"); %>
     <div class="container invisible">
 		<div class="jumbotron">			
 		</div>
@@ -44,7 +45,7 @@
 	<div class="container">
 		<div class="jumbotron">
 			<h1>Error 505</h1>
-			Snap, this is an error on our side. We will try it as soon as possible...
+			Snap, this is an error on our side. We will try to fix it as soon as possible...
 			
 			<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
           More &raquo;
@@ -56,17 +57,18 @@
                 <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel"><h2>More about this website</h2></h4>
+                    <h4 class="modal-title" id="myModalLabel"><h2>More about this error</h2></h4>
                   </div>
                   <div class="modal-body">
 					
 					<%
 						Exception e = (Exception) request.getAttribute("exception");
+						System.out.println(e.getStackTrace());
 					%>
 					
                      <h3>Rules <%= e.getClass().toString() %></h3>
                      <p> <%= e.getMessage() %> </p>
-                     <p><small class="text-muted"> <%= e.getStackTrace() %> </small></p>
+                     <p><small class="text-muted"> <%= e.getStackTrace().toString() %> </small></p>
                 </div>
                   
                     <div class="modal-footer">

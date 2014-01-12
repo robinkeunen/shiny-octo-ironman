@@ -168,7 +168,7 @@ public class BetDao {
 			bet.setChoice(choice);
 		}
 		if (amountO != null) {
-			int amount = ((Long) amountO).intValue();
+			double amount = ((Double) amountO);
 			bet.setAmount(amount);
 		}
 		if (oddsO != null){

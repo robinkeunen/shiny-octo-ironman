@@ -138,13 +138,14 @@ List<Player> playersAway = awayTeam.getPlayers();
                </form>
             </div>
           </div>
-          </div>
           
           <%
+          System.out.println("Match.jsp: error on top");
           Boolean error = (Boolean) ctxt.getAttribute("error");
           if (error != null && error){
           	%>
-        		<div class="alert alert-danger hidden-lg hidden-md"><%=ctxt.getAttribute("errorMessage") %></div>
+        		<div class="hidden-lg hidden-md alert alert-danger ">
+        			<%=ctxt.getAttribute("errorMessage") %></div>
         		<%
         	}
           Boolean betDone = (Boolean) ctxt.getAttribute("betDone");
@@ -156,6 +157,7 @@ List<Player> playersAway = awayTeam.getPlayers();
         		ctxt.setAttribute("betDone", betDone);
           }
           %>
+          </div>
           
           </div>
           <!-- End bet form -->
@@ -252,7 +254,7 @@ List<Player> playersAway = awayTeam.getPlayers();
                         <div class="col-xs-12">
                             <div class="input-group ">
                                 <span class="input-group-addon">$</span>
-                                <input type="text" name="betValue" class="form-control text-right input-lg" placeholder="You have <%= fdUser.getWallet() %> $">
+                                <input type="text" name="betValue" class="form-control text-right input-lg" placeholder="You have <%= fdUser.getWallet() %> $" required>
                             </div>
                         </div>			
                     </div> 

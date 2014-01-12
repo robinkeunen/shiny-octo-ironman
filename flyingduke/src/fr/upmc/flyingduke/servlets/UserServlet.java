@@ -36,16 +36,7 @@ public class UserServlet extends HttpServlet {
 			try {
 				response.sendRedirect(userService.createLoginURL(request.getRequestURI()));
 			} catch (IOException e) {
-				try {
-					request.setAttribute("exception", e);
-					RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
-					dispatcher.forward(request, response);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				} catch (ServletException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+					e.printStackTrace();
 			}
 			return;
 		}
@@ -56,7 +47,7 @@ public class UserServlet extends HttpServlet {
 			} catch (IOException e) {
 				try {
 					request.setAttribute("exception", e);
-					RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/views/servererror.jsp");
 					dispatcher.forward(request, response);
 				} catch (IOException | ServletException e1) {
 					e1.printStackTrace();
@@ -87,13 +78,15 @@ public class UserServlet extends HttpServlet {
 		System.out.println("Redirection depuis la servlet");
 
 		try {
+			System.out.println("UserServlet:GET - redirect");
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/user.jsp");
 			dispatcher.forward(request, response);
 
 		} catch (IOException | ServletException e) {
 			try {
+				System.out.println("UserServlet:GET - Exception");
 				request.setAttribute("exception", e);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/views/servererror.jsp");
 				dispatcher.forward(request, response);
 			} catch (IOException e1) {
 				e1.printStackTrace();

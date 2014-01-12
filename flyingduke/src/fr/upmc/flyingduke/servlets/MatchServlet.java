@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
 import com.google.appengine.api.datastore.EntityNotFoundException;
 
@@ -37,7 +38,7 @@ public class MatchServlet extends HttpServlet {
 			ctxt.setAttribute("game", game);
 		} catch (EntityNotFoundException e) {
 			request.setAttribute("exception", e);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/servererror.jsp");
 			dispatcher.forward(request, response);
 		}
 
@@ -68,7 +69,7 @@ public class MatchServlet extends HttpServlet {
 		}*/
 
 		// get form parameters
-		String betValueString = request.getParameter("betValue");
+		String betValueString = escapeHtml(request.getParameter("betValue"));
 		try{
 			Integer betValue = Integer.parseInt(betValueString);
 			if (betValue <= 0){
@@ -111,7 +112,7 @@ public class MatchServlet extends HttpServlet {
 				dispatcher.forward(request,response);
 			} catch (ServletException e1) {
 				request.setAttribute("exception", e1);
-				RequestDispatcher dispatcher1 = request.getRequestDispatcher("/error");
+				RequestDispatcher dispatcher1 = request.getRequestDispatcher("/views/servererror.jsp");
 				try {
 					dispatcher1.forward(request, response);
 				} catch (ServletException e2) {
