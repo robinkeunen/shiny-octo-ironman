@@ -17,7 +17,7 @@ public class FDUser {
 	private String firstName;
 	private String lastName;
 	private User googleuser;
-	private int wallet; // Amount of money per user
+	private double wallet; // Amount of money per user
 	
 	/**
 	 * Contructor for FDUsers. This constructor creates an entity
@@ -42,13 +42,13 @@ public class FDUser {
 	/**
 	 * @return the wallet
 	 */
-	public int getWallet() {
+	public double getWallet() {
 		return wallet;
 	}
 	/**
 	 * @param wallet the wallet to set
 	 */
-	public void setWallet(int wallet) {
+	public void setWallet(double wallet) {
 		this.wallet = wallet;
 	}
 

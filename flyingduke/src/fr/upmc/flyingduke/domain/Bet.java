@@ -7,7 +7,7 @@ public class Bet {
 	private final long punterID;
 	private String gameUUID;
 	private BetChoice choice; 
-	private int amount;
+	private double amount;
 	private double odds;
 	private boolean computed;
 	
@@ -59,13 +59,13 @@ public class Bet {
 	/**
 	 * @return the amount
 	 */
-	public int getAmount() {
+	public double getAmount() {
 		return amount;
 	}
 	/**
 	 * @param amount the amount to set
 	 */
-	public void setAmount(int amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 	/**

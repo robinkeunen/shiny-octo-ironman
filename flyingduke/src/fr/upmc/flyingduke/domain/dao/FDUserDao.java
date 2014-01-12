@@ -171,7 +171,7 @@ public class FDUserDao {
 		if (googleUser != null)
 			fdUser.setGoogleuser((User) googleUser); 
 		if (wallet != null)
-			fdUser.setWallet(((Long) wallet).intValue());
+			fdUser.setWallet((Double) wallet);
 		return fdUser;
 	}
 }
