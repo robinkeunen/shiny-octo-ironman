@@ -1,6 +1,8 @@
 package fr.upmc.flyingduke.servlets;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -24,10 +26,7 @@ public class MatchServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		System.out.println("DOGET MATCH!!");
 		ServletContext ctxt = getServletContext();
-
-		System.out.println(request.getParameter("game"));
 		String gameUUID = request.getParameter("gameid");
 
 		Game game = null;;
@@ -37,7 +36,6 @@ public class MatchServlet extends HttpServlet {
 		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
 		}
-		System.out.println("apres");
 		response.sendRedirect("views/match.jsp");
 	}
 
@@ -48,14 +46,28 @@ public class MatchServlet extends HttpServlet {
 		FDUser fdUser = (FDUser) ctxt.getAttribute("fdUser");
 		Game game = (Game) ctxt.getAttribute("game");
 		
+		Calendar now = Calendar.getInstance();
+		now.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
+		now.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH),now.get(Calendar.HOUR_OF_DAY),now.get(Calendar.MINUTE));
+		//Check if the Game has started
+		if (now.getTimeInMillis() > game.getDate().getTime()){
+			ctxt.setAttribute("error", error);
+			ctxt.setAttribute("errorMessage", "Game has already started. Bets are closed.");
+			response.sendRedirect("/views/match.jsp");
+			return;
+		}
 		// get form parameters
-		System.out.println("\n\nMatch:DoPost");
 		String betValueString = request.getParameter("betValue");
 		try{
 			Integer betValue = Integer.parseInt(betValueString);
-			if (betValue <= 0 || betValue > fdUser.getWallet()){
-				System.out.println("MatchServlet: wrong value, user has " + fdUser.getWallet());
+			if (betValue <= 0){
 				ctxt.setAttribute("error", error);
+				ctxt.setAttribute("errorMessage", "Bet must be over 0$");
+				response.sendRedirect("/views/match.jsp");
+				return;
+			}else if (betValue > fdUser.getWallet()){
+				ctxt.setAttribute("error", error);
+				ctxt.setAttribute("errorMessage", "You don't have enough money");
 				response.sendRedirect("/views/match.jsp");
 				return;
 			}
@@ -68,19 +80,20 @@ public class MatchServlet extends HttpServlet {
 				System.out.println("home choisi");
 			}else if(team.equalsIgnoreCase("away")){
 				bet.setChoice(BetChoice.AWAY);
-				System.out.println("away choisi");
 				bet.setOdds(game.getOdds().getAway());
 			}
 			bet.setComputed(false);
 			bet.setGameUUID(game.getUUID());
-			System.out.println(game.getUUID());
 			BetDao.update(bet);
 			fdUser.setWallet(fdUser.getWallet()-betValue);
 			FDUserDao.update(fdUser);
-			response.sendRedirect("/views/home.jsp");
+			Boolean betDone = true;
+			ctxt.setAttribute("betDone", betDone);
+			response.sendRedirect("/views/match.jsp");
 		}catch(Exception e){
 			System.out.println("error Cast");
 			ctxt.setAttribute("error", error);
+			ctxt.setAttribute("errorMessage", "Bet must be a number");
 			response.sendRedirect("/views/match.jsp");
 		}
 

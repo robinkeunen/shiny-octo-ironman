@@ -44,10 +44,8 @@
     <![endif]-->
     
     <%
-System.out.println("MATCH.JSP");
 FDUserDao fdUserQuery = new FDUserDao();
 FDUser fdUser;
-System.out.println("doGet HomeServlet");
 DecimalFormat twoDigitsFormat = new DecimalFormat("##.##");
 
 UserService userService = UserServiceFactory.getUserService();
@@ -58,7 +56,6 @@ if (googleUser == null){
 }
 System.out.println("MAIL : " + googleUser.getEmail());
 if ((fdUser = fdUserQuery.getFromGoogleUser(googleUser)) == null){
-	System.out.println("Redirection vers création");
 	response.sendRedirect("/views/createUser.jsp");
 	return;
 }
@@ -252,17 +249,24 @@ List<Player> playersAway = awayTeam.getPlayers();
           </div>
           <%
           Boolean error = (Boolean) ctxt.getAttribute("error");
-          
           if (error != null && error){
-              System.out.println("match.jsp: error in bet value"); 
-
-        		%>
-        		<div class="alert alert-danger">You don't have enough money.</div>
+          	%>
+        		<div class="alert alert-danger"><%=ctxt.getAttribute("errorMessage") %></div>
         		<%
         		error=false;
-        		ctxt.setAttribute("erreur", error);
+        		ctxt.setAttribute("error", error);
         	}
-          %>	
+          Boolean betDone = (Boolean) ctxt.getAttribute("betDone");
+          if(betDone){
+          	%>
+        	<div class="alert alert-success">Your bet has been registered.</div>
+        		<%
+        		betDone = false;
+        		ctxt.setAttribute("betDone", betDone);
+          }
+          %>
+		
+	
           </div>
           <!-- End bet form -->
           
