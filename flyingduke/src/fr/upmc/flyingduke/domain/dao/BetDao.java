@@ -1,5 +1,6 @@
 package fr.upmc.flyingduke.domain.dao;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class BetDao {
 	private final static String AMOUNT = "AMOUNT";
 	private final static String ODDS = "ODDS";
 	private final static String COMPUTED = "COMPUTED";
+	private final static String DATE = "DATE";
 
 	private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
@@ -67,6 +69,7 @@ public class BetDao {
 		entity.setProperty(AMOUNT, bet.getAmount());
 		entity.setProperty(ODDS, bet.getOdds());
 		entity.setProperty(COMPUTED, bet.isComputed());
+		entity.setProperty(DATE, bet.getDate());
 
 		// update in base
 		datastore.put(entity);	
@@ -156,6 +159,7 @@ public class BetDao {
 		Object amountO = entity.getProperty(AMOUNT);
 		Object oddsO = entity.getProperty(ODDS);
 		Object computed = entity.getProperty(COMPUTED);
+		Object date = entity.getProperty(DATE);
 
 		// build bet
 		long parentId = entity.getKey().getParent().getId();
@@ -177,6 +181,12 @@ public class BetDao {
 		}
 		if (computed != null) {
 			bet.setComputed((boolean) computed);
+		}
+		if (computed != null) {
+			bet.setComputed((boolean) computed);
+		}
+		if (date != null) {
+			bet.setDate((Date) date);
 		}
 
 		return bet;

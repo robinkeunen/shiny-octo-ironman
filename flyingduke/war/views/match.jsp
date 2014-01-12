@@ -153,7 +153,6 @@ List<Player> playersAway = awayTeam.getPlayers();
           	%>
         	<div class="alert alert-success hidden-lg hidden-md">Your bet has been registered.</div>
         		<%
-        		betDone = false;
         		ctxt.setAttribute("betDone", betDone);
           }
           %>
@@ -287,6 +286,56 @@ List<Player> playersAway = awayTeam.getPlayers();
           }
           %>
 		
+		<div class="visible-md visible-lg" id="bet1">
+			<div class="panel panel-info ">  
+               <div class="panel-heading text-center"> 
+                  punter name 
+                </div> 
+            	
+                 <div class="panel-body"> 
+                    <div class="btn-group text-center center-block col-xs-8"> 
+                         <div class="btn btn-default btn-lg col-xs-6"> SFG </div> 
+                         <div class="btn btn-danger btn-lg col-xs-6"> NYN </div> 
+                    </div> 
+					<div class="btn btn-default btn-lg col-xs-4" id="amount"> 12.00$ </div> 
+                  </div>
+               </div>
+             </div>
+		</div>
+		
+		<div class="visible-md visible-lg" id="bet2">
+			<div class="panel panel-info ">  
+               <div class="panel-heading text-center" id="punter1"> 
+                  punter name 
+                </div> 
+            	
+                 <div class="panel-body"> 
+                    <div class="btn-group text-center center-block col-xs-8"> 
+                         <div class="btn btn-default btn-lg col-xs-6"> SFG </div> 
+                         <div class="btn btn-danger btn-lg col-xs-6"> NYN </div> 
+                    </div> 
+					<div class="btn btn-default btn-lg col-xs-4" id="amount"> 12.00$ </div> 
+                  </div>
+               </div>
+             </div>
+		</div>
+		
+		<div class="visible-md visible-lg" id="bet3">
+			<div class="panel panel-info ">  
+               <div class="panel-heading text-center"> 
+                  punter name 
+                </div> 
+            	
+                 <div class="panel-body"> 
+                    <div class="btn-group text-center center-block col-xs-8"> 
+                         <div class="btn btn-default btn-lg col-xs-6"> SFG </div> 
+                         <div class="btn btn-danger btn-lg col-xs-6"> NYN </div> 
+                    </div> 
+					<div class="btn btn-default btn-lg col-xs-4" id="amount"> 12.00$ </div> 
+                  </div>
+               </div>
+             </div>
+		</div>
 	
           </div>
           <!-- End bet form -->
@@ -311,5 +360,7 @@ List<Player> playersAway = awayTeam.getPlayers();
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+	<!-- <script src="/js/script.js"></script> -->
+		
 </body>
 </html>

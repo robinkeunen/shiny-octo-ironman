@@ -10,8 +10,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
-
 import com.google.appengine.api.datastore.EntityNotFoundException;
 
 import fr.upmc.flyingduke.domain.FDUser;

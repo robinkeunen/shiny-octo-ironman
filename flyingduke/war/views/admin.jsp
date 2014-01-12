@@ -111,8 +111,6 @@ System.out.println("admin.jsp: User verified");
       
 		<a href="/FillUp?action=getAllTeams" class="btn btn-large btn-primary btn-block">
 			Fetch all teams <small>(30s)</small></a>
-		<a href="/FillUp?action=getAllGames" class="btn btn-large btn-primary btn-block">
-			Fetch all games</a>
 		<a href="/FillUp?action=getGamesDay" class="btn btn-large btn-primary btn-block">
 			Get games for today</a>
 		<a href="/FillUp?action=betsComputing" class="btn btn-large btn-primary btn-block">

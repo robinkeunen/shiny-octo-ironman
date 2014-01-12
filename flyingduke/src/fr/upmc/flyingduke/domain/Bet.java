@@ -1,5 +1,7 @@
 package fr.upmc.flyingduke.domain;
 
+import java.util.Date;
+
 import fr.upmc.flyingduke.domain.dao.BetDao;
 
 public class Bet {
@@ -10,6 +12,7 @@ public class Bet {
 	private double amount;
 	private double odds;
 	private boolean computed;
+	private Date date;
 	
 	/**
 	 * Constructor for Bet. This constructor creates an entity
@@ -115,6 +118,14 @@ public class Bet {
 	 */
 	public void setComputed(boolean computed) {
 		this.computed = computed;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 }
