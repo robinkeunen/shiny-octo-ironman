@@ -26,7 +26,8 @@ public class FDUser {
 	 * @throws ExistingUserException One user per google account
 	 */
 	public static FDUser createFDUser(User googleuser) throws ExistingUserException {
-		return FDUserDao.create(googleuser);
+		FDUserDao fdUserDao = new FDUserDao();
+		return fdUserDao.create(googleuser);
 	}
 	
 	/**
