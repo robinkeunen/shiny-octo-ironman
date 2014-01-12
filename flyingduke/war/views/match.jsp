@@ -184,7 +184,10 @@ List<Player> playersAway = awayTeam.getPlayers();
             </div>
             <table class="table table-striped ">
              
-              <%for(Player player : playersHome){
+              <%
+              if(playersHome != null){
+              	for(Player player : playersHome){
+              
               	%>
               
                 <tr>
@@ -192,7 +195,8 @@ List<Player> playersAway = awayTeam.getPlayers();
                     <td><%=player.getLastName() %></td>
                     <td><%=player.getPosition() %></td>
                 </tr>
-                <%} %>
+                <%} 
+                }%>
               </table>
 
           </div>
@@ -222,7 +226,8 @@ List<Player> playersAway = awayTeam.getPlayers();
             
             <table class="table table-striped ">
              
-              <%for(Player player : playersAway){
+              <%if (playersAway != null){
+              for(Player player : playersAway){
               	%>
               
                 <tr>
@@ -230,7 +235,8 @@ List<Player> playersAway = awayTeam.getPlayers();
                     <td><%=player.getLastName() %></td>
                     <td><%=player.getPosition() %></td>
                 </tr>
-                <%} %>
+                <%} 
+                }%>
               </table>
               </div>
           </div>
