@@ -42,8 +42,9 @@ if (googleUser == null){
 	response.sendRedirect(userService.createLoginURL(request.getRequestURI()));
 	return;
 }
+FDUserDao fdUserDao = new FDUserDao();
 System.out.println("MAIL : " + googleUser.getEmail());
-if ((fdUser = FDUserDao.getFromGoogleUser(googleUser)) != null){
+if ((fdUser = fdUserDao.getFromGoogleUser(googleUser)) == null){
 	System.out.println("Redirection vers création");
 	response.sendRedirect("/views/home.jsp");
 	return;

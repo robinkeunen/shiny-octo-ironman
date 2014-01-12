@@ -25,10 +25,10 @@ public class UserServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println(":UserServlet");
-		
+
 		FDUserDao fdUserDao = new FDUserDao();
 		BetDao betDao = new BetDao();
-		
+
 		FDUser fdUser = null;
 		UserService userService = UserServiceFactory.getUserService();
 		User googleUser = userService.getCurrentUser();
@@ -37,8 +37,13 @@ public class UserServlet extends HttpServlet {
 				response.sendRedirect(userService.createLoginURL(request.getRequestURI()));
 			} catch (IOException e) {
 				try {
-					response.sendRedirect("/error");
+					request.setAttribute("exception", e);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+					dispatcher.forward(request, response);
 				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (ServletException e1) {
+					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -50,42 +55,49 @@ public class UserServlet extends HttpServlet {
 				response.sendRedirect("/views/createUser.jsp");
 			} catch (IOException e) {
 				try {
-					response.sendRedirect("/error");
-				} catch (IOException e1) {
+					request.setAttribute("exception", e);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+					dispatcher.forward(request, response);
+				} catch (IOException | ServletException e1) {
 					e1.printStackTrace();
 				}
 			}
 			return;
 		}
-		
+
 		ServletContext ctxt = getServletContext();
 		ctxt.setAttribute("fdUser", fdUser);
-		
+
 		List<Bet> bets = betDao.getBetForFDUser(fdUser);
 		List<Bet> futureBets = new LinkedList<Bet>();
 		List<Bet> pastBets =  new LinkedList<Bet>();
-		
+
 		for (Bet bet: bets) {
 			if (bet.isComputed()) 
 				pastBets.add(bet);
 			else 
 				futureBets.add(bet);
 		}
-		
+
 		System.out.println("UserServlet:futurebets " + futureBets);
 		System.out.println("UserServlet:pastbets " + pastBets);
 
 		request.setAttribute("futurebets", futureBets);
 		request.setAttribute("pastbets", pastBets);
-		
+
 		try {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/user.jsp");
-		    dispatcher.forward(request, response);
+			dispatcher.forward(request, response);
 
 		} catch (IOException | ServletException e) {
 			try {
-				response.sendRedirect("/error");
+				request.setAttribute("exception", e);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+				dispatcher.forward(request, response);
 			} catch (IOException e1) {
+				e1.printStackTrace();
+			} catch (ServletException e1) {
+				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}

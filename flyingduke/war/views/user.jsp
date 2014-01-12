@@ -3,6 +3,17 @@
 <%@ page import="com.google.appengine.api.users.UserService" %>
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
 <%@ page import="fr.upmc.flyingduke.domain.FDUser" %>
+<%@ page import="fr.upmc.flyingduke.domain.Bet" %>
+<%@ page import="fr.upmc.flyingduke.domain.Game" %>
+<%@ page import="fr.upmc.flyingduke.domain.Team" %>
+<%@ page import="fr.upmc.flyingduke.domain.BetChoice" %>
+<%@ page import="fr.upmc.flyingduke.domain.dao.FDUserDao" %>
+<%@ page import="fr.upmc.flyingduke.domain.dao.GameDao" %>
+<%@ page import="fr.upmc.flyingduke.domain.dao.TeamDao" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.HashMap" %>
+
 <%@ page import="fr.upmc.flyingduke.domain.dao.FDUserDao" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
@@ -36,6 +47,7 @@
     <![endif]-->
 <%
 FDUser fdUser;
+FDUserDao fdUserDao = new FDUserDao();
 System.out.println("doGet HomeServlet");
 UserService userService = UserServiceFactory.getUserService();
 User googleUser = userService.getCurrentUser();
@@ -44,12 +56,30 @@ if (googleUser == null){
 	return;
 }
 System.out.println("MAIL : " + googleUser.getEmail());
-if ((fdUser = FDUserDao.getFromGoogleUser(googleUser)) == null){
+if ((fdUser = fdUserDao.getFromGoogleUser(googleUser)) == null){
 	System.out.println("Redirection vers création");
 	response.sendRedirect("/views/createUser.jsp");
 	return;
 }
 System.out.println("la Verification User finie");
+List<Bet> futureBets = (List<Bet>) request.getAttribute("futureBets");
+List<Bet> pastBets = (List<Bet>) request.getAttribute("pastBets");
+ArrayList<Bet> winningBets = new ArrayList<Bet>();
+ArrayList<Bet> losingBets = new ArrayList<Bet>();
+TeamDao teamDao = new TeamDao();
+GameDao gameDao = new GameDao();
+for (Bet bet : pastBets){
+	Game gameForBet = gameDao.get(bet.getGameUUID());
+	int scoreHome = gameForBet.getScores().getHome();
+	int scoreAway = gameForBet.getScores().getAway();
+	String winner = (scoreHome > scoreAway) ? "home" : "away";
+	BetChoice winningTeam = (winner.equalsIgnoreCase("home")) ? BetChoice.HOME : BetChoice.AWAY;
+	if (bet.getChoice().equals(winningTeam)){
+		winningBets.add(bet);
+	}else{
+		losingBets.add(bet);
+	}
+}
 %>
 </head>
 <body>
@@ -91,7 +121,7 @@ System.out.println("la Verification User finie");
                         </div>
               
                         <div class="panel-body">
-                            <div class="center-clock text-center" ><h1 id="money" >25$</h1></div>
+                            <div class="center-clock text-center" ><h1 id="money" ><%=fdUser.getWallet() %>$</h1></div>
                         </div>
                     </div>
                  </div>
@@ -106,25 +136,45 @@ System.out.println("la Verification User finie");
             </div>
             
             <div class="row">
+            <% for (Bet bet : losingBets){ 
+              Game game = gameDao.get(bet.getGameUUID());
+              int homeScore = game.getScores().getHome();
+              int awayScore = game.getScores().getAway();
+              Team homeTeam = teamDao.deepGet(game.getHomeTeamUUID());
+              Team awayTeam = teamDao.deepGet(game.getAwayTeamUUID());
+              String betTeamAlias = "";
+              String notbetTeamAlias= "";
+              Double gainDouble = (bet.getAmount() * bet.getOdds());
+			  int gain = gainDouble.intValue();			
+              double betOdds = bet.getOdds();
+              if (bet.getChoice().equals(BetChoice.HOME)){
+              	betTeamAlias = homeTeam.getAlias();
+              	notbetTeamAlias = awayTeam.getAlias();
+              }else{
+              notbetTeamAlias = homeTeam.getAlias();
+              betTeamAlias = awayTeam.getAlias();
+              }
+              %>
                                                  
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="panel panel-info ">
                         <div class="panel-heading text-center"> 
-                            23 Feb 2014 19:00 
+                            <%=game.getDate() %>
                         </div>
               
                         <div class="panel-body">
                             <div class="btn-group text-center center-block">
-                                <div class="btn btn-primary btn-lg col-xs-6">NLK <small>1.2</small></div>
-                                <div class="btn btn-default btn-lg col-xs-6">SFG <small>1.5</small></div>
+                                <div class="btn btn-primary btn-lg col-xs-6"><%= betTeamAlias%> <small><%= betOdds%></small></div>
+                                <div class="btn btn-default btn-lg col-xs-6"><%= notbetTeamAlias%></div>
                                 </div>
                             <div class="text-center center-block" >
                                 <div class="invisible">invisible</div>
-                                <h2 id="money"><abbr title="Bid">13$</abbr></h2>
+                                <h2 id="money"><abbr title="Bid"><%=bet.getAmount() %>$</abbr></h2>
                             </div>
                         </div>
                     </div>
                 </div>
+                <%} %>
               
               </div> 
                 <div class="row">
@@ -132,46 +182,90 @@ System.out.println("la Verification User finie");
                   <div class="panel-heading"> <strong>Past bets</strong> </div>
                 </div>
             </div>
-           
-            <div class="row">
+           <div class="row">
             
+              <% for (Bet bet : losingBets){ 
+              Game game = gameDao.get(bet.getGameUUID());
+              int homeScore = game.getScores().getHome();
+              int awayScore = game.getScores().getAway();
+              Team homeTeam = teamDao.deepGet(game.getHomeTeamUUID());
+              Team awayTeam = teamDao.deepGet(game.getAwayTeamUUID());
+              String winTeamAlias = "";
+              String loseTeamAlias= "";
+              Double gainDouble = (bet.getAmount() * bet.getOdds());
+			  int gain = gainDouble.intValue();			
+              double betOdds = bet.getOdds();
+              if (homeScore > awayScore){
+              	winTeamAlias = homeTeam.getAlias();
+              	loseTeamAlias = awayTeam.getAlias();
+              }else{
+              	loseTeamAlias= homeTeam.getAlias();
+              	winTeamAlias = awayTeam.getAlias();  	
+              }
+              %>
+              
             <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="panel panel-info ">
                         <div class="panel-heading text-center"> 
-                            23 Feb 2014 19:00 
+                            <%=game.getDate() %>
                         </div>
-              
+            
                         <div class="panel-body">
                             <div class="btn-group text-center center-block">
-                                <div class="btn btn-danger btn-lg col-xs-6">NLK <small>1.2</small></div>
-                                <div class="btn btn-default btn-lg col-xs-6">SFG <small>1.5</small></div>
+                                <div class="btn btn-danger btn-lg col-xs-6"><%= loseTeamAlias%> <small><%= betOdds%></small></div>
+                                <div class="btn btn-default btn-lg col-xs-6"><%= winTeamAlias%></div>
                                 </div>
                             <div class="text-center center-block" >
                                 <div class="invisible">invisible</div>
-                                <h2 id="money"><abbr title="Gain">0$</abbr></h2>
+                                <h2 id="money"><abbr title="Gain"><%= gain%></abbr></h2>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
+                <%} %>
                 
-                <div class="col-lg-3 col-md-4 col-sm-6">
+                
+               <%
+              for (Bet bet : winningBets){ 
+              Game game = gameDao.get(bet.getGameUUID());
+              int homeScore = game.getScores().getHome();
+              int awayScore = game.getScores().getAway();
+              Team homeTeam = teamDao.deepGet(game.getHomeTeamUUID());
+              Team awayTeam = teamDao.deepGet(game.getAwayTeamUUID());
+              String winTeamAlias = "";
+              String loseTeamAlias= "";
+              Double gainDouble = (bet.getAmount() * bet.getOdds());
+			  int gain = gainDouble.intValue();			
+              double betOdds = bet.getOdds();
+              if (homeScore > awayScore){
+              	winTeamAlias = homeTeam.getAlias();
+              	loseTeamAlias = awayTeam.getAlias();
+              }else{
+              	loseTeamAlias= homeTeam.getAlias();
+              	winTeamAlias = awayTeam.getAlias();  	
+              }
+              %>
+               <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="panel panel-info ">
                         <div class="panel-heading text-center"> 
-                            23 Feb 2014 19:00 
+                            <%=game.getDate() %> 
                         </div>
               
                         <div class="panel-body">
                             <div class="btn-group text-center center-block">
-                                <div class="btn btn-success btn-lg col-xs-6">NLK <small>1.2</small></div>
-                                <div class="btn btn-default btn-lg col-xs-6">SFG <small>1.5</small></div>
+                                <div class="btn btn-success btn-lg col-xs-6"><%=winTeamAlias %> <small><%=betOdds%></small></div>
+                                <div class="btn btn-default btn-lg col-xs-6"><%=loseTeamAlias %> </div>
                                 </div>
                             <div class="text-center center-block" >
                                 <div class="invisible">invisible</div>
-                                <h2 id="money"><abbr title="Gain">3$</abbr></h2>
+                                <h2 id="money"><abbr title="Gain"><%=gain %></abbr></h2>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
+                <%} %>
                </div>
             
         </div>

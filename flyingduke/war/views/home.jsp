@@ -65,8 +65,10 @@ if (googleUser == null){
 	response.sendRedirect(userService.createLoginURL(request.getRequestURI()));
 	return;
 }
+FDUserDao fdUserDao = new FDUserDao();
+GameDao gameDao = new GameDao();
 System.out.println("MAIL : " + googleUser.getEmail());
-if ((fdUser = FDUserDao.getFromGoogleUser(googleUser)) == null){
+if ((fdUser = fdUserDao.getFromGoogleUser(googleUser)) == null){
 	System.out.println("Redirection vers création");
 	response.sendRedirect("/views/createUser.jsp");
 	return;
@@ -76,7 +78,7 @@ System.out.println("la Verification User finie");
 Calendar today = Calendar.getInstance();
 today.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
 today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
-List<Game> gamesList = GameDao.gameForDay(today);
+List<Game> gamesList = gameDao.gameForDay(today);
 ServletContext ctxt = getServletContext();
 ctxt.setAttribute("betDone",false);
 ctxt.setAttribute("error", false);

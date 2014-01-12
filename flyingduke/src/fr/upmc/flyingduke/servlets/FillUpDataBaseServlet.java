@@ -40,7 +40,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 		String xmlResult="";
 		RESTQuery requestsLauncher = new RESTQuery();
 		Parser parser = new Parser();
-		
+
 		GameDao gameDao = new GameDao();
 		TeamDao teamDao = new TeamDao();
 		BetDao betDao = new BetDao();
@@ -58,8 +58,9 @@ public class FillUpDataBaseServlet extends HttpServlet {
 					System.out.println("NOM Home :");
 					System.out.println("NOM EXTERIEUR :");
 				} catch (MissingUUIDException e) {
-					response.sendRedirect("/error");
-				} 
+					request.setAttribute("exception", e);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+					dispatcher.forward(request, response);				} 
 			}	
 
 		}else if (action.equalsIgnoreCase("getAllGames")){
@@ -69,8 +70,9 @@ public class FillUpDataBaseServlet extends HttpServlet {
 				try {
 					gameDao.store(game);
 				} catch (MissingUUIDException e) {
-					response.sendRedirect("/error");
-				}
+					request.setAttribute("exception", e);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+					dispatcher.forward(request, response);				}
 			}
 		}else if(action.equalsIgnoreCase("getAllTeams")){
 			System.out.println("GET ALL TEAMS LANCE");
@@ -86,11 +88,17 @@ public class FillUpDataBaseServlet extends HttpServlet {
 					System.out.println("NAME");
 					System.out.println(team.getName());
 				} catch (ParserConfigurationException | SAXException e1) {
-					response.sendRedirect("/error");
+					request.setAttribute("exception", e1);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+					dispatcher.forward(request, response);				
 				}catch (MissingUUIDException e) {
-					response.sendRedirect("/error");
+					request.setAttribute("exception", e);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+					dispatcher.forward(request, response);				
 				} catch (InterruptedException e) {
-					response.sendRedirect("/error");
+					request.setAttribute("exception", e);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+					dispatcher.forward(request, response);				
 				}
 			}
 		}else if(action.equalsIgnoreCase("betsComputing")){
@@ -124,8 +132,9 @@ public class FillUpDataBaseServlet extends HttpServlet {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					response.sendRedirect("/error");
-				}
+					request.setAttribute("exception", e);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+				    dispatcher.forward(request, response);				}
 				if (!over.equalsIgnoreCase("NotOver")){
 					System.out.println("Partie terminee");
 					BetChoice winningTeam = BetChoice.AWAY;
@@ -143,7 +152,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 								System.out.println("Il y a un bet a faire d'un amount de " + bet.getAmount());
 								System.out.println("winningTEAM  :" + winningTeam);
 								System.out.println("betTeam  :" + bet.getChoice());
-								
+
 								bet.setComputed(true);
 								if(bet.getChoice().equals(winningTeam)){
 									System.out.println("Il a gagne");
@@ -151,13 +160,16 @@ public class FillUpDataBaseServlet extends HttpServlet {
 									int gain = gainDouble.intValue();
 									fdUser.setWallet(fdUser.getWallet() + gain);
 								}
-									try {
-										betDao.update(bet);
-										fdUserDao.update(fdUser);
-									} catch (EntityNotFoundException e) {
-										System.out.println("Update of user impossible");
-									}
-								
+								try {
+									betDao.update(bet);
+									fdUserDao.update(fdUser);
+								} catch (EntityNotFoundException e) {
+									System.out.println("Update of user impossible");
+									request.setAttribute("exception", e);
+									RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+								    dispatcher.forward(request, response);
+								}
+
 							}
 						}
 					}
@@ -166,7 +178,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 		}
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/administration");
-	    dispatcher.forward(request, response);
+		dispatcher.forward(request, response);
 
 	}
 
@@ -177,7 +189,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 
 		GameDao gameDao = new GameDao();
 		TeamDao teamDao = new TeamDao();
-		
+
 		String button = request.getParameter("button");
 		String xmlResult = "";
 		System.out.println(button);
@@ -189,8 +201,9 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			try {
 				teamDao.store(team);
 			} catch (MissingUUIDException e) {
-				response.sendRedirect("/error");
-			}
+				request.setAttribute("exception", e);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+			    dispatcher.forward(request, response);			}
 		}
 
 		break;
@@ -225,8 +238,9 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			try {
 				gameDao.store(game);
 			} catch (MissingUUIDException e) {
-				response.sendRedirect("/error");
-			}
+				request.setAttribute("exception", e);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+			    dispatcher.forward(request, response);			}
 		}
 
 		}

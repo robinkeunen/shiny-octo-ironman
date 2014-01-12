@@ -54,7 +54,9 @@ if (googleUser == null){
 	return;
 }
 System.out.println("MAIL : " + googleUser.getEmail());
-if ((fdUser = FDUserDao.getFromGoogleUser(googleUser)) == null){
+FDUserDao fdUserDao = new FDUserDao();
+TeamDao teamDao = new TeamDao();
+if ((fdUser = fdUserDao.getFromGoogleUser(googleUser)) == null){
 	response.sendRedirect("/views/createUser.jsp");
 	return;
 }
@@ -64,8 +66,8 @@ ctxt.setAttribute("fdUser", fdUser);
 
 
 
-Team homeTeam = TeamDao.deepGet(game.getHomeTeamUUID());
-Team awayTeam = TeamDao.deepGet(game.getAwayTeamUUID());
+Team homeTeam = teamDao.deepGet(game.getHomeTeamUUID());
+Team awayTeam = teamDao.deepGet(game.getAwayTeamUUID());
 List<Player> playersHome = homeTeam.getPlayers();
 List<Player> playersAway = awayTeam.getPlayers();
 %>
@@ -137,6 +139,24 @@ List<Player> playersAway = awayTeam.getPlayers();
             </div>
           </div>
           </div>
+          
+          <%
+          Boolean error = (Boolean) ctxt.getAttribute("error");
+          if (error != null && error){
+          	%>
+        		<div class="alert alert-danger hidden-lg hidden-md"><%=ctxt.getAttribute("errorMessage") %></div>
+        		<%
+        	}
+          Boolean betDone = (Boolean) ctxt.getAttribute("betDone");
+          if(betDone){
+          	%>
+        	<div class="alert alert-success hidden-lg hidden-md">Your bet has been registered.</div>
+        		<%
+        		betDone = false;
+        		ctxt.setAttribute("betDone", betDone);
+          }
+          %>
+          
           </div>
           <!-- End bet form -->
           
@@ -247,18 +267,18 @@ List<Player> playersAway = awayTeam.getPlayers();
             </div>
           </div>
           <%
-          Boolean error = (Boolean) ctxt.getAttribute("error");
+          error = (Boolean) ctxt.getAttribute("error");
           if (error != null && error){
           	%>
-        		<div class="alert alert-danger"><%=ctxt.getAttribute("errorMessage") %></div>
+        		<div class="alert alert-danger visible-md visible-lg"><%=ctxt.getAttribute("errorMessage") %></div>
         		<%
         		error=false;
         		ctxt.setAttribute("error", error);
         	}
-          Boolean betDone = (Boolean) ctxt.getAttribute("betDone");
+          betDone = (Boolean) ctxt.getAttribute("betDone");
           if(betDone){
           	%>
-        	<div class="alert alert-success">Your bet has been registered.</div>
+        	<div class="alert alert-success visible-md visible-lg">Your bet has been registered.</div>
         		<%
         		betDone = false;
         		ctxt.setAttribute("betDone", betDone);

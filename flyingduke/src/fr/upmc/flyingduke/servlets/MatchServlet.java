@@ -36,9 +36,11 @@ public class MatchServlet extends HttpServlet {
 			game = gameDao.get(gameUUID);
 			ctxt.setAttribute("game", game);
 		} catch (EntityNotFoundException e) {
-			response.sendRedirect("/error");
+			request.setAttribute("exception", e);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+			dispatcher.forward(request, response);
 		}
-		
+
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/views/match.jsp"); 
 		dispatcher.forward(request,response);
 	}
@@ -49,14 +51,14 @@ public class MatchServlet extends HttpServlet {
 		Boolean error = true;
 		FDUser fdUser = (FDUser) ctxt.getAttribute("fdUser");
 		Game game = (Game) ctxt.getAttribute("game");
-		
+
 		BetDao betDao = new BetDao();
 		FDUserDao fdUserDao = new FDUserDao();
-		
+
 		Calendar now = Calendar.getInstance();
 		now.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
 		now.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH),now.get(Calendar.HOUR_OF_DAY),now.get(Calendar.MINUTE));
-		
+
 		//Check if the Game has started
 		/*if (now.getTimeInMillis() > game.getDate().getTime()){
 			ctxt.setAttribute("error", error);
@@ -64,7 +66,7 @@ public class MatchServlet extends HttpServlet {
 			response.sendRedirect("/views/match.jsp");
 			return;
 		}*/
-		
+
 		// get form parameters
 		String betValueString = request.getParameter("betValue");
 		try{
@@ -103,12 +105,18 @@ public class MatchServlet extends HttpServlet {
 			System.out.println("error Cast");
 			ctxt.setAttribute("error", error);
 			ctxt.setAttribute("errorMessage", "Bet must be a number");
-			
+
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/views/match.jsp"); 
 			try {
 				dispatcher.forward(request,response);
 			} catch (ServletException e1) {
-				response.sendRedirect("/error");
+				request.setAttribute("exception", e1);
+				RequestDispatcher dispatcher1 = request.getRequestDispatcher("/error");
+				try {
+					dispatcher1.forward(request, response);
+				} catch (ServletException e2) {
+					e2.printStackTrace();
+				}		
 			}
 		}
 
