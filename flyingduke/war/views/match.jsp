@@ -48,6 +48,8 @@ System.out.println("MATCH.JSP");
 FDUserDao fdUserQuery = new FDUserDao();
 FDUser fdUser;
 System.out.println("doGet HomeServlet");
+DecimalFormat twoDigitsFormat = new DecimalFormat("##.##");
+
 UserService userService = UserServiceFactory.getUserService();
 User googleUser = userService.getCurrentUser();
 if (googleUser == null){
@@ -63,20 +65,11 @@ if ((fdUser = fdUserQuery.getFromGoogleUser(googleUser)) == null){
 ServletContext ctxt = getServletContext();
 Game game = (Game) ctxt.getAttribute("game");
 ctxt.setAttribute("fdUser", fdUser);
-Boolean erreur = (Boolean) ctxt.getAttribute("erreur");
-DecimalFormat twoDigitsFormat = new DecimalFormat("##.##");
-System.out.println("erreur");
-if (erreur != null && erreur){
-	System.out.println("erreur");
-	%>
-	Bet's value must be an integer between 0 and <%=fdUser.getWallet() %> <br/>
-	<%
-	erreur=false;
-	ctxt.setAttribute("erreur",erreur);
-}
-TeamDao teamDao = new TeamDao();
-Team homeTeam = teamDao.deepGet(game.getHomeTeamUUID());
-Team awayTeam = teamDao.deepGet(game.getAwayTeamUUID());
+
+
+
+Team homeTeam = TeamDao.deepGet(game.getHomeTeamUUID());
+Team awayTeam = TeamDao.deepGet(game.getAwayTeamUUID());
 List<Player> playersHome = homeTeam.getPlayers();
 List<Player> playersAway = awayTeam.getPlayers();
 %>
@@ -102,7 +95,7 @@ List<Player> playersAway = awayTeam.getPlayers();
         </div>
         <div class="navbar-collapse collapse">
           <form class="navbar-form navbar-right" role="form">
-              <a href="/user" class="label">getUsername</a>
+              <a href="/user" class="label"><%= fdUser.getFirstName() %> <%= fdUser.getLastName() %></a>
               <a href="/user" class="label">
               	<span class="glyphicon glyphicon-dashboard"></span>
               </a>
@@ -142,9 +135,7 @@ List<Player> playersAway = awayTeam.getPlayers();
                         <button type="submit" value="away" name="team" class="btn btn-danger btn-lg btn-block ">
                             <%=awayTeam.getName() %> </button>
                     </div>
-                    
-                    <div class="form-group invisible"></div>
-                        
+                                           
                                          
                </form>
             </div>
@@ -255,14 +246,25 @@ List<Player> playersAway = awayTeam.getPlayers();
                             <%=homeTeam.getName() %> </button>
                         <button type="submit" value="away" name="team" class="btn btn-danger btn-lg btn-block ">
                             <%=awayTeam.getName() %> </button>
-                    </div>
-                    
-                    <div class="form-group invisible"></div>
-                        
-                                         
+                    </div>                                         
                </form>
             </div>
           </div>
+          <%
+          Boolean error = (Boolean) ctxt.getAttribute("error");
+          
+          if (error != null && error){
+              System.out.println("match.jsp: error in bet value"); 
+
+        		%>
+        		<div class="alert alert-danger">You don't have enough money.</div>
+        		<%
+        		error=false;
+        		ctxt.setAttribute("erreur", error);
+        	}
+          %>
+		
+	
           </div>
           <!-- End bet form -->
           
@@ -272,7 +274,7 @@ List<Player> playersAway = awayTeam.getPlayers();
      <div class="container">
          <hr>
          <footer class="text-right">
-             <p>This website was built as an assignment for the aar course 
+        <p class="text-muted">This website was built as an assignment for the aar course 
           <span class="visible-xs text-muted ">xs</span>
           <span class="visible-sm text-muted ">sm</span>
           <span class="visible-md text-muted ">md</span>

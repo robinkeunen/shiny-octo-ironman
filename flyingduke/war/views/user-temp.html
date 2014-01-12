@@ -43,7 +43,7 @@
         </div>
         <div class="navbar-collapse collapse">
           <form class="navbar-form navbar-right" role="form">
-              <a href="/user" class="label">getUsername</a>
+              <a href="/user" class="label"><%= fdUser.getFirstName() %> <%= fdUser.getLastName() %></a>
               <a href="/user" class="label">
               	<span class="glyphicon glyphicon-dashboard"></span>
               </a>
@@ -115,7 +115,7 @@
     
       <hr>
       <footer class="text-right">
-        <p>This website was built as an assignment for the aar course 
+        <p class="text-muted">This website was built as an assignment for the aar course 
           <span class="visible-xs text-muted ">xs</span>
           <span class="visible-sm text-muted ">sm</span>
           <span class="visible-md text-muted ">md</span>

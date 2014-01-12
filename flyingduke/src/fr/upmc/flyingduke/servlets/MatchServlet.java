@@ -26,9 +26,7 @@ public class MatchServlet extends HttpServlet {
 			throws IOException, ServletException {
 		System.out.println("DOGET MATCH!!");
 		ServletContext ctxt = getServletContext();
-		System.out.println("lalalaal");
-		System.out.println("ici");
-		System.out.println("azerty");
+
 		System.out.println(request.getParameter("game"));
 		String gameUUID = request.getParameter("gameid");
 
@@ -46,7 +44,7 @@ public class MatchServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// get context attributes
 		ServletContext ctxt = getServletContext();
-		Boolean erreur = true;
+		Boolean error = true;
 		FDUser fdUser = (FDUser) ctxt.getAttribute("fdUser");
 		Game game = (Game) ctxt.getAttribute("game");
 		
@@ -57,7 +55,7 @@ public class MatchServlet extends HttpServlet {
 			Integer betValue = Integer.parseInt(betValueString);
 			if (betValue <= 0 || betValue > fdUser.getWallet()){
 				System.out.println("MatchServlet: wrong value, user has " + fdUser.getWallet());
-				ctxt.setAttribute("erreur", erreur);
+				ctxt.setAttribute("error", error);
 				response.sendRedirect("/views/match.jsp");
 				return;
 			}
@@ -81,8 +79,8 @@ public class MatchServlet extends HttpServlet {
 			FDUserDao.update(fdUser);
 			response.sendRedirect("/views/home.jsp");
 		}catch(Exception e){
-			System.out.println("erreur Cast");
-			ctxt.setAttribute("erreur", erreur);
+			System.out.println("error Cast");
+			ctxt.setAttribute("error", error);
 			response.sendRedirect("/views/match.jsp");
 		}
 

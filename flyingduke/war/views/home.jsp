@@ -53,11 +53,9 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
-  </head>
-<body>
-<%
-FDUserDao fdUserQuery = new FDUserDao();
-FDUser fdUser;
+    
+    <%
+FDUser fdUser = null;
 System.out.println("doGet HomeServlet");
 UserService userService = UserServiceFactory.getUserService();
 User googleUser = userService.getCurrentUser();
@@ -66,7 +64,7 @@ if (googleUser == null){
 	return;
 }
 System.out.println("MAIL : " + googleUser.getEmail());
-if ((fdUser = fdUserQuery.getFromGoogleUser(googleUser)) == null){
+if ((fdUser = FDUserDao.getFromGoogleUser(googleUser)) == null){
 	System.out.println("Redirection vers création");
 	response.sendRedirect("/views/createUser.jsp");
 	return;
@@ -90,6 +88,11 @@ today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calenda
 List<Game> gamesList = gameDao.gameForDay(today);
 
 %>
+
+
+  </head>
+<body>
+
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
@@ -103,7 +106,7 @@ List<Game> gamesList = gameDao.gameForDay(today);
         </div>
         <div class="navbar-collapse collapse">
           <form class="navbar-form navbar-right" role="form">
-              <a href="/user" class="label">getUsername</a>
+              <a href="/user" class="label"><%= fdUser.getFirstName() %> <%= fdUser.getLastName() %></a>
               <a href="/user" class="label">
               	<span class="glyphicon glyphicon-dashboard"></span>
               </a>
@@ -236,7 +239,7 @@ for(Game game : gamesList){
 	<div class="container">
          <hr>
          <footer class="text-right">
-             <p>This website was built as an assignment for the aar course 
+        <p class="text-muted">This website was built as an assignment for the aar course 
           <span class="visible-xs text-muted ">xs</span>
           <span class="visible-sm text-muted ">sm</span>
           <span class="visible-md text-muted ">md</span>
