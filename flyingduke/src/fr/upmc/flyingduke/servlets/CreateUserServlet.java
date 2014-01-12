@@ -42,7 +42,7 @@ public class CreateUserServlet extends HttpServlet {
 		    dispatcher.forward(request, response);
 		} catch (ExistingUserException | EntityNotFoundException e) {
 			request.setAttribute("exception", e);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/error");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/servererror.jsp");
 		    dispatcher.forward(request, response);
 		}
 	}	
