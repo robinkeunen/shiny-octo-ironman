@@ -84,6 +84,7 @@ public class UserServlet extends HttpServlet {
 
 		request.setAttribute("futurebets", futureBets);
 		request.setAttribute("pastbets", pastBets);
+		System.out.println("Redirection depuis la servlet");
 
 		try {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/user.jsp");

@@ -62,16 +62,19 @@ if ((fdUser = fdUserDao.getFromGoogleUser(googleUser)) == null){
 	return;
 }
 System.out.println("la Verification User finie");
-List<Bet> futureBets = (List<Bet>) request.getAttribute("futureBets");
-List<Bet> pastBets = (List<Bet>) request.getAttribute("pastBets");
+List<Bet> futureBets = (List<Bet>) request.getAttribute("futurebets");
+List<Bet> pastBets = (List<Bet>) request.getAttribute("pastbets");
+
 ArrayList<Bet> winningBets = new ArrayList<Bet>();
 ArrayList<Bet> losingBets = new ArrayList<Bet>();
 TeamDao teamDao = new TeamDao();
 GameDao gameDao = new GameDao();
 for (Bet bet : pastBets){
 	Game gameForBet = gameDao.get(bet.getGameUUID());
+	gameForBet.setScores(100, 90);
 	int scoreHome = gameForBet.getScores().getHome();
 	int scoreAway = gameForBet.getScores().getAway();
+	System.out.println("La chute");
 	String winner = (scoreHome > scoreAway) ? "home" : "away";
 	BetChoice winningTeam = (winner.equalsIgnoreCase("home")) ? BetChoice.HOME : BetChoice.AWAY;
 	if (bet.getChoice().equals(winningTeam)){
@@ -80,6 +83,7 @@ for (Bet bet : pastBets){
 		losingBets.add(bet);
 	}
 }
+System.out.println("Sortie");
 %>
 </head>
 <body>
@@ -136,8 +140,10 @@ for (Bet bet : pastBets){
             </div>
             
             <div class="row">
-            <% for (Bet bet : losingBets){ 
+            <%System.out.println("Entrée"); 
+            for (Bet bet : futureBets){ 
               Game game = gameDao.get(bet.getGameUUID());
+              game.setScores(100, 90);
               int homeScore = game.getScores().getHome();
               int awayScore = game.getScores().getAway();
               Team homeTeam = teamDao.deepGet(game.getHomeTeamUUID());
@@ -174,7 +180,8 @@ for (Bet bet : pastBets){
                         </div>
                     </div>
                 </div>
-                <%} %>
+                <%} 
+                System.out.println("Sortie");%>
               
               </div> 
                 <div class="row">
@@ -184,8 +191,10 @@ for (Bet bet : pastBets){
             </div>
            <div class="row">
             
-              <% for (Bet bet : losingBets){ 
+              <%System.out.println("Sortie"); 
+              for (Bet bet : losingBets){ 
               Game game = gameDao.get(bet.getGameUUID());
+              game.setScores(100, 90);
               int homeScore = game.getScores().getHome();
               int awayScore = game.getScores().getAway();
               Team homeTeam = teamDao.deepGet(game.getHomeTeamUUID());
@@ -223,12 +232,14 @@ for (Bet bet : pastBets){
                         
                     </div>
                 </div>
-                <%} %>
+                <%} 
+                System.out.println("Sortie");%>
                 
                 
                <%
               for (Bet bet : winningBets){ 
               Game game = gameDao.get(bet.getGameUUID());
+              game.setScores(100, 90);
               int homeScore = game.getScores().getHome();
               int awayScore = game.getScores().getAway();
               Team homeTeam = teamDao.deepGet(game.getHomeTeamUUID());

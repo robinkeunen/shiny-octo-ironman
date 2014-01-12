@@ -110,7 +110,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
 			int hour = today.get(Calendar.HOUR_OF_DAY);
 			System.out.println("avant le if de betComputings");
-			if (hour >= 0 && hour < 12){
+			if (hour >= 0 && hour < 13){
 				//if it's before 6 A.M, fetch games of yesterday
 				yesterday.add(Calendar.DATE, -1);
 				gameList = gameDao.gameForDay(yesterday);  
@@ -129,6 +129,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 				String xmlBoxScore = queryLauncher.getGameByUUID(game.getUUID());
 				String over = parser.parseGameBoxScore(xmlBoxScore);
 				//Sleep for 1s because of the API limits
+				System.out.println("OVER ? :" + over);
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
