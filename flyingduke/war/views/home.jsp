@@ -36,7 +36,7 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="/images/duke_logo.png">
 
-    <title>Jumbotron Template for Bootstrap</title>
+    <title>Flying Duke</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/stylesheets/bootstrap.css" rel="stylesheet">
@@ -44,7 +44,6 @@
     <!-- Custom styles for this template -->
       
     <!-- Glyphicons -->  
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->

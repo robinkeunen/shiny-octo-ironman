@@ -23,7 +23,7 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="/images/duke_logo.png">
 
-    <title>Jumbotron Template for Bootstrap</title>
+   
 
     <!-- Bootstrap core CSS -->
     <link href="/stylesheets/bootstrap.css" rel="stylesheet">
@@ -42,10 +42,8 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
-  </head>
-
-  <body>
-<%
+    
+    <%
 System.out.println("MATCH.JSP");
 FDUserDao fdUserQuery = new FDUserDao();
 FDUser fdUser;
@@ -82,6 +80,13 @@ Team awayTeam = teamDao.deepGet(game.getAwayTeamUUID());
 List<Player> playersHome = homeTeam.getPlayers();
 List<Player> playersAway = awayTeam.getPlayers();
 %>
+
+ <title><%= homeTeam.getAlias() %> vs <%= awayTeam.getAlias() %> </title>
+
+  </head>
+
+  <body>
+
 
 
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -126,7 +131,7 @@ List<Player> playersAway = awayTeam.getPlayers();
                         <div class="col-xs-12">
                             <div class="input-group ">
                                 <span class="input-group-addon">$</span>
-                                <input type="text" name="betValue" class="form-control text-right input-lg" placeholder="10">
+                                <input type="text" name="betValue" class="form-control text-right input-lg" placeholder="10" required autofocus>
                             </div>
                         </div>			
                     </div> 
