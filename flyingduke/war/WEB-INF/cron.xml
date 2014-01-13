@@ -14,13 +14,6 @@
   </cron>
   
   <cron>
-    <url>/FillUp?action=getGamesDay</url>
-    <description>Get Games of the Day</description>
-    <schedule>every day 05:00</schedule>
-    <timezone>America/New_York</timezone>
-  </cron>
-  
-  <cron>
     <url>/FillUp?action=betsComputing</url>
     <description>Compute users bets</description>
     <schedule>every 59 minutes</schedule>

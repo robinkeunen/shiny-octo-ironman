@@ -155,7 +155,7 @@ public class RESTQuery {
 		String xml = "";
 		
 		for (int i=0; i<2;i++){
-		
+		System.out.println("DAY AUJOURDUI " + day);
 		if (tomorrow){
 			Calendar tomorrowCal = Calendar.getInstance();
 			tomorrowCal.add(Calendar.DATE, +1);
