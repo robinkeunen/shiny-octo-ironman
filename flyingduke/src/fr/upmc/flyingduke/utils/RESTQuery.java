@@ -13,7 +13,7 @@ import java.util.TimeZone;
 
 public class RESTQuery {
 
-	private final String ApiKey = "hcx82vd2atscjty6zzsdhzrs";
+	private final String ApiKey = "csv2n895fs3tyq5w5wsrkmhs";
 
 	/**
 	 * Builds a REST query to get the games schedule for a day.
@@ -157,7 +157,6 @@ public class RESTQuery {
 		String xml = "";
 		
 		for (int i=0; i<2;i++){
-		System.out.println("DAY AUJOURDUI " + day);
 		if (tomorrow){
 			Calendar tomorrowCal = Calendar.getInstance();
 			tomorrowCal.setTimeZone(TimeZone.getTimeZone("America/New_York"));
