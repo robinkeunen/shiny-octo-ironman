@@ -82,7 +82,9 @@ Calendar tomorrow = Calendar.getInstance();
 Calendar today = Calendar.getInstance();
 today.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
 today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
+tomorrow.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
 tomorrow.add(Calendar.DATE, +1);
+System.out.println("DATE !!!!!!!! :" +today.get(Calendar.DAY_OF_MONTH) +" "+ tomorrow.get(Calendar.DAY_OF_MONTH));
 List<Game> gamesListToday = gameDao.gameForDay(today);
 List<Game> gamesListTomorrow = gameDao.gameForDay(tomorrow);
 List<Game> gamesList = gamesListToday;
@@ -138,7 +140,7 @@ ctxt.setAttribute("error", false);
                 <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel"><h2>More about this website</h2></h4>
+                    <h4 class="modal-title" id="myModalLabel"><h2>More about this web site</h2></h4>
                   </div>
                   <div class="modal-body">
 

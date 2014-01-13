@@ -72,8 +72,7 @@ public class BetDao {
 		entity.setProperty(AMOUNT, bet.getAmount());
 		entity.setProperty(ODDS, bet.getOdds());
 		entity.setProperty(COMPUTED, bet.isComputed());
-		if (bet.getDate() != null)
-			entity.setProperty(DATE, bet.getDate());
+		entity.setProperty(DATE, bet.getDate());
 
 		// update in base
 		datastore.put(entity);	

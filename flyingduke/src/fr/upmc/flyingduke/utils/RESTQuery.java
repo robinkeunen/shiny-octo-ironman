@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 
 public class RESTQuery {
 
@@ -147,6 +148,7 @@ public class RESTQuery {
 		List<String> xmlResults = new ArrayList<String>();
 		// get strings for the date
 		Calendar calendar = new GregorianCalendar();
+		calendar.setTimeZone((TimeZone.getTimeZone("America/New_York")));
 		String day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
 		// Calendar months start at 0, API months start at 1
 		String month = String.valueOf(calendar.get(Calendar.MONTH) + 1); 
@@ -158,6 +160,7 @@ public class RESTQuery {
 		System.out.println("DAY AUJOURDUI " + day);
 		if (tomorrow){
 			Calendar tomorrowCal = Calendar.getInstance();
+			tomorrowCal.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 			tomorrowCal.add(Calendar.DATE, +1);
 			System.out.println("JOURNEE ! : " + tomorrowCal.get(Calendar.DATE));
 			day = String.valueOf(tomorrowCal.get(Calendar.DAY_OF_MONTH));

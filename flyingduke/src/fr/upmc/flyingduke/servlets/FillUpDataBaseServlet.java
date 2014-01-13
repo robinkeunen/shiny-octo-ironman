@@ -118,6 +118,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			System.out.println("avant le if de betComputings");
 			if (hour >= 0 && hour < 6){
 				//if it's before 6 A.M, fetch games of yesterday
+				yesterday.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 				yesterday.add(Calendar.DATE, -1);
 				gameList = gameDao.gameForDay(yesterday);  
 				System.out.println(gameList);
