@@ -160,7 +160,8 @@ public class RESTQuery {
 			Calendar tomorrowCal = Calendar.getInstance();
 			tomorrowCal.add(Calendar.DATE, +1);
 			System.out.println("JOURNEE ! : " + tomorrowCal.get(Calendar.DATE));
-			day = String.valueOf(tomorrowCal.get(Calendar.DATE));
+			day = String.valueOf(tomorrowCal.get(Calendar.DAY_OF_MONTH));
+			System.out.println("JOURNEE !!!!! " + day);
 			month = String.valueOf(tomorrowCal.get(Calendar.MONTH) + 1);
 			year = String.valueOf(tomorrowCal.get(Calendar.YEAR));
 			System.out.println("LA DATE EST " + day + " " + month + " " + year);
