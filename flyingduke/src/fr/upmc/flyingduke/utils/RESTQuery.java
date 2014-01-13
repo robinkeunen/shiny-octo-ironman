@@ -12,7 +12,7 @@ import java.util.List;
 
 public class RESTQuery {
 
-	private final String ApiKey = "csv2n895fs3tyq5w5wsrkmhs";
+	private final String ApiKey = "hcx82vd2atscjty6zzsdhzrs";
 
 	/**
 	 * Builds a REST query to get the games schedule for a day.
