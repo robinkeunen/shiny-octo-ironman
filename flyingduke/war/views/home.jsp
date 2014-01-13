@@ -138,7 +138,7 @@ ctxt.setAttribute("error", false);
                 <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel"><h2>More about this web site</h2></h4>
+                    <h4 class="modal-title" id="myModalLabel"><h2>More about this website</h2></h4>
                   </div>
                   <div class="modal-body">
 
