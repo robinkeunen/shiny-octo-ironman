@@ -76,17 +76,17 @@ if ((fdUser = fdUserDao.getFromGoogleUser(googleUser)) == null){
 	return;
 }
 
-System.out.println("home.jsp: End of user verification");
 Calendar tomorrow = Calendar.getInstance();
 Calendar today = Calendar.getInstance();
 today.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
 today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
 tomorrow.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
 tomorrow.add(Calendar.DATE, +1);
+Calendar yesterday = Calendar.getInstance();
 List<Game> gamesListToday = gameDao.gameForDay(today);
 List<Game> gamesListTomorrow = gameDao.gameForDay(tomorrow);
-List<Game> gamesList = gamesListToday;
 System.out.println("Creation de la liste des games d'aujourd'hui et demain");
+List<Game> gamesList = gamesListToday;
 gamesList.addAll(gamesListTomorrow);
 %>
 

@@ -78,7 +78,7 @@ public class MatchServlet extends HttpServlet {
 				dispatcher.forward(request,response);
 				return;
 			}
-	
+		
 			// get Bet amount
 			String betValueString = request.getParameter("betValue");
 			Double betValue = Double.parseDouble(betValueString);

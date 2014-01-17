@@ -116,6 +116,7 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			today.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
 			today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
 			int hour = today.get(Calendar.HOUR_OF_DAY);
+			System.out.println("HOUR + " + hour);
 			if (hour >= 0 && hour < 6){
 				//if it's before 6 A.M, fetch games of yesterday
 				yesterday.setTimeZone(TimeZone.getTimeZone("America/New_York"));
@@ -126,7 +127,6 @@ public class FillUpDataBaseServlet extends HttpServlet {
 				//else fetch today's games
 				gameList = gameDao.gameForDay(today);  
 			}
-			System.out.println("apres le if");
 			RESTQuery queryLauncher = new RESTQuery();
 
 			List<FDUser> usersList = fdUserDao.getAllFDUsers();
@@ -151,15 +151,13 @@ public class FillUpDataBaseServlet extends HttpServlet {
 						System.out.println("Victoire a domicile");
 					}
 					for (FDUser fdUser : usersList){
-						System.out.println("USERName : " + fdUser.getFirstName());
 						List<Bet> listBetsUser = betDao.getBets2Compute(fdUser);
 						for (Bet bet : listBetsUser){
-							System.out.println("GAMEIDBet " + bet.getGameUUID());
 							if (!bet.isComputed() && bet.getGameUUID().equalsIgnoreCase(game.getUUID())){
-								System.out.println("winningTEAM  :" + winningTeam);
+								System.out.println("fdUser" + fdUser.getFirstName() + "winningTeam " + winningTeam );
 								bet.setComputed(true);
 								if(bet.getChoice().equals(winningTeam)){
-									System.out.println("Il a gagne");
+									System.out.println("L'utilisateur a gagne son pari");
 									Double gain = (bet.getAmount() * bet.getOdds());
 									fdUser.setWallet(fdUser.getWallet() + gain);
 								}

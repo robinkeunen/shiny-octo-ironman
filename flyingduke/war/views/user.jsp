@@ -74,9 +74,8 @@ TeamDao teamDao = new TeamDao();
 GameDao gameDao = new GameDao();
 for (Bet bet : pastBets){
 	Game gameForBet = gameDao.get(bet.getGameUUID());
-	System.out.println("AVANT LES SCORES");
+	System.out.println("Paris Anciens");
 	int scoreHome = gameForBet.getScores().getHome();
-	System.out.println("Apres LES SCORES");
 	int scoreAway = gameForBet.getScores().getAway();
 	String winner = (scoreHome > scoreAway) ? "home" : "away";
 	BetChoice winningTeam = (winner.equalsIgnoreCase("home")) ? BetChoice.HOME : BetChoice.AWAY;

@@ -51,7 +51,7 @@ public class Game {
 		
 		return "Game [uuid=" + uuid + ", awayTeam=" + awayTeamUUID + ", homeTeam="
 				+ homeTeamUUID + ", date=" + df.format(date) + ", odds="
-				+ odds +"]";
+				+ odds + "]";
 	}
 
 
@@ -151,7 +151,6 @@ public class Game {
 			return away;
 		}
 
-		
 	}
 	
 

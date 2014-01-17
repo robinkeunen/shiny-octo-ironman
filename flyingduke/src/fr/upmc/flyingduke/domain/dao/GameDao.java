@@ -211,7 +211,7 @@ public class GameDao {
 		public  EmbeddedEntity makeScoreEntity(ScoreContainer scores) {
 			EmbeddedEntity ee = new EmbeddedEntity();
 			ee.setProperty(HOME_SCORE , scores.getHome());
-			ee.setProperty(AWAY_SCORE, scores.getHome());
+			ee.setProperty(AWAY_SCORE, scores.getAway());
 
 			return ee;
 		}
