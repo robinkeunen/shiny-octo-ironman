@@ -13,7 +13,7 @@ import java.util.TimeZone;
 
 public class RESTQuery {
 
-	private final String ApiKey = "csv2n895fs3tyq5w5wsrkmhs";
+	private final String ApiKey = "jgw4cu3gveerwnvxk4m5n86h";
 
 	/**
 	 * Builds a REST query to get the games schedule for a day.

@@ -74,10 +74,10 @@ TeamDao teamDao = new TeamDao();
 GameDao gameDao = new GameDao();
 for (Bet bet : pastBets){
 	Game gameForBet = gameDao.get(bet.getGameUUID());
-	gameForBet.setScores(100, 90);
+	System.out.println("AVANT LES SCORES");
 	int scoreHome = gameForBet.getScores().getHome();
+	System.out.println("Apres LES SCORES");
 	int scoreAway = gameForBet.getScores().getAway();
-	System.out.println("La chute");
 	String winner = (scoreHome > scoreAway) ? "home" : "away";
 	BetChoice winningTeam = (winner.equalsIgnoreCase("home")) ? BetChoice.HOME : BetChoice.AWAY;
 	if (bet.getChoice().equals(winningTeam)){
@@ -200,22 +200,12 @@ System.out.println("Sortie");
               <%System.out.println("Sortie"); 
               for (Bet bet : losingBets){ 
               Game game = gameDao.get(bet.getGameUUID());
-              game.setScores(100, 90);
               int homeScore = game.getScores().getHome();
               int awayScore = game.getScores().getAway();
               Team homeTeam = teamDao.deepGet(game.getHomeTeamUUID());
               Team awayTeam = teamDao.deepGet(game.getAwayTeamUUID());
-              String winTeamAlias = "";
-              String loseTeamAlias= "";
               Double gain = (bet.getAmount() * bet.getOdds());			
               double betOdds = bet.getOdds();
-              if (homeScore > awayScore){
-              	winTeamAlias = homeTeam.getAlias();
-              	loseTeamAlias = awayTeam.getAlias();
-              }else{
-              	loseTeamAlias= homeTeam.getAlias();
-              	winTeamAlias = awayTeam.getAlias();  	
-              }
               %>
               
             <div class="col-lg-3 col-md-4 col-sm-6">
@@ -226,8 +216,16 @@ System.out.println("Sortie");
             
                         <div class="panel-body">
                             <div class="btn-group text-center center-block">
-                                <div class="btn btn-danger btn-lg col-xs-6"><%= loseTeamAlias%> <small><%= twoDigitsFormat.format(betOdds) %></small></div>
-                                <div class="btn btn-default btn-lg col-xs-6"><%= winTeamAlias%></div>
+                            <%BetChoice choice = BetChoice.HOME;
+                            if (bet.getChoice().equals(choice)){ %>
+                                <div class="btn btn-danger btn-lg col-xs-6"><%= homeTeam.getAlias()%> <small><%= twoDigitsFormat.format(betOdds) %></small></div>
+                                <div class="btn btn-default btn-lg col-xs-6"><%= awayTeam.getAlias()%></div>
+                                <%}else{%>
+                                <div class="btn btn-default btn-lg col-xs-6"><%= homeTeam.getAlias()%></div>
+                                <div class="btn btn-danger btn-lg col-xs-6"><%= awayTeam.getAlias()%> <small><%= twoDigitsFormat.format(betOdds) %></small></div>
+                               <%}	%>
+                                
+                                
                                 </div>
                             <div class="text-center center-block" >
                                 <div class="invisible">invisible</div>
@@ -244,22 +242,13 @@ System.out.println("Sortie");
                <%
               for (Bet bet : winningBets){ 
               Game game = gameDao.get(bet.getGameUUID());
-              game.setScores(100, 90);
               int homeScore = game.getScores().getHome();
               int awayScore = game.getScores().getAway();
               Team homeTeam = teamDao.deepGet(game.getHomeTeamUUID());
               Team awayTeam = teamDao.deepGet(game.getAwayTeamUUID());
-              String winTeamAlias = "";
-              String loseTeamAlias= "";
               Double gain = (bet.getAmount() * bet.getOdds());			
               double betOdds = bet.getOdds();
-              if (homeScore > awayScore){
-              	winTeamAlias = homeTeam.getAlias();
-              	loseTeamAlias = awayTeam.getAlias();
-              }else{
-              	loseTeamAlias= homeTeam.getAlias();
-              	winTeamAlias = awayTeam.getAlias();  	
-              }
+              
               %>
                <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="panel panel-info ">
@@ -269,8 +258,14 @@ System.out.println("Sortie");
               
                         <div class="panel-body">
                             <div class="btn-group text-center center-block">
-                                <div class="btn btn-success btn-lg col-xs-6"><%=winTeamAlias %> <small><%=twoDigitsFormat.format(betOdds) %></small></div>
-                                <div class="btn btn-default btn-lg col-xs-6"><%=loseTeamAlias %> </div>
+                            <%BetChoice choice = BetChoice.HOME;
+                            if (bet.getChoice().equals(choice)){ %>
+                                <div class="btn btn-success btn-lg col-xs-6"><%= homeTeam.getAlias()%> <small><%= twoDigitsFormat.format(betOdds) %></small></div>
+                                <div class="btn btn-default btn-lg col-xs-6"><%= awayTeam.getAlias()%></div>
+                                <%}else{%>
+                                <div class="btn btn-default btn-lg col-xs-6"><%= homeTeam.getAlias()%></div>
+                                <div class="btn btn-success btn-lg col-xs-6"><%= awayTeam.getAlias()%> <small><%= twoDigitsFormat.format(betOdds) %></small></div>
+                               <%}	%>
                                 </div>
                             <div class="text-center center-block" >
                                 <div class="invisible">invisible</div>

@@ -60,12 +60,11 @@ if ((fdUser = fdUserDao.getFromGoogleUser(googleUser)) == null){
 	response.sendRedirect("/views/createUser.jsp");
 	return;
 }
-ServletContext ctxt = getServletContext();
-Game game = (Game) ctxt.getAttribute("game");
-ctxt.setAttribute("fdUser", fdUser);
-
-
-
+Game game = (Game) request.getAttribute("game");
+if (game==null){
+	System.out.println("GAME NULL JSP");
+}
+//Game game = (Game) ctxt.getAttribute("game");
 Team homeTeam = teamDao.deepGet(game.getHomeTeamUUID());
 Team awayTeam = teamDao.deepGet(game.getAwayTeamUUID());
 List<Player> playersHome = homeTeam.getPlayers();
@@ -141,19 +140,19 @@ List<Player> playersAway = awayTeam.getPlayers();
           
           <%
           System.out.println("Match.jsp: error on top");
-          Boolean error = (Boolean) ctxt.getAttribute("error");
+          Boolean error = (Boolean) request.getAttribute("error");
           if (error != null && error){
           	%>
         		<div class="hidden-lg hidden-md alert alert-danger ">
-        			<%=ctxt.getAttribute("errorMessage") %></div>
+        			<%=request.getAttribute("errorMessage") %></div>
         		<%
         	}
-          Boolean betDone = (Boolean) ctxt.getAttribute("betDone");
-          if(betDone){
+          Boolean betDone = (Boolean) request.getAttribute("betDone");
+          if(betDone != null && betDone){
           	%>
         	<div class="alert alert-success hidden-lg hidden-md">Your bet has been registered.</div>
         		<%
-        		ctxt.setAttribute("betDone", betDone);
+        		request.setAttribute("betDone", betDone);
           }
           %>
           </div>
@@ -263,6 +262,8 @@ List<Player> playersAway = awayTeam.getPlayers();
                             </div>
                         </div>			
                     </div> 
+                    <input type="hidden" name="gameId" value=<%=game.getUUID() %>></input>
+                    <input type="hidden" name="userId" value=<%=fdUser.getId() %>></input>
                 
                     <div class="form-froup">
                         <button type="submit" value="home" name="team" class="btn btn-primary btn-lg btn-block"> 
@@ -274,22 +275,18 @@ List<Player> playersAway = awayTeam.getPlayers();
             </div>
           </div>
           <%
-          error = (Boolean) ctxt.getAttribute("error");
+          error = (Boolean) request.getAttribute("error");
           if (error != null && error){
           	%>
-        		<div class="alert alert-danger visible-md visible-lg"><%=ctxt.getAttribute("errorMessage") %></div>
+        		<div class="alert alert-danger visible-md visible-lg"><%=request.getAttribute("errorMessage") %></div>
         		<%
-        		error=false;
-        		ctxt.setAttribute("error", error);
         	}
-          betDone = (Boolean) ctxt.getAttribute("betDone");
-          if(betDone){
+          betDone = (Boolean) request.getAttribute("betDone");
+          if(betDone != null && betDone ){
           	%>
         	<div class="alert alert-success visible-md visible-lg">Your bet has been registered.</div>
         		<%
-        		betDone = false;
-        		ctxt.setAttribute("betDone", betDone);
-          }
+        		}
           %>
 		
 		

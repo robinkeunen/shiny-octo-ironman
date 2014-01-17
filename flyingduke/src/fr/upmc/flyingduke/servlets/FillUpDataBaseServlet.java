@@ -21,6 +21,7 @@ import fr.upmc.flyingduke.domain.Bet;
 import fr.upmc.flyingduke.domain.BetChoice;
 import fr.upmc.flyingduke.domain.FDUser;
 import fr.upmc.flyingduke.domain.Game;
+import fr.upmc.flyingduke.domain.Game.ScoreContainer;
 import fr.upmc.flyingduke.domain.Player;
 import fr.upmc.flyingduke.domain.Team;
 import fr.upmc.flyingduke.domain.dao.BetDao;
@@ -115,7 +116,6 @@ public class FillUpDataBaseServlet extends HttpServlet {
 			today.setTimeZone(TimeZone.getTimeZone("America/New_York")); 
 			today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
 			int hour = today.get(Calendar.HOUR_OF_DAY);
-			System.out.println("avant le if de betComputings");
 			if (hour >= 0 && hour < 6){
 				//if it's before 6 A.M, fetch games of yesterday
 				yesterday.setTimeZone(TimeZone.getTimeZone("America/New_York"));
@@ -131,8 +131,6 @@ public class FillUpDataBaseServlet extends HttpServlet {
 
 			List<FDUser> usersList = fdUserDao.getAllFDUsers();
 			for(Game game : gameList){
-				System.out.println("UUID : " + game.getUUID());
-				System.out.println("DATE : " + game.getDate());
 				String xmlBoxScore = queryLauncher.getGameByUUID(game.getUUID());
 				String over = parser.parseGameBoxScore(xmlBoxScore);
 				//Sleep for 1s because of the API limits
@@ -146,8 +144,10 @@ public class FillUpDataBaseServlet extends HttpServlet {
 				if (!over.equalsIgnoreCase("NotOver")){
 					System.out.println("Partie terminee");
 					BetChoice winningTeam = BetChoice.AWAY;
+					game.setScores(90,100);
 					if (over.equalsIgnoreCase("home")){
 						winningTeam = BetChoice.HOME; 
+						game.setScores(100, 90);
 						System.out.println("Victoire a domicile");
 					}
 					for (FDUser fdUser : usersList){
@@ -155,12 +155,8 @@ public class FillUpDataBaseServlet extends HttpServlet {
 						List<Bet> listBetsUser = betDao.getBets2Compute(fdUser);
 						for (Bet bet : listBetsUser){
 							System.out.println("GAMEIDBet " + bet.getGameUUID());
-							System.out.println("GameId " + game.getUUID());
 							if (!bet.isComputed() && bet.getGameUUID().equalsIgnoreCase(game.getUUID())){
-								System.out.println("Il y a un bet a faire d'un amount de " + bet.getAmount());
 								System.out.println("winningTEAM  :" + winningTeam);
-								System.out.println("betTeam  :" + bet.getChoice());
-
 								bet.setComputed(true);
 								if(bet.getChoice().equals(winningTeam)){
 									System.out.println("Il a gagne");
@@ -169,9 +165,10 @@ public class FillUpDataBaseServlet extends HttpServlet {
 								}
 								try {
 									betDao.update(bet);
+									gameDao.store(game);
 									fdUserDao.update(fdUser);
-								} catch (EntityNotFoundException e) {
-									System.out.println("Update of user impossible");
+								} catch (EntityNotFoundException | MissingUUIDException e) {
+									System.out.println("Update of user or Game impossible");
 									request.setAttribute("exception", e);
 									RequestDispatcher dispatcher = request.getRequestDispatcher("/views/servererror.jsp");
 								    dispatcher.forward(request, response);
