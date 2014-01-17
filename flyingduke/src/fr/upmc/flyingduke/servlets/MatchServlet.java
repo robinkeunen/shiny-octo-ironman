@@ -3,9 +3,9 @@ package fr.upmc.flyingduke.servlets;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +26,8 @@ import fr.upmc.flyingduke.domain.dao.BetDao;
 public class MatchServlet extends HttpServlet {
 
 
+	public static final String FORM_TOKEN = "FORM_TOKEN";
+
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		System.out.println("Je passe ici");
@@ -41,12 +43,31 @@ public class MatchServlet extends HttpServlet {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/servererror.jsp");
 			dispatcher.forward(request, response);
 		}
+		
+		String formToken = UUID.randomUUID().toString();
+		HttpSession session = request.getSession();
+		session.setAttribute(FORM_TOKEN, formToken);
 
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/views/match.jsp"); 
 		dispatcher.forward(request,response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// Check for XSRF
+		String generatedToken = (String) request.getSession().getAttribute(FORM_TOKEN);
+		String receivedToken = request.getParameter("token");
+		
+		if (!generatedToken.equals(receivedToken)) {
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/views/sessiontimeout.jsp"); 
+			try {
+				dispatcher.forward(request,response);
+			} catch (ServletException e) {
+				e.printStackTrace();
+			}
+			return;
+		}
+		
+		
 		// get context attributes
 		GameDao gameDao = new GameDao();
 		FDUserDao userDao = new FDUserDao();

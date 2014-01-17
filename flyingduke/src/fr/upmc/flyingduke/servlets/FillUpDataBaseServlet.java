@@ -21,7 +21,6 @@ import fr.upmc.flyingduke.domain.Bet;
 import fr.upmc.flyingduke.domain.BetChoice;
 import fr.upmc.flyingduke.domain.FDUser;
 import fr.upmc.flyingduke.domain.Game;
-import fr.upmc.flyingduke.domain.Game.ScoreContainer;
 import fr.upmc.flyingduke.domain.Player;
 import fr.upmc.flyingduke.domain.Team;
 import fr.upmc.flyingduke.domain.dao.BetDao;

@@ -1,3 +1,4 @@
+<%@page import="fr.upmc.flyingduke.servlets.MatchServlet"%>
 <%@page import="fr.upmc.flyingduke.servlets.HomeServlet"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.google.appengine.api.users.User" %>
@@ -132,14 +133,15 @@ List<Player> playersAway = awayTeam.getPlayers();
                         <button type="submit" value="away" name="team" class="btn btn-danger btn-lg btn-block ">
                             <%=awayTeam.getName() %> </button>
                     </div>
-                                           
+                    <input name="token" value="<%= request.getSession().getAttribute(MatchServlet.FORM_TOKEN) %>" hidden>     
+                    <input type="hidden" name="gameId" value=<%=game.getUUID() %>></input>
+                    <input type="hidden" name="userId" value=<%=fdUser.getId() %>></input>                  
                                          
                </form>
             </div>
           </div>
           
           <%
-          System.out.println("Match.jsp: error on top");
           Boolean error = (Boolean) request.getAttribute("error");
           if (error != null && error){
           	%>
@@ -264,6 +266,8 @@ List<Player> playersAway = awayTeam.getPlayers();
                     </div> 
                     <input type="hidden" name="gameId" value=<%=game.getUUID() %>></input>
                     <input type="hidden" name="userId" value=<%=fdUser.getId() %>></input>
+                    <input name="token" value="<%= request.getSession().getAttribute(MatchServlet.FORM_TOKEN) %>" hidden>      
+                    
                 
                     <div class="form-froup">
                         <button type="submit" value="home" name="team" class="btn btn-primary btn-lg btn-block"> 
