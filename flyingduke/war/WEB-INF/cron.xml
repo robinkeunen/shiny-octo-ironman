@@ -16,7 +16,7 @@
   <cron>
     <url>/FillUp?action=getGamesDay</url>
     <description>Compute users bets</description>
-    <schedule>every day 05:00</schedule>
+    <schedule>every day 00:01</schedule>
     <timezone>America/New_York</timezone>
   </cron>
   
