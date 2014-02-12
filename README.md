@@ -1,8 +1,8 @@
 shiny-octo-ironman
 ==================
 
-Code for http://flyingduke-aar.appspot.com/
-This website was built as an assignment for the web application course at UPMC (Paris VI).
+Code for http://flyingduke-aar.appspot.com .
+This website was built as an assignment for the web application course at UPMC (Paris VI). The API key we used has expired hence the lack of information on the website.
 
 # Technologies
 
